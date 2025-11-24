@@ -15,7 +15,6 @@ abstract class HomeController extends State<HomeView> {
   late List<DropdownMenuEntry<String>> _enabledHomeLibrariesEntries = [];
   late Map<String, List<LibraryService>> _librariesServices = {};
   late List<BookSelection> _bookSelections = [];
-  final QueryParams _queryParams = QueryParams();
   String selectedLibraryServices = 'USBI-X';
   bool isItemTypesLoading = true;
   bool isLibrariesLoading = true;
@@ -140,8 +139,10 @@ abstract class HomeController extends State<HomeView> {
       itemTypeEntries: _itemTypeEntries,
       filterEntries: _filterEntries,
     );
-    _queryParams.startRecord = 1;
-    _queryParams.searchQuery = _searchController.text;
+    // Set query parameters provider values
+    final queryParams = Provider.of<QueryParams>(context, listen: false);
+    queryParams.startRecord = 1;
+    queryParams.searchQuery = _searchController.text;
 
     navigateToSearchView(controllersData);
   }
@@ -151,10 +152,7 @@ abstract class HomeController extends State<HomeView> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SearchView(
-          controllersData: controllersData,
-          queryParams: _queryParams,
-        ),
+        builder: (context) => SearchView(controllersData: controllersData),
       ),
     );
   }

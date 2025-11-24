@@ -3,8 +3,7 @@ part of '../views/search_view.dart';
 abstract class SearchController extends State<SearchView> {
   final TextEditingController _filterController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
-  final TextEditingController _itemTypeController =
-      TextEditingController();
+  final TextEditingController _itemTypeController = TextEditingController();
   ScrollController _scrollController = ScrollController();
   late List<BookPreview> books = [];
   late final List<DropdownMenuEntry<String>> _filterEntries;
@@ -25,7 +24,8 @@ abstract class SearchController extends State<SearchView> {
     super.initState();
     _scrollController = ScrollController();
     _filterEntries = widget.controllersData.filterEntries;
-    _searchController.text = widget.queryParams.searchQuery;
+    final queryParams = Provider.of<QueryParams>(context, listen: false);
+    _searchController.text = queryParams.searchQuery;
     setMiddleSpace = setUpperLimit - 2;
 
     loadSearch();
@@ -34,7 +34,8 @@ abstract class SearchController extends State<SearchView> {
   void loadSearch() {
     isInitialRequestLoading = true;
     isError = false;
-    SearchService.searchBooks(widget.queryParams)
+    final queryParams = Provider.of<QueryParams>(context, listen: false);
+    SearchService.searchBooks(queryParams)
         .then((result) {
           if (!mounted) return;
           setState(() {
@@ -77,8 +78,9 @@ abstract class SearchController extends State<SearchView> {
 
   void onSubmitAction(String searchQuery) {
     if (searchQuery.isEmpty) return;
+    final queryParams = Provider.of<QueryParams>(context, listen: false);
     setState(() {
-      widget.queryParams.searchQuery = searchQuery;
+      queryParams.searchQuery = searchQuery;
       books.clear();
       totalRecords = 0;
       currentPage = 1;
@@ -90,12 +92,13 @@ abstract class SearchController extends State<SearchView> {
   }
 
   void updatePageResults() {
-    widget.queryParams.startRecord = (currentPage - 1) * 10;
+    final queryParams = Provider.of<QueryParams>(context, listen: false);
+    queryParams.startRecord = (currentPage - 1) * 10;
 
     setState(() {
       isPageLoading = true;
     });
-    SearchService.searchBooks(widget.queryParams)
+    SearchService.searchBooks(queryParams)
         .then((result) {
           setState(() {
             books = result.books;

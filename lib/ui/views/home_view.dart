@@ -58,6 +58,7 @@ class _HomeViewState extends HomeController {
       ..._itemTypeEntries,
     ];
 
+    final queryParams = context.watch<QueryParams>();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -74,54 +75,22 @@ class _HomeViewState extends HomeController {
       ),
       drawerEnableOpenDragGesture: true,
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  // Padding(
-                  //   padding: const EdgeInsets.only(
-                  //     top: 8.0,
-                  //     left: 16.0,
-                  //     right: 16.0,
-                  //     bottom: 8.0,
-                  //   ),
-                  //   child: ConstrainedBox(
-                  //     constraints: BoxConstraints(
-                  //       maxWidth:
-                  //           MediaQuery.of(context).size.width < screenSizeLimit
-                  //           ? MediaQuery.of(context).size.width
-                  //           : (MediaQuery.of(context).size.width / 3) * 2,
-                  //     ),
-                  //     child: LayoutBuilder(
-                  //       builder: (context, constraints) {
-                  //         return DropdownItemTypesWidget(
-                  //           itemTypeController: _itemTypeController,
-                  //           itemTypeEntries: itemTypeEntriesPlusAll,
-                  //           queryParams: _queryParams,
-                  //           maxWidth: constraints.maxWidth,
-                  //         );
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
-                  SearchSection(
-                    screenSizeLimit: screenSizeLimit,
-                    itemTypeController: _itemTypeController,
-                    itemTypeEntries: itemTypeEntriesPlusAll,
-                    isItemTypesLoading: isItemTypesLoading,
-                    libraryController: _libraryController,
-                    libraryEntries: libraryEntriesPlusAll,
-                    isLibrariesLoading: isLibrariesLoading,
-                    searchFilterController: _searchFilterController,
-                    filterEntries: _filterEntries,
-                    queryParams: _queryParams,
-                    searchController: _searchController,
-                    onSubmitted: (value) => onSubmitAction(),
-                    clearSearchController: () => clearSearchController(),
-                  ),
-                ],
-              ),
+        child: ListView(
+          children: [
+            SearchSection(
+              screenSizeLimit: screenSizeLimit,
+              itemTypeController: _itemTypeController,
+              itemTypeEntries: itemTypeEntriesPlusAll,
+              isItemTypesLoading: isItemTypesLoading,
+              libraryController: _libraryController,
+              libraryEntries: libraryEntriesPlusAll,
+              isLibrariesLoading: isLibrariesLoading,
+              searchFilterController: _searchFilterController,
+              filterEntries: _filterEntries,
+              queryParams: queryParams,
+              searchController: _searchController,
+              onSubmitted: (value) => onSubmitAction(),
+              clearSearchController: () => clearSearchController(),
             ),
             SliverToBoxAdapter(
               child: Container(
@@ -167,35 +136,39 @@ class _HomeViewState extends HomeController {
                             constraints: BoxConstraints(
                               maxHeight: MediaQuery.of(context).size.height / 2,
                             ),
-                            child: IgnorePointer(
-                              ignoring: kIsWeb,
-                              child: CarouselView.weighted(
-                                flexWeights:
-                                    MediaQuery.of(context).size.width < 600
-                                    ? const [1, 3, 1]
-                                    : const [1, 1, 1, 1, 1],
-                                scrollDirection: Axis.horizontal,
-                                itemSnapping: true,
-                                elevation: 2.0,
-                                controller: _booksCarouselController,
-                                enableSplash: true,
-                                backgroundColor: primaryColor,
-                                onTap: (index) {
-                                  final bookSelection = _bookSelections[index];
-                                  if (kIsWeb) {
-                                    context.go(
-                                      '/book-details/${bookSelection.biblionumber}',
-                                    );
-                                    return;
-                                  }
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => BookView(
-                                        biblioNumber:
-                                            bookSelection.biblionumber,
-                                      ),
-                                    ),
+                          );
+                        } else if (asyncSnapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              'error',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          );
+                        }
+                        _bookSelections = asyncSnapshot.data ?? [];
+
+                        return ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: MediaQuery.of(context).size.height / 2,
+                          ),
+                          child: IgnorePointer(
+                            ignoring: kIsWeb,
+                            child: CarouselView.weighted(
+                              flexWeights:
+                                  MediaQuery.of(context).size.width < 600
+                                  ? const [1, 3, 1]
+                                  : const [1, 1, 1, 1, 1],
+                              scrollDirection: Axis.horizontal,
+                              itemSnapping: true,
+                              elevation: 2.0,
+                              controller: _booksCarouselController,
+                              enableSplash: true,
+                              backgroundColor: primaryColor,
+                              onTap: (index) {
+                                final bookSelection = _bookSelections[index];
+                                if (kIsWeb) {
+                                  context.go(
+                                    '/book-details/${bookSelection.biblionumber}',
                                   );
                                 },
                                 children: _bookSelections.map((bookSelection) {
@@ -229,6 +202,13 @@ class _HomeViewState extends HomeController {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                  );
+                }
+
+                _librariesServices = asyncSnapshot.data ?? {};
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height / 2,
                   ),
                   Center(
                     child: DropdownLibrariesServicesWidget(
@@ -487,17 +467,16 @@ class DropdownFilters extends StatelessWidget {
     super.key,
     required this.searchFilterController,
     required this.filterEntries,
-    required this.queryParams,
     required this.maxWidth,
   });
 
   final TextEditingController searchFilterController;
   final List<DropdownMenuEntry<String>> filterEntries;
-  final QueryParams queryParams;
   final double maxWidth;
 
   @override
   Widget build(BuildContext context) {
+    final queryParams = context.watch<QueryParams>();
     return DropdownMenu(
       controller: searchFilterController,
       label: Text(AppLocalizations.of(context)!.searchBy),
@@ -547,16 +526,15 @@ class DropdownLibrariesWidget extends StatelessWidget {
     super.key,
     required this.libraryController,
     required this.libraryEntries,
-    required this.queryParams,
     required this.maxWidth,
   });
 
   final TextEditingController libraryController;
   final List<DropdownMenuEntry<String>> libraryEntries;
-  final QueryParams queryParams;
   final double maxWidth;
   @override
   Widget build(BuildContext context) {
+    final queryParams = context.watch<QueryParams>();
     return DropdownMenu(
       controller: libraryController,
       label: Text(AppLocalizations.of(context)!.library),
@@ -578,16 +556,15 @@ class DropdownItemTypesWidget extends StatelessWidget {
     super.key,
     required this.itemTypeController,
     required this.itemTypeEntries,
-    required this.queryParams,
     required this.maxWidth,
   });
 
   final TextEditingController itemTypeController;
   final List<DropdownMenuEntry<String>> itemTypeEntries;
-  final QueryParams queryParams;
   final double maxWidth;
   @override
   Widget build(BuildContext context) {
+    final queryParams = context.watch<QueryParams>();
     return DropdownMenu(
       controller: itemTypeController,
       label: Text(AppLocalizations.of(context)!.itemType),
@@ -674,7 +651,6 @@ class SearchSection extends StatelessWidget {
                         return DropdownItemTypesWidget(
                           itemTypeController: itemTypeController,
                           itemTypeEntries: itemTypeEntries,
-                          queryParams: queryParams,
                           maxWidth: constraints.maxWidth,
                         );
                       },
@@ -689,7 +665,6 @@ class SearchSection extends StatelessWidget {
                         return DropdownLibrariesWidget(
                           libraryController: libraryController,
                           libraryEntries: libraryEntries,
-                          queryParams: queryParams,
                           maxWidth: constraints.maxWidth,
                         );
                       },
@@ -702,7 +677,6 @@ class SearchSection extends StatelessWidget {
                       return DropdownFilters(
                         searchFilterController: searchFilterController,
                         filterEntries: filterEntries,
-                        queryParams: queryParams,
                         maxWidth: constraints.maxWidth,
                       );
                     },
