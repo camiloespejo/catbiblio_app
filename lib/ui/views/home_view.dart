@@ -58,7 +58,6 @@ class _HomeViewState extends HomeController {
       ..._itemTypeEntries,
     ];
 
-    final queryParams = Provider.of<QueryParams>(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -80,46 +79,41 @@ class _HomeViewState extends HomeController {
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  // Padding(
-                  //   padding: const EdgeInsets.only(
-                  //     top: 8.0,
-                  //     left: 16.0,
-                  //     right: 16.0,
-                  //     bottom: 8.0,
-                  //   ),
-                  //   child: ConstrainedBox(
-                  //     constraints: BoxConstraints(
-                  //       maxWidth:
-                  //           MediaQuery.of(context).size.width < screenSizeLimit
-                  //           ? MediaQuery.of(context).size.width
-                  //           : (MediaQuery.of(context).size.width / 3) * 2,
-                  //     ),
-                  //     child: LayoutBuilder(
-                  //       builder: (context, constraints) {
-                  //         return DropdownItemTypesWidget(
-                  //           itemTypeController: _itemTypeController,
-                  //           itemTypeEntries: itemTypeEntriesPlusAll,
-                  //           queryParams: _queryParams,
-                  //           maxWidth: constraints.maxWidth,
-                  //         );
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
-                  SearchSection(
+                  ItemTypes(
                     screenSizeLimit: screenSizeLimit,
                     itemTypeController: _itemTypeController,
-                    itemTypeEntries: itemTypeEntriesPlusAll,
-                    isItemTypesLoading: isItemTypesLoading,
+                    itemTypeEntriesPlusAll: itemTypeEntriesPlusAll,
+                  ),
+                  Libraries(
+                    screenSizeLimit: screenSizeLimit,
                     libraryController: _libraryController,
-                    libraryEntries: libraryEntriesPlusAll,
-                    isLibrariesLoading: isLibrariesLoading,
-                    searchFilterController: _searchFilterController,
+                    libraryEntriesPlusAll: libraryEntriesPlusAll,
+                  ),
+                  Filters(
+                    screenSizeLimit: screenSizeLimit,
+                    filterController: _searchFilterController,
                     filterEntries: _filterEntries,
-                    queryParams: queryParams,
-                    searchController: _searchController,
-                    onSubmitted: (value) => onSubmitAction(),
-                    clearSearchController: () => clearSearchController(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 8.0,
+                      left: 16.0,
+                      right: 16.0,
+                      bottom: 16.0,
+                    ),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width <
+                                screenSizeLimit
+                            ? MediaQuery.of(context).size.width
+                            : (MediaQuery.of(context).size.width / 3) * 2,
+                      ),
+                      child: TextFieldSearchWidget(
+                        searchController: _searchController,
+                        onSubmitted: (value) => onSubmitAction(),
+                        clearSearchController: clearSearchController,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -292,6 +286,129 @@ class _HomeViewState extends HomeController {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class ItemTypes extends StatelessWidget {
+  const ItemTypes({
+    super.key,
+    required this.screenSizeLimit,
+    required TextEditingController itemTypeController,
+    required this.itemTypeEntriesPlusAll,
+  }) : _itemTypeController = itemTypeController;
+
+  final int screenSizeLimit;
+  final TextEditingController _itemTypeController;
+  final List<DropdownMenuEntry<String>> itemTypeEntriesPlusAll;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 8.0,
+        left: 16.0,
+        right: 16.0,
+        bottom: 8.0,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width < screenSizeLimit
+              ? MediaQuery.of(context).size.width
+              : (MediaQuery.of(context).size.width / 3) * 2,
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return DropdownItemTypesWidget(
+              itemTypeController: _itemTypeController,
+              itemTypeEntries: itemTypeEntriesPlusAll,
+              maxWidth: constraints.maxWidth,
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class Libraries extends StatelessWidget {
+  const Libraries({
+    super.key,
+    required this.screenSizeLimit,
+    required TextEditingController libraryController,
+    required this.libraryEntriesPlusAll,
+  }) : _libraryController = libraryController;
+
+  final int screenSizeLimit;
+  final TextEditingController _libraryController;
+  final List<DropdownMenuEntry<String>> libraryEntriesPlusAll;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 8.0,
+        left: 16.0,
+        right: 16.0,
+        bottom: 8.0,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width < screenSizeLimit
+              ? MediaQuery.of(context).size.width
+              : (MediaQuery.of(context).size.width / 3) * 2,
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return DropdownLibrariesWidget(
+              libraryController: _libraryController,
+              libraryEntries: libraryEntriesPlusAll,
+              maxWidth: constraints.maxWidth,
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class Filters extends StatelessWidget {
+  const Filters({
+    super.key,
+    required this.screenSizeLimit,
+    required TextEditingController filterController,
+    required this.filterEntries,
+  }) : _searchFilterController = filterController;
+
+  final int screenSizeLimit;
+  final TextEditingController _searchFilterController;
+  final List<DropdownMenuEntry<String>> filterEntries;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 8.0,
+        left: 16.0,
+        right: 16.0,
+        bottom: 8.0,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width < screenSizeLimit
+              ? MediaQuery.of(context).size.width
+              : (MediaQuery.of(context).size.width / 3) * 2,
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return DropdownFilters(
+              searchFilterController: _searchFilterController,
+              filterEntries: filterEntries,
+              maxWidth: constraints.maxWidth,
+            );
+          },
         ),
       ),
     );
@@ -598,122 +715,6 @@ class DropdownItemTypesWidget extends StatelessWidget {
       onSelected: (value) {
         queryParams.itemType = value!;
       },
-    );
-  }
-}
-
-class SearchSection extends StatelessWidget {
-  const SearchSection({
-    super.key,
-    required this.screenSizeLimit,
-    required this.itemTypeController,
-    required this.itemTypeEntries,
-    required this.isItemTypesLoading,
-    required this.libraryController,
-    required this.libraryEntries,
-    required this.isLibrariesLoading,
-    required this.searchFilterController,
-    required this.filterEntries,
-    required this.queryParams,
-    required this.searchController,
-    required this.onSubmitted,
-    required this.clearSearchController,
-  });
-
-  final int screenSizeLimit;
-  final TextEditingController itemTypeController;
-  final List<DropdownMenuEntry<String>> itemTypeEntries;
-  final bool isItemTypesLoading;
-  final TextEditingController libraryController;
-  final List<DropdownMenuEntry<String>> libraryEntries;
-  final bool isLibrariesLoading;
-  final TextEditingController searchFilterController;
-  final List<DropdownMenuEntry<String>> filterEntries;
-  final QueryParams queryParams;
-  final TextEditingController searchController;
-  final Function(String) onSubmitted;
-  final VoidCallback clearSearchController;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width < screenSizeLimit
-              ? MediaQuery.of(context).size.width
-              : (MediaQuery.of(context).size.width / 3) * 2,
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 8.0,
-                left: 16.0,
-                right: 16.0,
-                bottom: 8.0,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.searchSectionTitle,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Item types dropdown
-                  Skeletonizer(
-                    enabled: isItemTypesLoading,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return DropdownItemTypesWidget(
-                          itemTypeController: itemTypeController,
-                          itemTypeEntries: itemTypeEntries,
-                          maxWidth: constraints.maxWidth,
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  // Libraries dropdown
-                  Skeletonizer(
-                    enabled: isLibrariesLoading,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return DropdownLibrariesWidget(
-                          libraryController: libraryController,
-                          libraryEntries: libraryEntries,
-                          maxWidth: constraints.maxWidth,
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  // Search filters dropdown
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      return DropdownFilters(
-                        searchFilterController: searchFilterController,
-                        filterEntries: filterEntries,
-                        maxWidth: constraints.maxWidth,
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  TextFieldSearchWidget(
-                    searchController: searchController,
-                    onSubmitted: onSubmitted,
-                    clearSearchController: clearSearchController,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

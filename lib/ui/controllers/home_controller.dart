@@ -289,7 +289,7 @@ abstract class HomeController extends State<HomeView> {
 
     final serviceList = _librariesServices[selectedLibraryServices];
     // Safety check that data is available
-    if (serviceList == null || serviceList.isEmpty || _enabledHomeLibrariesEntries.isEmpty) {
+    if (serviceList == null || serviceList.isEmpty) {
       _isServicesTimerStarted = true;
       return;
     }
@@ -304,8 +304,7 @@ abstract class HomeController extends State<HomeView> {
 
       _currentServiceIndex = _currentServiceIndex + 1;
 
-      // Assuming 3 items are visible (1:4:1 flex), reset when the index is off screen.
-      if (_currentServiceIndex >= currentList.length - 2) {
+      if (_currentServiceIndex >= currentList.length) {
         _currentServiceIndex = 0;
       }
 
