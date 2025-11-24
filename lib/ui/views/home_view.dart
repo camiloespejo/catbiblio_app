@@ -92,32 +92,49 @@ class _HomeViewState extends HomeController {
               onSubmitted: (value) => onSubmitAction(),
               clearSearchController: () => clearSearchController(),
             ),
-            SizedBox(height: 16.0),
-            Container(
-              decoration: BoxDecoration(color: primaryColor),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Column(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.bookSelections,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+            SliverToBoxAdapter(
+              child: Container(
+                decoration: BoxDecoration(color: primaryColor),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.bookSelections,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 16.0),
-                    FutureBuilder(
-                      future: _bookSelectionsFuture,
-                      builder: (context, asyncSnapshot) {
-                        if (asyncSnapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
+                      SizedBox(height: 16.0),
+                      FutureBuilder(
+                        future: _bookSelectionsFuture,
+                        builder: (context, asyncSnapshot) {
+                          if (asyncSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
                               ),
+                            );
+                          } else if (asyncSnapshot.hasError) {
+                            return Center(
+                              child: Text(
+                                'error',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            );
+                          }
+
+                          _bookSelections = asyncSnapshot.data ?? [];
+                          _startBooksCarouselTimer();
+
+                          return ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: MediaQuery.of(context).size.height / 2,
                             ),
                           );
                         } else if (asyncSnapshot.hasError) {
@@ -153,60 +170,37 @@ class _HomeViewState extends HomeController {
                                   context.go(
                                     '/book-details/${bookSelection.biblionumber}',
                                   );
-                                  return;
-                                }
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BookView(
-                                      biblioNumber: bookSelection.biblionumber,
+                                },
+                                children: _bookSelections.map((bookSelection) {
+                                  return HeroLayoutCard(
+                                    fit: BoxFit.fitHeight,
+                                    imageModel: ImageModel(
+                                      bookSelection.name,
+                                      '$_baseUrl/cgi-bin/koha/opac-image.pl?biblionumber=${bookSelection.biblionumber}',
                                     ),
-                                  ),
-                                );
-                              },
-                              children: _bookSelections.map((bookSelection) {
-                                return HeroLayoutCard(
-                                  fit: BoxFit.fitHeight,
-                                  imageModel: ImageModel(
-                                    bookSelection.name,
-                                    '$_baseUrl/cgi-bin/koha/opac-image.pl?biblionumber=${bookSelection.biblionumber}',
-                                  ),
-                                );
-                              }).toList(),
+                                  );
+                                }).toList(),
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
-            Center(
-              child: Text(
-                AppLocalizations.of(context)!.libraryServices,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-              ),
-            ),
-            Center(
-              child: DropdownLibrariesServicesWidget(
-                libraryServicesController: _libraryServicesController,
-                enabledHomeLibrariesEntries: _enabledHomeLibrariesEntries,
-                maxWidth: MediaQuery.of(context).size.width * 0.9,
-                onSelected: onSelectLibraryService,
-              ),
-            ),
-            FutureBuilder(
-              future: _librariesServicesFuture,
-              builder: (context, asyncSnapshot) {
-                if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (asyncSnapshot.hasError) {
-                  return Center(
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  SizedBox(height: 16.0),
+                  Center(
                     child: Text(
-                      'error',
-                      style: const TextStyle(color: Colors.red),
+                      AppLocalizations.of(context)!.libraryServices,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   );
                 }
@@ -216,32 +210,65 @@ class _HomeViewState extends HomeController {
                   constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height / 2,
                   ),
-                  child: IgnorePointer(
-                    ignoring: kIsWeb,
-                    child: CarouselView.weighted(
-                      flexWeights: [1, 4, 1],
-                      elevation: 2.0,
-                      scrollDirection: Axis.horizontal,
-                      itemSnapping: true,
-                      controller: _servicesCarouselController,
-                      enableSplash: false,
-                      children:
-                          _librariesServices[selectedLibraryServices]?.map((
-                            libraryService,
-                          ) {
-                            return HeroLayoutCard(
-                              fit: BoxFit.fitWidth,
-                              imageModel: ImageModel(
-                                libraryService.name,
-                                libraryService.imageUrl,
-                              ),
-                            );
-                          }).toList() ??
-                          [],
+                  Center(
+                    child: DropdownLibrariesServicesWidget(
+                      libraryServicesController: _libraryServicesController,
+                      enabledHomeLibrariesEntries: _enabledHomeLibrariesEntries,
+                      maxWidth: MediaQuery.of(context).size.width * 0.9,
+                      onSelected: onSelectLibraryService,
                     ),
                   ),
-                );
-              },
+                  FutureBuilder(
+                    future: _librariesServicesFuture,
+                    builder: (context, asyncSnapshot) {
+                      if (asyncSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (asyncSnapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            'error',
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        );
+                      }
+
+                      _librariesServices = asyncSnapshot.data ?? {};
+                      _startServicesCarouselTimer();
+
+                      return ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: MediaQuery.of(context).size.height / 2,
+                        ),
+                        child: IgnorePointer(
+                          ignoring: kIsWeb,
+                          child: CarouselView.weighted(
+                            flexWeights: [1, 4, 1],
+                            elevation: 2.0,
+                            scrollDirection: Axis.horizontal,
+                            itemSnapping: true,
+                            controller: _servicesCarouselController,
+                            enableSplash: false,
+                            children:
+                                _librariesServices[selectedLibraryServices]
+                                    ?.map((libraryService) {
+                                      return HeroLayoutCard(
+                                        fit: BoxFit.fitWidth,
+                                        imageModel: ImageModel(
+                                          libraryService.name,
+                                          libraryService.imageUrl,
+                                        ),
+                                      );
+                                    })
+                                    .toList() ??
+                                [],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),
