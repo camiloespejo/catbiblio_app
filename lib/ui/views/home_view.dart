@@ -273,9 +273,6 @@ class HeroLayoutCard extends StatelessWidget {
             child: CachedNetworkImage(
               imageUrl: imageModel.url,
               fit: fit,
-              width: double.infinity,
-              placeholder: (context, url) =>
-                  const Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) => const Center(
                 child: Icon(Icons.broken_image, color: Colors.grey, size: 40),
               ),

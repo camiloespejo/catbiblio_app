@@ -26,6 +26,7 @@ abstract class HomeController extends State<HomeView> {
   String currentBookName = '';
   String currentBiblionumber = '';
 
+  // late Future<List<ItemType>> _futureItemTypes;
   late Future<List<BookSelection>> _bookSelectionsFuture;
   late Future<Map<String, List<LibraryService>>> _librariesServicesFuture;
 
@@ -33,6 +34,8 @@ abstract class HomeController extends State<HomeView> {
   late Timer _servicesCarouselTimer;
   int _currentBookIndex = 0;
   int _currentServiceIndex = 0;
+  bool _isBooksTimerStarted = false;
+  bool _isServicesTimerStarted = false;
 
   List<DropdownMenuEntry<String>> get _filterEntries {
     return [
@@ -73,51 +76,9 @@ abstract class HomeController extends State<HomeView> {
     _libraryServicesController = TextEditingController();
     _librariesFuture = Future.value([]);
 
-    fetchData();
-
     _bookSelectionsFuture = BookSelectionsService.getBookSelections();
     _librariesServicesFuture = LibraryServices.getLibraryCodeServicesMap();
-
-    if (mounted && context.mounted) {
-      _booksCarouselTimer = Timer.periodic(const Duration(seconds: 4), (
-        Timer timer,
-      ) {
-        _currentBookIndex = _currentBookIndex + 1;
-        if (MediaQuery.of(context).size.width < 600) {
-          if (_currentBookIndex >= _bookSelections.length) {
-            _currentBookIndex = 0;
-          }
-        } else {
-          if (_currentBookIndex >= _bookSelections.length - 4) {
-            _currentBookIndex = 0;
-          }
-        }
-
-        _booksCarouselController.animateToItem(
-          _currentBookIndex,
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeInOut,
-        );
-      });
-
-      _servicesCarouselTimer = Timer.periodic(const Duration(seconds: 6), (
-        Timer timer,
-      ) {
-        if (context.mounted && _enabledHomeLibrariesEntries.isNotEmpty) {
-          if (_currentServiceIndex >
-              _librariesServices[selectedLibraryServices]!.length) {
-            _currentServiceIndex = 0;
-          }
-
-          _currentServiceIndex = _currentServiceIndex + 1;
-          _servicesCarouselController.animateToItem(
-            _currentServiceIndex,
-            duration: const Duration(milliseconds: 800),
-            curve: Curves.easeInOut,
-          );
-        }
-      });
-    }
+    fetchData();
   }
 
   /// fetches necessary data for home view
@@ -125,11 +86,9 @@ abstract class HomeController extends State<HomeView> {
   /// Optimized to run independent operations in parallel
   Future<void> fetchData() async {
     try {
+      fetchItemTypes();
       // Fetch libraries first (needed for services dropdown)
       await fetchLibraries();
-
-      // Start item types and library services in parallel
-      await Future.wait([fetchItemTypes()]);
 
       // Build dropdown after library services are loaded
       buildLibraryServicesDropdown();
@@ -287,6 +246,78 @@ abstract class HomeController extends State<HomeView> {
     }
   }
 
+  void _startBooksCarouselTimer() {
+    if (_isBooksTimerStarted) return;
+
+    // Safety check that data is available
+    if (_bookSelections.isEmpty) {
+      _isBooksTimerStarted = true;
+      return;
+    }
+
+    _booksCarouselTimer = Timer.periodic(const Duration(seconds: 4), (
+      Timer timer,
+    ) {
+      if (!mounted) return;
+
+      _currentBookIndex++;
+      final listLength = _bookSelections.length;
+
+      // Logic to determine when to reset the index
+      if (MediaQuery.of(context).size.width < 600) {
+        if (_currentBookIndex >= listLength) {
+          _currentBookIndex = 0;
+        }
+      } else {
+        // Assuming 5 items are visible (1:1:1:1:1 flex) on wider screen, so reset earlier
+        if (_currentBookIndex >= listLength - 4) {
+          _currentBookIndex = 0;
+        }
+      }
+
+      _booksCarouselController.animateToItem(
+        _currentBookIndex,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+      );
+    });
+    _isBooksTimerStarted = true;
+  }
+
+  void _startServicesCarouselTimer() {
+    if (_isServicesTimerStarted) return;
+
+    final serviceList = _librariesServices[selectedLibraryServices];
+    // Safety check that data is available
+    if (serviceList == null || serviceList.isEmpty || _enabledHomeLibrariesEntries.isEmpty) {
+      _isServicesTimerStarted = true;
+      return;
+    }
+
+    _servicesCarouselTimer = Timer.periodic(const Duration(seconds: 6), (
+      Timer timer,
+    ) {
+      if (!mounted) return;
+
+      final currentList = _librariesServices[selectedLibraryServices];
+      if (currentList == null || currentList.isEmpty) return;
+
+      _currentServiceIndex = _currentServiceIndex + 1;
+
+      // Assuming 3 items are visible (1:4:1 flex), reset when the index is off screen.
+      if (_currentServiceIndex >= currentList.length - 2) {
+        _currentServiceIndex = 0;
+      }
+
+      _servicesCarouselController.animateToItem(
+        _currentServiceIndex,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+      );
+    });
+    _isServicesTimerStarted = true;
+  }
+
   /// builds the library services dropdown based on previously fetched libraries
   void buildLibraryServicesDropdown() {
     _enabledHomeLibrariesEntries = _libraryEntries
@@ -297,8 +328,6 @@ abstract class HomeController extends State<HomeView> {
   }
 
   void onSelectLibraryService(String value) {
-    setState(() {
-      selectedLibraryServices = value;
-    });
+    selectedLibraryServices = value;
   }
 }
