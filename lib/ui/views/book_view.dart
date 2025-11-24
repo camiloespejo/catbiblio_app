@@ -44,340 +44,342 @@ class _BookViewState extends BookController {
               )
             : Text(AppLocalizations.of(context)!.detailsTitle),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: MediaQuery.of(context).size.height,
-                  maxWidth: MediaQuery.of(context).size.width < screenSizeLimit
-                      ? MediaQuery.of(context).size.width
-                      : (MediaQuery.of(context).size.width / 3) * 2,
-                ),
-                child: Column(
-                  children: [
-                    if (isErrorLoadingDetails)
-                      Center(
-                        child: Column(
-                          children: [
-                            const Icon(
-                              Icons.error,
-                              color: Colors.red,
-                              size: 48,
-                            ),
-                            const SizedBox(height: 8.0),
-                            Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.errorLoadingBookDetails,
-                            ),
-                          ],
-                        ),
-                      )
-                    else
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Skeletonizer(
-                            enabled: isLoadingDetails,
-                            child: Container(
-                              color: primaryUVColor,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 24.0,
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height,
+                    maxWidth: MediaQuery.of(context).size.width < screenSizeLimit
+                        ? MediaQuery.of(context).size.width
+                        : (MediaQuery.of(context).size.width / 3) * 2,
+                  ),
+                  child: Column(
+                    children: [
+                      if (isErrorLoadingDetails)
+                        Center(
+                          child: Column(
+                            children: [
+                              const Icon(
+                                Icons.error,
+                                color: Colors.red,
+                                size: 48,
                               ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Imagen real cuando esté disponible, si está cargando mostramos un mock.
-                                  if (isLoadingDetails)
-                                    SizedBox(
-                                      width: 120,
-                                      height: 160,
-                                      child: Container(
-                                        color: Colors.white24,
-                                        child: const Center(
-                                          child: Icon(
-                                            Icons.image,
-                                            size: 48,
-                                            color: Colors.white60,
+                              const SizedBox(height: 8.0),
+                              Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.errorLoadingBookDetails,
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Skeletonizer(
+                              enabled: isLoadingDetails,
+                              child: Container(
+                                color: primaryUVColor,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 24.0,
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Imagen real cuando esté disponible, si está cargando mostramos un mock.
+                                    if (isLoadingDetails)
+                                      SizedBox(
+                                        width: 120,
+                                        height: 160,
+                                        child: Container(
+                                          color: Colors.white24,
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.image,
+                                              size: 48,
+                                              color: Colors.white60,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  else
-                                    FutureBuilder<ThumbnailResult?>(
-                                      future: ImageService.fetchThumbnail(
-                                        widget.biblioNumber,
-                                        bibliosDetails.isbn,
-                                      ),
-                                      builder: (context, snapshot) {
-                                        // Error or no image found: show placeholder
-                                        if (snapshot.hasError ||
-                                            snapshot.data == null) {
-                                          hasImage = false;
-                                          return Hero(
-                                            tag: 'biblioImage',
-                                            child: SizedBox(
-                                              width: 120,
-                                              height: 160,
-                                              child: Container(
-                                                color: Colors.white24,
-                                                child: const Center(
-                                                  child: Icon(
-                                                    Icons.book,
-                                                    size: 36,
-                                                    color: Colors.white70,
+                                      )
+                                    else
+                                      FutureBuilder<ThumbnailResult?>(
+                                        future: ImageService.fetchThumbnail(
+                                          widget.biblioNumber,
+                                          bibliosDetails.isbn,
+                                        ),
+                                        builder: (context, snapshot) {
+                                          // Error or no image found: show placeholder
+                                          if (snapshot.hasError ||
+                                              snapshot.data == null) {
+                                            hasImage = false;
+                                            return Hero(
+                                              tag: 'biblioImage',
+                                              child: SizedBox(
+                                                width: 120,
+                                                height: 160,
+                                                child: Container(
+                                                  color: Colors.white24,
+                                                  child: const Center(
+                                                    child: Icon(
+                                                      Icons.book,
+                                                      size: 36,
+                                                      color: Colors.white70,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
+                                            );
+                                          }
+                                          // We have an image and know its source now
+                                          hasImage = true;
+                                          final source = snapshot.data!.source;
+                                          final imageWidget =
+                                              snapshot.data!.image;
+        
+                                          return GestureDetector(
+                                            onTap: () {
+                                              if (source ==
+                                                  ImageService.sourceLocal) {
+                                                _showImageDialog(
+                                                  context,
+                                                  'biblioImage',
+                                                  '$_baseUrl/cgi-bin/koha/opac-image.pl?biblionumber=${widget.biblioNumber}',
+                                                );
+                                              } else {
+                                                _showImageDialog(
+                                                  context,
+                                                  'biblioImage',
+                                                  '$_openLibraryBaseUrl/b/isbn/${bibliosDetails.isbn}-L.jpg',
+                                                );
+                                              }
+                                            },
+                                            child: Hero(
+                                              tag: 'biblioImage',
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 120,
+                                                    height: 160,
+                                                    child: imageWidget,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 120,
+                                                    child: Text(
+                                                      source ==
+                                                              ImageService
+                                                                  .sourceLocal
+                                                          ? AppLocalizations.of(
+                                                              context,
+                                                            )!.localCoverIMGAlt
+                                                          : AppLocalizations.of(
+                                                              context,
+                                                            )!.openLibraryCoverIMGAlt,
+                                                      style: const TextStyle(
+                                                        color: Colors.white70,
+                                                        fontSize: 12,
+                                                      ),
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           );
-                                        }
-                                        // We have an image and know its source now
-                                        hasImage = true;
-                                        final source = snapshot.data!.source;
-                                        final imageWidget =
-                                            snapshot.data!.image;
-
-                                        return GestureDetector(
-                                          onTap: () {
-                                            if (source ==
-                                                ImageService.sourceLocal) {
-                                              _showImageDialog(
-                                                context,
-                                                'biblioImage',
-                                                '$_baseUrl/cgi-bin/koha/opac-image.pl?biblionumber=${widget.biblioNumber}',
-                                              );
-                                            } else {
-                                              _showImageDialog(
-                                                context,
-                                                'biblioImage',
-                                                '$_openLibraryBaseUrl/b/isbn/${bibliosDetails.isbn}-L.jpg',
-                                              );
-                                            }
-                                          },
-                                          child: Hero(
-                                            tag: 'biblioImage',
-                                            child: Column(
-                                              children: [
-                                                SizedBox(
-                                                  width: 120,
-                                                  height: 160,
-                                                  child: imageWidget,
-                                                ),
-                                                SizedBox(
-                                                  width: 120,
-                                                  child: Text(
-                                                    source ==
-                                                            ImageService
-                                                                .sourceLocal
-                                                        ? AppLocalizations.of(
-                                                            context,
-                                                          )!.localCoverIMGAlt
-                                                        : AppLocalizations.of(
-                                                            context,
-                                                          )!.openLibraryCoverIMGAlt,
-                                                    style: const TextStyle(
-                                                      color: Colors.white70,
-                                                      fontSize: 12,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                              ],
+                                        },
+                                      ),
+                                    const SizedBox(width: 16.0),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          // Texto mock mientras carga, título real cuando esté disponible.
+                                          SelectionArea(
+                                            child: Text(
+                                              isLoadingDetails
+                                                  ? mockTitle
+                                                  : bibliosDetails.title,
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.white,
+                                              ),
                                             ),
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  const SizedBox(width: 16.0),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        // Texto mock mientras carga, título real cuando esté disponible.
-                                        SelectionArea(
-                                          child: Text(
-                                            isLoadingDetails
-                                                ? mockTitle
-                                                : bibliosDetails.title,
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 16.0,
-                              left: 16.0,
-                              right: 16.0,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Skeletonizer(
-                                      enabled: isLoadingDetails,
-                                      child: Text(
-                                        AppLocalizations.of(
-                                          context,
-                                        )!.bibliographicDetails,
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 8.0,
-                                        right: 8.0,
-                                      ),
-                                      child: SelectionArea(
-                                        child: BibliographicDetails(
-                                          bibliosDetails: bibliosDetails,
-                                          languageMap: languageMap,
-                                          isLoadingDetails: isLoadingDetails,
-                                        ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 16.0,
-                        right: 16.0,
-                        bottom: 16.0,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Divider(),
-                          Skeletonizer(
-                            enabled: isLoadingDetails || isErrorLoadingDetails,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                OutlinedButton.icon(
-                                  onPressed: () {
-                                    // if (kIsWeb) {
-                                    //   context.go(
-                                    //     '/marc-view/${Uri.encodeComponent(widget.biblioNumber)}',
-                                    //   );
-                                    //   return;
-                                    // }
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => MarcView(
-                                          biblioNumber: widget.biblioNumber,
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 16.0,
+                                left: 16.0,
+                                right: 16.0,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Skeletonizer(
+                                        enabled: isLoadingDetails,
+                                        child: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.bibliographicDetails,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
                                       ),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.library_books),
-                                  label: const Text('MARC'),
-                                ),
-                                OutlinedButton.icon(
-                                  onPressed: () {
-                                    showShareDialog(
-                                      context,
-                                      bibliosDetails.title,
-                                      widget.biblioNumber,
-                                    );
-                                  },
-                                  icon: const Icon(Icons.share),
-                                  label: Text(
-                                    AppLocalizations.of(context)!.share,
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 8.0,
+                                          right: 8.0,
+                                        ),
+                                        child: SelectionArea(
+                                          child: BibliographicDetails(
+                                            bibliosDetails: bibliosDetails,
+                                            languageMap: languageMap,
+                                            isLoadingDetails: isLoadingDetails,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          const Divider(),
-
-                          if (isErrorLoadingBiblioItems)
-                            Center(
-                              child: Column(
+                          ],
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 16.0,
+                          right: 16.0,
+                          bottom: 16.0,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Divider(),
+                            Skeletonizer(
+                              enabled: isLoadingDetails || isErrorLoadingDetails,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  const Icon(
-                                    Icons.error,
-                                    color: Colors.red,
-                                    size: 48,
+                                  OutlinedButton.icon(
+                                    onPressed: () {
+                                      // if (kIsWeb) {
+                                      //   context.go(
+                                      //     '/marc-view/${Uri.encodeComponent(widget.biblioNumber)}',
+                                      //   );
+                                      //   return;
+                                      // }
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => MarcView(
+                                            biblioNumber: widget.biblioNumber,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(Icons.library_books),
+                                    label: const Text('MARC'),
                                   ),
-                                  const SizedBox(height: 8.0),
-                                  Text('Error loading item copies'),
+                                  OutlinedButton.icon(
+                                    onPressed: () {
+                                      showShareDialog(
+                                        context,
+                                        bibliosDetails.title,
+                                        widget.biblioNumber,
+                                      );
+                                    },
+                                    icon: const Icon(Icons.share),
+                                    label: Text(
+                                      AppLocalizations.of(context)!.share,
+                                    ),
+                                  ),
                                 ],
                               ),
-                            )
-                          else if (biblioItems.isEmpty && !isLoadingDetails)
-                            Center(
-                              child: Column(
-                                children: [
-                                  const Icon(
-                                    Icons.info,
-                                    color: primaryUVColor,
-                                    size: 48,
+                            ),
+                            const Divider(),
+        
+                            if (isErrorLoadingBiblioItems)
+                              Center(
+                                child: Column(
+                                  children: [
+                                    const Icon(
+                                      Icons.error,
+                                      color: Colors.red,
+                                      size: 48,
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text('Error loading item copies'),
+                                  ],
+                                ),
+                              )
+                            else if (biblioItems.isEmpty && !isLoadingDetails)
+                              Center(
+                                child: Column(
+                                  children: [
+                                    const Icon(
+                                      Icons.info,
+                                      color: primaryUVColor,
+                                      size: 48,
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Text(
+                                      AppLocalizations.of(context)!.noCopiesFound,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            else
+                              Skeletonizer(
+                                enabled: isLoadingBiblioItems,
+                                child: Text(
+                                  '${AppLocalizations.of(context)!.copies}: ${biblioItems.length}',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  const SizedBox(height: 8.0),
-                                  Text(
-                                    AppLocalizations.of(context)!.noCopiesFound,
-                                  ),
-                                ],
+                                ),
                               ),
-                            )
-                          else
+        
                             Skeletonizer(
                               enabled: isLoadingBiblioItems,
-                              child: Text(
-                                '${AppLocalizations.of(context)!.copies}: ${biblioItems.length}',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                              child: KeysLegend(),
                             ),
-
-                          Skeletonizer(
-                            enabled: isLoadingBiblioItems,
-                            child: KeysLegend(),
-                          ),
-
-                          ListViewLibrariesWidget(
-                            finderlibraries: _finderLibraries,
-                            holdingLibraries: holdingLibraries,
-                            groupedItems: groupedItems,
-                            navigateToFinderView: navigateToFinderView,
-                            isLoadingBiblioItems: isLoadingBiblioItems,
-                          ),
-                        ],
+        
+                            ListViewLibrariesWidget(
+                              finderlibraries: _finderLibraries,
+                              holdingLibraries: holdingLibraries,
+                              groupedItems: groupedItems,
+                              navigateToFinderView: navigateToFinderView,
+                              isLoadingBiblioItems: isLoadingBiblioItems,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

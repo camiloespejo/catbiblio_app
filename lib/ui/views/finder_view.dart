@@ -22,49 +22,51 @@ class _FinderViewState extends FinderController {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.finderTitle)),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth < screenSizeLimit) {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  TitleSection(widget: widget, bookLocation: bookLocation),
-                  MapSection(widget: widget, bookLocation: bookLocation),
-                ],
-              ),
-            );
-          } else {
-            return SingleChildScrollView(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth:
-                        MediaQuery.of(context).size.width < screenSizeLimit
-                        ? MediaQuery.of(context).size.width
-                        : (MediaQuery.of(context).size.width / 4) * 3.5,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: TitleSection(
-                          widget: widget,
-                          bookLocation: bookLocation,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth < screenSizeLimit) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TitleSection(widget: widget, bookLocation: bookLocation),
+                    MapSection(widget: widget, bookLocation: bookLocation),
+                  ],
+                ),
+              );
+            } else {
+              return SingleChildScrollView(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth:
+                          MediaQuery.of(context).size.width < screenSizeLimit
+                          ? MediaQuery.of(context).size.width
+                          : (MediaQuery.of(context).size.width / 4) * 3.5,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: TitleSection(
+                            widget: widget,
+                            bookLocation: bookLocation,
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: MapSection(
-                          widget: widget,
-                          bookLocation: bookLocation,
+                        Expanded(
+                          child: MapSection(
+                            widget: widget,
+                            bookLocation: bookLocation,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          }
-        },
+              );
+            }
+          },
+        ),
       ),
     );
   }

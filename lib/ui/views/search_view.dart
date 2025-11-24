@@ -36,70 +36,123 @@ class _SearchViewState extends SearchController {
         centerTitle: true,
         title: Image.asset('assets/images/head-icon.png', height: 40),
       ),
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          // Top controls
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth:
-                          MediaQuery.of(context).size.width < screenSizeLimit
-                          ? MediaQuery.of(context).size.width
-                          : (MediaQuery.of(context).size.width / 3) * 2,
+      body: SafeArea(
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            // Top controls
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth:
+                            MediaQuery.of(context).size.width < screenSizeLimit
+                            ? MediaQuery.of(context).size.width
+                            : (MediaQuery.of(context).size.width / 3) * 2,
+                      ),
+                      child: Column(
+                        children: [
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              return DropdownItemType(
+                                itemTypeController: _itemTypeController,
+                                itemTypeEntries:
+                                    widget.controllersData.itemTypeEntries,
+                                queryParams: widget.queryParams,
+                                maxWidth: constraints.maxWidth,
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              return DropdownLibraries(
+                                libraryEntries:
+                                    widget.controllersData.libraryEntries,
+                                widget: widget,
+                                maxWidth: constraints.maxWidth,
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              return DropdownFilter(
+                                filterController: _filterController,
+                                filterEntries: _filterEntries,
+                                widget: widget,
+                                maxWidth: constraints.maxWidth,
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          TextFieldSearchWidget(
+                            searchController: _searchController,
+                            onSubmitted: onSubmitAction,
+                            clearSearchController: clearSearchController,
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      children: [
-                        LayoutBuilder(
-                          builder: (context, constraints) {
-                            return DropdownItemType(
-                              itemTypeController: _itemTypeController,
-                              itemTypeEntries:
-                                  widget.controllersData.itemTypeEntries,
-                              queryParams: widget.queryParams,
-                              maxWidth: constraints.maxWidth,
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        LayoutBuilder(
-                          builder: (context, constraints) {
-                            return DropdownLibraries(
-                              libraryEntries:
-                                  widget.controllersData.libraryEntries,
-                              widget: widget,
-                              maxWidth: constraints.maxWidth,
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        LayoutBuilder(
-                          builder: (context, constraints) {
-                            return DropdownFilter(
-                              filterController: _filterController,
-                              filterEntries: _filterEntries,
-                              widget: widget,
-                              maxWidth: constraints.maxWidth,
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        TextFieldSearchWidget(
-                          searchController: _searchController,
-                          onSubmitted: onSubmitAction,
-                          clearSearchController: clearSearchController,
-                        ),
-                      ],
+        
+                    const SizedBox(height: 12),
+                    PaginationButtonRow(
+                      paginationBehavior: paginationBehavior,
+                      setLowerLimit: setLowerLimit,
+                      setUpperLimit: setUpperLimit,
+                      totalPages: totalPages,
+                      currentPage: currentPage,
+                      setMiddleSpace: setMiddleSpace,
+                      scrollController: _scrollController,
                     ),
-                  ),
-
-                  const SizedBox(height: 12),
-                  PaginationButtonRow(
+                    const SizedBox(height: 8),
+                    if (isInitialRequestLoading)
+                      const Center(child: LinearProgressIndicator()),
+                    if (isError)
+                      Text(
+                        AppLocalizations.of(context)!.errorOccurred,
+                        textAlign: TextAlign.center,
+                      ),
+                    if (books.isEmpty &&
+                        !isInitialRequestLoading &&
+                        !isError &&
+                        !isPageLoading)
+                      Text(
+                        AppLocalizations.of(context)!.noResults,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    else if (!isInitialRequestLoading &&
+                        !isError &&
+                        !isPageLoading)
+                      Text(
+                        '$totalRecords ${AppLocalizations.of(context)!.totalResults}',
+                        textAlign: TextAlign.center,
+                      ),
+                    const Divider(color: Colors.grey),
+                    if (isPageLoading)
+                      const Center(child: LinearProgressIndicator()),
+                  ],
+                ),
+              ),
+            ),
+        
+            BookList(
+              books: books,
+              isPageLoading: isPageLoading,
+              isInitialRequestLoading: isInitialRequestLoading,
+            ),
+        
+            // Bottom pagination
+            if (!isPageLoading && books.length > 5)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8, bottom: 16),
+                  child: PaginationButtonRow(
                     paginationBehavior: paginationBehavior,
                     setLowerLimit: setLowerLimit,
                     setUpperLimit: setUpperLimit,
@@ -108,61 +161,10 @@ class _SearchViewState extends SearchController {
                     setMiddleSpace: setMiddleSpace,
                     scrollController: _scrollController,
                   ),
-                  const SizedBox(height: 8),
-                  if (isInitialRequestLoading)
-                    const Center(child: LinearProgressIndicator()),
-                  if (isError)
-                    Text(
-                      AppLocalizations.of(context)!.errorOccurred,
-                      textAlign: TextAlign.center,
-                    ),
-                  if (books.isEmpty &&
-                      !isInitialRequestLoading &&
-                      !isError &&
-                      !isPageLoading)
-                    Text(
-                      AppLocalizations.of(context)!.noResults,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    )
-                  else if (!isInitialRequestLoading &&
-                      !isError &&
-                      !isPageLoading)
-                    Text(
-                      '$totalRecords ${AppLocalizations.of(context)!.totalResults}',
-                      textAlign: TextAlign.center,
-                    ),
-                  const Divider(color: Colors.grey),
-                  if (isPageLoading)
-                    const Center(child: LinearProgressIndicator()),
-                ],
-              ),
-            ),
-          ),
-
-          BookList(
-            books: books,
-            isPageLoading: isPageLoading,
-            isInitialRequestLoading: isInitialRequestLoading,
-          ),
-
-          // Bottom pagination
-          if (!isPageLoading && books.length > 5)
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8, bottom: 16),
-                child: PaginationButtonRow(
-                  paginationBehavior: paginationBehavior,
-                  setLowerLimit: setLowerLimit,
-                  setUpperLimit: setUpperLimit,
-                  totalPages: totalPages,
-                  currentPage: currentPage,
-                  setMiddleSpace: setMiddleSpace,
-                  scrollController: _scrollController,
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

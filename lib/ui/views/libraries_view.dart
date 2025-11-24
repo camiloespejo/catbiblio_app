@@ -24,122 +24,124 @@ class _LibrariesViewState extends LibrariesController {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.libraryDirectory),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: MediaQuery.of(context).size.height,
-                  maxWidth: MediaQuery.of(context).size.width < screenSizeLimit
-                      ? MediaQuery.of(context).size.width
-                      : (MediaQuery.of(context).size.width / 3) * 2,
-                ),
-                child: FutureBuilder<List<Library>>(
-                  future: widget.libraries,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const SizedBox(
-                        height: 200,
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.couldNotFetchLibraries,
-                        ),
-                      );
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.noLibrariesFound,
-                        ),
-                      );
-                    } else {
-                      final libraries = snapshot.data!;
-                      return Column(
-                        children: regionsList.map((item) {
-                          return Card(
-                            color: Colors.grey[100],
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
-                            ),
-                            child: Theme(
-                              data: Theme.of(
-                                context,
-                              ).copyWith(dividerColor: Colors.transparent),
-                              child: ExpansionTile(
-                                collapsedShape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                title: Text(
-                                  item,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                children: libraries
-                                    .where((lib) => lib.region == item)
-                                    .map((library) {
-                                      return ListTile(
-                                        title: Text(library.name),
-                                        subtitle: Text(
-                                          '${library.city}, ${library.state}',
-                                        ),
-                                        trailing: library.url.isNotEmpty
-                                            ? IconButton(
-                                                icon: const Icon(Icons.link),
-                                                color: Colors.blue,
-                                                onPressed: () =>
-                                                    openLink(library.url),
-                                              )
-                                            : null,
-                                        onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Text(library.name),
-                                                content: LibraryDialogBody(
-                                                  library: library,
-                                                  context: context,
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.of(
-                                                          context,
-                                                        ).pop(),
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!.close,
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        },
-                                      );
-                                    })
-                                    .toList(),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height,
+                    maxWidth: MediaQuery.of(context).size.width < screenSizeLimit
+                        ? MediaQuery.of(context).size.width
+                        : (MediaQuery.of(context).size.width / 3) * 2,
+                  ),
+                  child: FutureBuilder<List<Library>>(
+                    future: widget.libraries,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox(
+                          height: 200,
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.couldNotFetchLibraries,
+                          ),
+                        );
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.noLibrariesFound,
+                          ),
+                        );
+                      } else {
+                        final libraries = snapshot.data!;
+                        return Column(
+                          children: regionsList.map((item) {
+                            return Card(
+                              color: Colors.grey[100],
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
                               ),
-                            ),
-                          );
-                        }).toList(),
-                      );
-                    }
-                  },
+                              child: Theme(
+                                data: Theme.of(
+                                  context,
+                                ).copyWith(dividerColor: Colors.transparent),
+                                child: ExpansionTile(
+                                  collapsedShape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  title: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  children: libraries
+                                      .where((lib) => lib.region == item)
+                                      .map((library) {
+                                        return ListTile(
+                                          title: Text(library.name),
+                                          subtitle: Text(
+                                            '${library.city}, ${library.state}',
+                                          ),
+                                          trailing: library.url.isNotEmpty
+                                              ? IconButton(
+                                                  icon: const Icon(Icons.link),
+                                                  color: Colors.blue,
+                                                  onPressed: () =>
+                                                      openLink(library.url),
+                                                )
+                                              : null,
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: Text(library.name),
+                                                  content: LibraryDialogBody(
+                                                    library: library,
+                                                    context: context,
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pop(),
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.close,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                        );
+                                      })
+                                      .toList(),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
