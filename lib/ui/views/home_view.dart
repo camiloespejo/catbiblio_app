@@ -74,172 +74,221 @@ class _HomeViewState extends HomeController {
       ),
       drawerEnableOpenDragGesture: true,
       body: SafeArea(
-        child: ListView(
-          children: [
-            SearchSection(
-              screenSizeLimit: screenSizeLimit,
-              itemTypeController: _itemTypeController,
-              itemTypeEntries: itemTypeEntriesPlusAll,
-              isItemTypesLoading: isItemTypesLoading,
-              libraryController: _libraryController,
-              libraryEntries: libraryEntriesPlusAll,
-              isLibrariesLoading: isLibrariesLoading,
-              searchFilterController: _searchFilterController,
-              filterEntries: _filterEntries,
-              queryParams: _queryParams,
-              searchController: _searchController,
-              onSubmitted: (value) => onSubmitAction(),
-              clearSearchController: () => clearSearchController(),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  // Padding(
+                  //   padding: const EdgeInsets.only(
+                  //     top: 8.0,
+                  //     left: 16.0,
+                  //     right: 16.0,
+                  //     bottom: 8.0,
+                  //   ),
+                  //   child: ConstrainedBox(
+                  //     constraints: BoxConstraints(
+                  //       maxWidth:
+                  //           MediaQuery.of(context).size.width < screenSizeLimit
+                  //           ? MediaQuery.of(context).size.width
+                  //           : (MediaQuery.of(context).size.width / 3) * 2,
+                  //     ),
+                  //     child: LayoutBuilder(
+                  //       builder: (context, constraints) {
+                  //         return DropdownItemTypesWidget(
+                  //           itemTypeController: _itemTypeController,
+                  //           itemTypeEntries: itemTypeEntriesPlusAll,
+                  //           queryParams: _queryParams,
+                  //           maxWidth: constraints.maxWidth,
+                  //         );
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
+                  SearchSection(
+                    screenSizeLimit: screenSizeLimit,
+                    itemTypeController: _itemTypeController,
+                    itemTypeEntries: itemTypeEntriesPlusAll,
+                    isItemTypesLoading: isItemTypesLoading,
+                    libraryController: _libraryController,
+                    libraryEntries: libraryEntriesPlusAll,
+                    isLibrariesLoading: isLibrariesLoading,
+                    searchFilterController: _searchFilterController,
+                    filterEntries: _filterEntries,
+                    queryParams: _queryParams,
+                    searchController: _searchController,
+                    onSubmitted: (value) => onSubmitAction(),
+                    clearSearchController: () => clearSearchController(),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 16.0),
-            Container(
-              decoration: BoxDecoration(color: primaryColor),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Column(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.bookSelections,
-                      style: const TextStyle(
-                        color: Colors.white,
+            SliverToBoxAdapter(
+              child: Container(
+                decoration: BoxDecoration(color: primaryColor),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.bookSelections,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
+                      FutureBuilder(
+                        future: _bookSelectionsFuture,
+                        builder: (context, asyncSnapshot) {
+                          if (asyncSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            );
+                          } else if (asyncSnapshot.hasError) {
+                            return Center(
+                              child: Text(
+                                'error',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            );
+                          }
+
+                          _bookSelections = asyncSnapshot.data ?? [];
+                          _startBooksCarouselTimer();
+
+                          return ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: MediaQuery.of(context).size.height / 2,
+                            ),
+                            child: IgnorePointer(
+                              ignoring: kIsWeb,
+                              child: CarouselView.weighted(
+                                flexWeights:
+                                    MediaQuery.of(context).size.width < 600
+                                    ? const [1, 3, 1]
+                                    : const [1, 1, 1, 1, 1],
+                                scrollDirection: Axis.horizontal,
+                                itemSnapping: true,
+                                elevation: 2.0,
+                                controller: _booksCarouselController,
+                                enableSplash: true,
+                                backgroundColor: primaryColor,
+                                onTap: (index) {
+                                  final bookSelection = _bookSelections[index];
+                                  if (kIsWeb) {
+                                    context.go(
+                                      '/book-details/${bookSelection.biblionumber}',
+                                    );
+                                    return;
+                                  }
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BookView(
+                                        biblioNumber:
+                                            bookSelection.biblionumber,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                children: _bookSelections.map((bookSelection) {
+                                  return HeroLayoutCard(
+                                    fit: BoxFit.fitHeight,
+                                    imageModel: ImageModel(
+                                      bookSelection.name,
+                                      '$_baseUrl/cgi-bin/koha/opac-image.pl?biblionumber=${bookSelection.biblionumber}',
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  SizedBox(height: 16.0),
+                  Center(
+                    child: Text(
+                      AppLocalizations.of(context)!.libraryServices,
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 16.0),
-                    FutureBuilder(
-                      future: _bookSelectionsFuture,
-                      builder: (context, asyncSnapshot) {
-                        if (asyncSnapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
-                              ),
-                            ),
-                          );
-                        } else if (asyncSnapshot.hasError) {
-                          return Center(
-                            child: Text(
-                              'error',
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          );
-                        }
-                        _bookSelections = asyncSnapshot.data ?? [];
-        
-                        return ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: MediaQuery.of(context).size.height / 2,
-                          ),
-                          child: IgnorePointer(
-                            ignoring: kIsWeb,
-                            child: CarouselView.weighted(
-                              flexWeights: MediaQuery.of(context).size.width < 600
-                                  ? const [1, 3, 1]
-                                  : const [1, 1, 1, 1, 1],
-                              scrollDirection: Axis.horizontal,
-                              itemSnapping: true,
-                              elevation: 2.0,
-                              controller: _booksCarouselController,
-                              enableSplash: true,
-                              backgroundColor: primaryColor,
-                              onTap: (index) {
-                                final bookSelection = _bookSelections[index];
-                                if (kIsWeb) {
-                                  context.go(
-                                    '/book-details/${bookSelection.biblionumber}',
-                                  );
-                                  return;
-                                }
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BookView(
-                                      biblioNumber: bookSelection.biblionumber,
-                                    ),
-                                  ),
-                                );
-                              },
-                              children: _bookSelections.map((bookSelection) {
-                                return HeroLayoutCard(
-                                  fit: BoxFit.fitHeight,
-                                  imageModel: ImageModel(
-                                    bookSelection.name,
-                                    '$_baseUrl/cgi-bin/koha/opac-image.pl?biblionumber=${bookSelection.biblionumber}',
-                                  ),
-                                );
-                              }).toList(),
-                            ),
+                  ),
+                  Center(
+                    child: DropdownLibrariesServicesWidget(
+                      libraryServicesController: _libraryServicesController,
+                      enabledHomeLibrariesEntries: _enabledHomeLibrariesEntries,
+                      maxWidth: MediaQuery.of(context).size.width * 0.9,
+                      onSelected: onSelectLibraryService,
+                    ),
+                  ),
+                  FutureBuilder(
+                    future: _librariesServicesFuture,
+                    builder: (context, asyncSnapshot) {
+                      if (asyncSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (asyncSnapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            'error',
+                            style: const TextStyle(color: Colors.red),
                           ),
                         );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 16.0),
-            Center(
-              child: Text(
-                AppLocalizations.of(context)!.libraryServices,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-              ),
-            ),
-            Center(
-              child: DropdownLibrariesServicesWidget(
-                libraryServicesController: _libraryServicesController,
-                enabledHomeLibrariesEntries: _enabledHomeLibrariesEntries,
-                maxWidth: MediaQuery.of(context).size.width * 0.9,
-                onSelected: onSelectLibraryService,
-              ),
-            ),
-            FutureBuilder(
-              future: _librariesServicesFuture,
-              builder: (context, asyncSnapshot) {
-                if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (asyncSnapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      'error',
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  );
-                }
-        
-                _librariesServices = asyncSnapshot.data ?? {};
-                return ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height / 2,
+                      }
+
+                      _librariesServices = asyncSnapshot.data ?? {};
+                      _startServicesCarouselTimer();
+
+                      return ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: MediaQuery.of(context).size.height / 2,
+                        ),
+                        child: IgnorePointer(
+                          ignoring: kIsWeb,
+                          child: CarouselView.weighted(
+                            flexWeights: [1, 4, 1],
+                            elevation: 2.0,
+                            scrollDirection: Axis.horizontal,
+                            itemSnapping: true,
+                            controller: _servicesCarouselController,
+                            enableSplash: false,
+                            children:
+                                _librariesServices[selectedLibraryServices]
+                                    ?.map((libraryService) {
+                                      return HeroLayoutCard(
+                                        fit: BoxFit.fitWidth,
+                                        imageModel: ImageModel(
+                                          libraryService.name,
+                                          libraryService.imageUrl,
+                                        ),
+                                      );
+                                    })
+                                    .toList() ??
+                                [],
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  child: IgnorePointer(
-                    ignoring: kIsWeb,
-                    child: CarouselView.weighted(
-                      flexWeights: [1, 4, 1],
-                      elevation: 2.0,
-                      scrollDirection: Axis.horizontal,
-                      itemSnapping: true,
-                      controller: _servicesCarouselController,
-                      enableSplash: false,
-                      children:
-                          _librariesServices[selectedLibraryServices]?.map((
-                            libraryService,
-                          ) {
-                            return HeroLayoutCard(
-                              fit: BoxFit.fitWidth,
-                              imageModel: ImageModel(
-                                libraryService.name,
-                                libraryService.imageUrl,
-                              ),
-                            );
-                          }).toList() ??
-                          [],
-                    ),
-                  ),
-                );
-              },
+                ],
+              ),
             ),
           ],
         ),
@@ -271,9 +320,6 @@ class HeroLayoutCard extends StatelessWidget {
             child: CachedNetworkImage(
               imageUrl: imageModel.url,
               fit: fit,
-              width: double.infinity,
-              placeholder: (context, url) =>
-                  const Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) => const Center(
                 child: Icon(Icons.broken_image, color: Colors.grey, size: 40),
               ),
