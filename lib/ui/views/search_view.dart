@@ -4,7 +4,7 @@ import 'package:catbiblio_app/models/book_preview.dart';
 import 'package:catbiblio_app/models/controllers_data.dart';
 import 'package:catbiblio_app/models/query_params.dart';
 import 'package:catbiblio_app/ui/views/book_view.dart';
-import 'package:catbiblio_app/ui/views/home_view.dart';
+import 'colors.dart';
 import 'package:flutter/material.dart';
 import 'package:catbiblio_app/services/search.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -13,7 +13,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 part '../controllers/search_controller.dart';
 
-const Color primaryUVColor = Color.fromARGB(255, 24, 82, 157);
+const Color _primaryColor = CustomColors.primaryColor;
 
 class SearchView extends StatefulWidget {
   final ControllersData controllersData;
@@ -219,13 +219,13 @@ class PaginationButtonRow extends StatelessWidget {
                 },
                 style: i == _currentPage
                     ? OutlinedButton.styleFrom(
-                        backgroundColor: primaryUVColor,
+                        backgroundColor: _primaryColor,
                         foregroundColor: Colors.white,
                         minimumSize: const Size(36, 36),
                         padding: EdgeInsets.zero,
                       )
                     : OutlinedButton.styleFrom(
-                        foregroundColor: primaryUVColor,
+                        foregroundColor: _primaryColor,
                         minimumSize: const Size(36, 36),
                         padding: EdgeInsets.zero,
                       ),
@@ -471,7 +471,7 @@ class TextFieldSearchWidget extends StatelessWidget {
       controller: _searchController,
       onSubmitted: (value) => _onSubmitted(value),
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.search, color: primaryColor),
+        prefixIcon: Icon(Icons.search, color: _primaryColor),
         suffixIcon: IconButton(
           icon: Icon(Icons.clear),
           onPressed: () => _clearSearchController(),
@@ -500,7 +500,7 @@ class DropdownLibraries extends StatelessWidget {
     final queryParams = context.watch<QueryParams>();
     return DropdownMenu(
       label: Text(AppLocalizations.of(context)!.library),
-      leadingIcon: const Icon(Icons.location_city, color: primaryUVColor),
+      leadingIcon: const Icon(Icons.location_city, color: _primaryColor),
       initialSelection: queryParams.library,
       dropdownMenuEntries: [
         DropdownMenuEntry(
@@ -538,7 +538,7 @@ class DropdownFilter extends StatelessWidget {
     return DropdownMenu(
       controller: _filterController,
       label: Text(AppLocalizations.of(context)!.searchBy),
-      leadingIcon: const Icon(Icons.filter_list, color: primaryUVColor),
+      leadingIcon: const Icon(Icons.filter_list, color: _primaryColor),
       dropdownMenuEntries: _filterEntries,
       onSelected: (value) => queryParams.searchBy = value!,
       enableFilter: false,
@@ -571,7 +571,7 @@ class DropdownItemType extends StatelessWidget {
       label: Text(AppLocalizations.of(context)!.itemType),
       enableSearch: true,
       menuHeight: 300,
-      leadingIcon: const Icon(Icons.category, color: primaryUVColor),
+      leadingIcon: const Icon(Icons.category, color: _primaryColor),
       dropdownMenuEntries: [
         DropdownMenuEntry(
           value: 'all',

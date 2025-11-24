@@ -1,6 +1,6 @@
 import 'package:catbiblio_app/l10n/app_localizations.dart';
 import 'package:catbiblio_app/services/biblios_details.dart';
-import 'package:catbiblio_app/ui/views/home_view.dart';
+import 'colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -29,7 +29,7 @@ class _MarcViewState extends MarcController {
           : isError
           ? Center(child: Text(AppLocalizations.of(context)!.errorLoadingMarc))
           : SafeArea(
-            child: SingleChildScrollView(
+              child: SingleChildScrollView(
                 padding: const EdgeInsets.all(10),
                 child: Center(
                   child: ConstrainedBox(
@@ -41,7 +41,10 @@ class _MarcViewState extends MarcController {
                     ),
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: primaryColor, width: 3.0),
+                        border: Border.all(
+                          color: CustomColors.primaryColor,
+                          width: 3.0,
+                        ),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: InteractiveViewer(
@@ -53,7 +56,9 @@ class _MarcViewState extends MarcController {
                               formattedMarcData =
                                   MarcController.formatAltMarcStyle(marcData) ??
                                   marcData ??
-                                  AppLocalizations.of(context)!.noMarcDataAvailable,
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.noMarcDataAvailable,
                               style: const TextStyle(
                                 fontFamily: 'Roboto Mono',
                                 fontSize: 16.0,
@@ -66,7 +71,7 @@ class _MarcViewState extends MarcController {
                   ),
                 ),
               ),
-          ),
+            ),
     );
   }
 }

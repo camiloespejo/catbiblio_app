@@ -7,7 +7,7 @@ import 'package:catbiblio_app/services/book_finder_libraries.dart';
 import 'package:catbiblio_app/services/images.dart';
 import 'package:catbiblio_app/ui/views/finder_view.dart';
 import 'package:catbiblio_app/ui/views/marc_view.dart';
-import 'package:catbiblio_app/ui/views/search_view.dart';
+import 'colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:catbiblio_app/services/biblios_details.dart';
@@ -18,6 +18,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part '../controllers/book_controller.dart';
+
+const Color _primaryColor = CustomColors.primaryColor;
 
 class BookView extends StatefulWidget {
   final String biblioNumber;
@@ -52,7 +54,8 @@ class _BookViewState extends BookController {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     minHeight: MediaQuery.of(context).size.height,
-                    maxWidth: MediaQuery.of(context).size.width < screenSizeLimit
+                    maxWidth:
+                        MediaQuery.of(context).size.width < screenSizeLimit
                         ? MediaQuery.of(context).size.width
                         : (MediaQuery.of(context).size.width / 3) * 2,
                   ),
@@ -83,7 +86,7 @@ class _BookViewState extends BookController {
                             Skeletonizer(
                               enabled: isLoadingDetails,
                               child: Container(
-                                color: primaryUVColor,
+                                color: _primaryColor,
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 16.0,
                                   vertical: 24.0,
@@ -141,7 +144,7 @@ class _BookViewState extends BookController {
                                           final source = snapshot.data!.source;
                                           final imageWidget =
                                               snapshot.data!.image;
-        
+
                                           return GestureDetector(
                                             onTap: () {
                                               if (source ==
@@ -184,7 +187,8 @@ class _BookViewState extends BookController {
                                                         color: Colors.white70,
                                                         fontSize: 12,
                                                       ),
-                                                      textAlign: TextAlign.center,
+                                                      textAlign:
+                                                          TextAlign.center,
                                                     ),
                                                   ),
                                                 ],
@@ -229,7 +233,8 @@ class _BookViewState extends BookController {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Skeletonizer(
                                         enabled: isLoadingDetails,
@@ -274,9 +279,11 @@ class _BookViewState extends BookController {
                           children: [
                             const Divider(),
                             Skeletonizer(
-                              enabled: isLoadingDetails || isErrorLoadingDetails,
+                              enabled:
+                                  isLoadingDetails || isErrorLoadingDetails,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   OutlinedButton.icon(
                                     onPressed: () {
@@ -315,7 +322,7 @@ class _BookViewState extends BookController {
                               ),
                             ),
                             const Divider(),
-        
+
                             if (isErrorLoadingBiblioItems)
                               Center(
                                 child: Column(
@@ -336,12 +343,14 @@ class _BookViewState extends BookController {
                                   children: [
                                     const Icon(
                                       Icons.info,
-                                      color: primaryUVColor,
+                                      color: _primaryColor,
                                       size: 48,
                                     ),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                      AppLocalizations.of(context)!.noCopiesFound,
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.noCopiesFound,
                                     ),
                                   ],
                                 ),
@@ -357,12 +366,12 @@ class _BookViewState extends BookController {
                                   ),
                                 ),
                               ),
-        
+
                             Skeletonizer(
                               enabled: isLoadingBiblioItems,
                               child: KeysLegend(),
                             ),
-        
+
                             ListViewLibrariesWidget(
                               finderlibraries: _finderLibraries,
                               holdingLibraries: holdingLibraries,
@@ -399,7 +408,7 @@ class KeysLegend extends StatelessWidget {
             children: [
               const Icon(
                 Icons.pin_drop,
-                color: Color.fromARGB(255, 240, 30, 15),
+                color: CustomColors.customRed,
                 size: 20.0,
               ),
               const SizedBox(width: 4.0),
@@ -509,7 +518,7 @@ class ListViewLibrariesWidget extends StatelessWidget {
           shadowColor: Colors.transparent,
           surfaceTintColor: Colors.transparent,
           color: isFinderEnabled
-              ? const Color.fromARGB(255, 0, 153, 50).withAlpha(255)
+              ? CustomColors.secondaryColor.withAlpha(255)
               : null,
           child: Theme(
             data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
@@ -563,7 +572,7 @@ class ListViewLibrariesWidget extends StatelessWidget {
                                 ),
                                 icon: const Icon(
                                   Icons.pin_drop,
-                                  color: Color.fromARGB(255, 240, 30, 15),
+                                  color: CustomColors.customRed,
                                 ),
                               )
                             : const SizedBox.shrink(),

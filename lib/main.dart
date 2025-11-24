@@ -6,6 +6,7 @@ import 'package:catbiblio_app/ui/views/book_view.dart';
 import 'package:catbiblio_app/ui/views/finder_view.dart';
 import 'package:catbiblio_app/ui/views/home_view.dart';
 import 'package:catbiblio_app/ui/views/marc_view.dart';
+import 'package:catbiblio_app/ui/views/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -122,14 +123,14 @@ class _MainAppState extends State<MainApp> {
         fontFamily: 'Inter',
         drawerTheme: DrawerThemeData(
           backgroundColor: Colors.white,
-          surfaceTintColor: primaryColor,
+          surfaceTintColor: CustomColors.primaryColor,
         ),
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
-          surfaceTintColor: primaryColor,
+          surfaceTintColor: CustomColors.primaryColor,
         ),
         scaffoldBackgroundColor: Colors.white,
-        colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
+        colorScheme: ColorScheme.fromSeed(seedColor: CustomColors.primaryColor),
       ),
       routerConfig: _router,
     );

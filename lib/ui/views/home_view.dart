@@ -13,6 +13,7 @@ import 'package:catbiblio_app/services/library_services.dart';
 import 'package:catbiblio_app/ui/views/book_view.dart';
 import 'package:catbiblio_app/ui/views/search_view.dart';
 import 'package:catbiblio_app/ui/views/libraries_view.dart';
+import 'colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -25,7 +26,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 part '../controllers/home_controller.dart';
 
-const Color primaryColor = Color.fromARGB(255, 24, 82, 157);
+const Color _primaryColor = CustomColors.primaryColor;
+const Color _secondaryColor = CustomColors.secondaryColor;
 
 class HomeView extends StatefulWidget {
   final Function(Locale locale) onLocaleChange;
@@ -120,7 +122,7 @@ class _HomeViewState extends HomeController {
             ),
             SliverToBoxAdapter(
               child: Container(
-                decoration: BoxDecoration(color: primaryColor),
+                decoration: BoxDecoration(color: _primaryColor),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Column(
@@ -174,7 +176,7 @@ class _HomeViewState extends HomeController {
                                 elevation: 2.0,
                                 controller: _booksCarouselController,
                                 enableSplash: true,
-                                backgroundColor: primaryColor,
+                                backgroundColor: _primaryColor,
                                 onTap: (index) {
                                   final bookSelection = _bookSelections[index];
                                   if (kIsWeb) {
@@ -446,7 +448,7 @@ class HeroLayoutCard extends StatelessWidget {
         ),
         Container(
           width: double.infinity,
-          color: const Color.fromARGB(255, 0, 153, 50).withAlpha(200),
+          color: _secondaryColor.withAlpha(200),
           child: Padding(
             padding: const EdgeInsets.all(18.0),
             child: Column(
@@ -490,7 +492,7 @@ class AppNavigationDrawer extends StatelessWidget {
       children: [
         DrawerHeader(child: Image.asset('assets/images/head.png')),
         ListTile(
-          leading: const Icon(Icons.map, color: primaryColor),
+          leading: const Icon(Icons.map, color: _primaryColor),
           title: Text(AppLocalizations.of(context)!.libraryDirectory),
           enabled: !isLibrariesLoading,
           onTap: () => Navigator.push(
@@ -501,7 +503,7 @@ class AppNavigationDrawer extends StatelessWidget {
           ),
         ),
         ListTile(
-          leading: const Icon(Icons.computer, color: primaryColor),
+          leading: const Icon(Icons.computer, color: _primaryColor),
           title: Text(AppLocalizations.of(context)!.electronicResources),
           trailing: Transform.scale(
             scale: 0.8,
@@ -510,7 +512,7 @@ class AppNavigationDrawer extends StatelessWidget {
           onTap: () => openLink('https://www.uv.mx/dgbuv/#descubridor'),
         ),
         ListTile(
-          leading: const Icon(Icons.help, color: primaryColor),
+          leading: const Icon(Icons.help, color: _primaryColor),
           title: Text(AppLocalizations.of(context)!.faq),
           trailing: Transform.scale(
             scale: 0.8,
@@ -520,7 +522,7 @@ class AppNavigationDrawer extends StatelessWidget {
               openLink('https://www.uv.mx/dgbuv/preguntas-frecuentes/'),
         ),
         ListTile(
-          leading: const Icon(Icons.privacy_tip, color: primaryColor),
+          leading: const Icon(Icons.privacy_tip, color: _primaryColor),
           title: Text(AppLocalizations.of(context)!.privacyNotice),
           trailing: Transform.scale(
             scale: 0.8,
@@ -532,7 +534,7 @@ class AppNavigationDrawer extends StatelessWidget {
         ),
         const Divider(),
         ListTile(
-          leading: const Icon(Icons.language, color: primaryColor),
+          leading: const Icon(Icons.language, color: _primaryColor),
           title: Text(AppLocalizations.of(context)!.language),
           onTap: () {
             onLocaleChange(
@@ -553,7 +555,7 @@ class AppNavigationDrawer extends StatelessWidget {
           },
         ),
         ListTile(
-          leading: const Icon(Icons.info, color: primaryColor),
+          leading: const Icon(Icons.info, color: _primaryColor),
           title: Text(AppLocalizations.of(context)!.about),
           onTap: () {
             showAboutDialog(
@@ -618,7 +620,7 @@ class DropdownFilters extends StatelessWidget {
     return DropdownMenu(
       controller: searchFilterController,
       label: Text(AppLocalizations.of(context)!.searchBy),
-      leadingIcon: const Icon(Icons.filter_list, color: primaryColor),
+      leadingIcon: const Icon(Icons.filter_list, color: _primaryColor),
       dropdownMenuEntries: filterEntries,
       initialSelection: queryParams.searchBy,
       onSelected: (value) => queryParams.searchBy = value!,
@@ -647,7 +649,7 @@ class TextFieldSearchWidget extends StatelessWidget {
       controller: searchController,
       onSubmitted: (value) => onSubmitted(value),
       decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.search, color: primaryColor),
+        prefixIcon: const Icon(Icons.search, color: _primaryColor),
         suffixIcon: IconButton(
           icon: const Icon(Icons.clear),
           onPressed: () => clearSearchController(),
@@ -678,7 +680,7 @@ class DropdownLibrariesWidget extends StatelessWidget {
       label: Text(AppLocalizations.of(context)!.library),
       enableSearch: true,
       menuHeight: 300,
-      leadingIcon: const Icon(Icons.location_city, color: primaryColor),
+      leadingIcon: const Icon(Icons.location_city, color: _primaryColor),
       initialSelection: queryParams.library,
       width: maxWidth,
       dropdownMenuEntries: libraryEntries,
@@ -708,7 +710,7 @@ class DropdownItemTypesWidget extends StatelessWidget {
       label: Text(AppLocalizations.of(context)!.itemType),
       enableSearch: true,
       menuHeight: 300,
-      leadingIcon: const Icon(Icons.category, color: primaryColor),
+      leadingIcon: const Icon(Icons.category, color: _primaryColor),
       initialSelection: queryParams.itemType,
       dropdownMenuEntries: itemTypeEntries,
       width: maxWidth,

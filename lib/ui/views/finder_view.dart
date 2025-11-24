@@ -3,7 +3,7 @@ import 'package:catbiblio_app/models/book_location.dart';
 import 'package:catbiblio_app/models/finder_params.dart';
 import 'package:catbiblio_app/services/images.dart';
 import 'package:catbiblio_app/services/locations.dart';
-import 'package:catbiblio_app/ui/views/search_view.dart';
+import 'colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -123,7 +123,7 @@ class TitleSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          color: primaryUVColor,
+          color: CustomColors.primaryColor,
           padding: const EdgeInsets.all(16.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
