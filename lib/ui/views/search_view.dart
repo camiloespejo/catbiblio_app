@@ -8,6 +8,7 @@ import 'package:catbiblio_app/ui/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:catbiblio_app/services/search.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 part '../controllers/search_controller.dart';
@@ -16,13 +17,8 @@ const Color primaryUVColor = Color.fromARGB(255, 24, 82, 157);
 
 class SearchView extends StatefulWidget {
   final ControllersData controllersData;
-  final QueryParams queryParams;
 
-  const SearchView({
-    super.key,
-    required this.controllersData,
-    required this.queryParams,
-  });
+  const SearchView({super.key, required this.controllersData});
 
   @override
   State<SearchView> createState() => _SearchViewState();
@@ -43,7 +39,10 @@ class _SearchViewState extends SearchController {
             // Top controls
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -62,7 +61,6 @@ class _SearchViewState extends SearchController {
                                 itemTypeController: _itemTypeController,
                                 itemTypeEntries:
                                     widget.controllersData.itemTypeEntries,
-                                queryParams: widget.queryParams,
                                 maxWidth: constraints.maxWidth,
                               );
                             },
@@ -98,7 +96,7 @@ class _SearchViewState extends SearchController {
                         ],
                       ),
                     ),
-        
+
                     const SizedBox(height: 12),
                     PaginationButtonRow(
                       paginationBehavior: paginationBehavior,
@@ -140,13 +138,13 @@ class _SearchViewState extends SearchController {
                 ),
               ),
             ),
-        
+
             BookList(
               books: books,
               isPageLoading: isPageLoading,
               isInitialRequestLoading: isInitialRequestLoading,
             ),
-        
+
             // Bottom pagination
             if (!isPageLoading && books.length > 5)
               SliverToBoxAdapter(
@@ -499,10 +497,11 @@ class DropdownLibraries extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final queryParams = context.watch<QueryParams>();
     return DropdownMenu(
       label: Text(AppLocalizations.of(context)!.library),
       leadingIcon: const Icon(Icons.location_city, color: primaryUVColor),
-      initialSelection: widget.queryParams.library,
+      initialSelection: queryParams.library,
       dropdownMenuEntries: [
         DropdownMenuEntry(
           value: 'all',
@@ -511,7 +510,7 @@ class DropdownLibraries extends StatelessWidget {
         ...libraryEntries,
       ],
       menuHeight: 300,
-      onSelected: (value) => widget.queryParams.library = value!,
+      onSelected: (value) => queryParams.library = value!,
       width: _maxWidth,
     );
   }
@@ -535,14 +534,15 @@ class DropdownFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final queryParams = context.watch<QueryParams>();
     return DropdownMenu(
       controller: _filterController,
       label: Text(AppLocalizations.of(context)!.searchBy),
       leadingIcon: const Icon(Icons.filter_list, color: primaryUVColor),
       dropdownMenuEntries: _filterEntries,
-      onSelected: (value) => widget.queryParams.searchBy = value!,
+      onSelected: (value) => queryParams.searchBy = value!,
       enableFilter: false,
-      initialSelection: widget.queryParams.searchBy,
+      initialSelection: queryParams.searchBy,
       requestFocusOnTap: false,
       width: _maxWidth,
     );
@@ -554,20 +554,18 @@ class DropdownItemType extends StatelessWidget {
     super.key,
     required TextEditingController itemTypeController,
     required List<DropdownMenuEntry<String>> itemTypeEntries,
-    required QueryParams queryParams,
     required double maxWidth,
   }) : _itemTypeController = itemTypeController,
        _itemTypeEntries = itemTypeEntries,
-       _queryParams = queryParams,
        _maxWidth = maxWidth;
 
   final TextEditingController _itemTypeController;
   final List<DropdownMenuEntry<String>> _itemTypeEntries;
-  final QueryParams _queryParams;
   final double _maxWidth;
 
   @override
   Widget build(BuildContext context) {
+    final queryParams = context.watch<QueryParams>();
     return DropdownMenu(
       controller: _itemTypeController,
       label: Text(AppLocalizations.of(context)!.itemType),
@@ -581,8 +579,8 @@ class DropdownItemType extends StatelessWidget {
         ),
         ..._itemTypeEntries,
       ],
-      initialSelection: _queryParams.itemType,
-      onSelected: (value) => _queryParams.itemType = value!,
+      initialSelection: queryParams.itemType,
+      onSelected: (value) => queryParams.itemType = value!,
       width: _maxWidth,
     );
   }

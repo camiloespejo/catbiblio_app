@@ -58,6 +58,7 @@ class _HomeViewState extends HomeController {
       ..._itemTypeEntries,
     ];
 
+    final queryParams = context.watch<QueryParams>();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -86,7 +87,7 @@ class _HomeViewState extends HomeController {
               isLibrariesLoading: isLibrariesLoading,
               searchFilterController: _searchFilterController,
               filterEntries: _filterEntries,
-              queryParams: _queryParams,
+              queryParams: queryParams,
               searchController: _searchController,
               onSubmitted: (value) => onSubmitAction(),
               clearSearchController: () => clearSearchController(),
@@ -128,7 +129,7 @@ class _HomeViewState extends HomeController {
                           );
                         }
                         _bookSelections = asyncSnapshot.data ?? [];
-        
+
                         return ConstrainedBox(
                           constraints: BoxConstraints(
                             maxHeight: MediaQuery.of(context).size.height / 2,
@@ -136,7 +137,8 @@ class _HomeViewState extends HomeController {
                           child: IgnorePointer(
                             ignoring: kIsWeb,
                             child: CarouselView.weighted(
-                              flexWeights: MediaQuery.of(context).size.width < 600
+                              flexWeights:
+                                  MediaQuery.of(context).size.width < 600
                                   ? const [1, 3, 1]
                                   : const [1, 1, 1, 1, 1],
                               scrollDirection: Axis.horizontal,
@@ -208,7 +210,7 @@ class _HomeViewState extends HomeController {
                     ),
                   );
                 }
-        
+
                 _librariesServices = asyncSnapshot.data ?? {};
                 return ConstrainedBox(
                   constraints: BoxConstraints(
@@ -441,17 +443,16 @@ class DropdownFilters extends StatelessWidget {
     super.key,
     required this.searchFilterController,
     required this.filterEntries,
-    required this.queryParams,
     required this.maxWidth,
   });
 
   final TextEditingController searchFilterController;
   final List<DropdownMenuEntry<String>> filterEntries;
-  final QueryParams queryParams;
   final double maxWidth;
 
   @override
   Widget build(BuildContext context) {
+    final queryParams = context.watch<QueryParams>();
     return DropdownMenu(
       controller: searchFilterController,
       label: Text(AppLocalizations.of(context)!.searchBy),
@@ -501,16 +502,15 @@ class DropdownLibrariesWidget extends StatelessWidget {
     super.key,
     required this.libraryController,
     required this.libraryEntries,
-    required this.queryParams,
     required this.maxWidth,
   });
 
   final TextEditingController libraryController;
   final List<DropdownMenuEntry<String>> libraryEntries;
-  final QueryParams queryParams;
   final double maxWidth;
   @override
   Widget build(BuildContext context) {
+    final queryParams = context.watch<QueryParams>();
     return DropdownMenu(
       controller: libraryController,
       label: Text(AppLocalizations.of(context)!.library),
@@ -532,16 +532,15 @@ class DropdownItemTypesWidget extends StatelessWidget {
     super.key,
     required this.itemTypeController,
     required this.itemTypeEntries,
-    required this.queryParams,
     required this.maxWidth,
   });
 
   final TextEditingController itemTypeController;
   final List<DropdownMenuEntry<String>> itemTypeEntries;
-  final QueryParams queryParams;
   final double maxWidth;
   @override
   Widget build(BuildContext context) {
+    final queryParams = context.watch<QueryParams>();
     return DropdownMenu(
       controller: itemTypeController,
       label: Text(AppLocalizations.of(context)!.itemType),
@@ -628,7 +627,6 @@ class SearchSection extends StatelessWidget {
                         return DropdownItemTypesWidget(
                           itemTypeController: itemTypeController,
                           itemTypeEntries: itemTypeEntries,
-                          queryParams: queryParams,
                           maxWidth: constraints.maxWidth,
                         );
                       },
@@ -643,7 +641,6 @@ class SearchSection extends StatelessWidget {
                         return DropdownLibrariesWidget(
                           libraryController: libraryController,
                           libraryEntries: libraryEntries,
-                          queryParams: queryParams,
                           maxWidth: constraints.maxWidth,
                         );
                       },
@@ -656,7 +653,6 @@ class SearchSection extends StatelessWidget {
                       return DropdownFilters(
                         searchFilterController: searchFilterController,
                         filterEntries: filterEntries,
-                        queryParams: queryParams,
                         maxWidth: constraints.maxWidth,
                       );
                     },
