@@ -81,15 +81,21 @@ class _HomeViewState extends HomeController {
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  ItemTypes(
-                    screenSizeLimit: screenSizeLimit,
-                    itemTypeController: _itemTypeController,
-                    itemTypeEntriesPlusAll: itemTypeEntriesPlusAll,
+                  Skeletonizer(
+                    enabled: isItemTypesLoading,
+                    child: ItemTypes(
+                      screenSizeLimit: screenSizeLimit,
+                      itemTypeController: _itemTypeController,
+                      itemTypeEntriesPlusAll: itemTypeEntriesPlusAll,
+                    ),
                   ),
-                  Libraries(
-                    screenSizeLimit: screenSizeLimit,
-                    libraryController: _libraryController,
-                    libraryEntriesPlusAll: libraryEntriesPlusAll,
+                  Skeletonizer(
+                    enabled: isLibrariesLoading,
+                    child: Libraries(
+                      screenSizeLimit: screenSizeLimit,
+                      libraryController: _libraryController,
+                      libraryEntriesPlusAll: libraryEntriesPlusAll,
+                    ),
                   ),
                   Filters(
                     screenSizeLimit: screenSizeLimit,
