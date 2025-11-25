@@ -1,9 +1,11 @@
-import 'package:dio/dio.dart';
 import 'dart:convert';
-import 'package:catbiblio_app/models/biblio_item.dart';
+import 'dart:async';
+//import 'package:flutter/material.dart' show debugPrint;
+import 'package:dio/dio.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:catbiblio_app/models/biblio_item.dart';
 
 final String _baseUrl = dotenv.env['KOHA_SVC_URL'] ?? '';
 
@@ -46,7 +48,7 @@ class BibliosItemsService {
     final dio = _createDio();
 
     if (biblioNumber <= 0) {
-      debugPrint('Invalid biblionumber: $biblioNumber');
+      //debugPrint('Invalid biblionumber: $biblioNumber');
       return [];
     }
 
@@ -62,43 +64,33 @@ class BibliosItemsService {
           .map((json) => BiblioItem.fromJson(json as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
-      // Log the error for debugging
-      //debugPrint('DioException in getBiblioItems: ${e.message}');
-      //debugPrint('Response data: ${e.response?.data}');
-      debugPrint('Status code: ${e.response?.statusCode}');
+      // debugPrint('DioException in getBiblioItems: ${e.message}');
+      // debugPrint('Response data: ${e.response?.data}');
+      // debugPrint('Status code: ${e.response?.statusCode}');
 
       if (e.response?.statusCode == 404) {
-        // debugPrint(
-        //   'BibliosDetails not found (404) for biblionumber $biblioNumber',
-        // );
         return [];
       }
 
-      // Handle specific error types
+      // Propagate timeouts so the caller (controller) can show a SnackBar
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        throw TimeoutException('Request to $_baseUrl timed out');
+      }
+
+      // Handle other specific error types locally (log and return empty)
       switch (e.type) {
-        case DioExceptionType.connectionTimeout:
-          debugPrint('Connection timeout: Check your internet connection');
-          break;
-        case DioExceptionType.receiveTimeout:
-          debugPrint('Receive timeout: Check network connection');
-          break;
         case DioExceptionType.badResponse:
-          debugPrint('Server error: ${e.response?.statusCode}');
-          break;
-        case DioExceptionType.cancel:
-          debugPrint('Request cancelled');
-          break;
-        case DioExceptionType.unknown:
-          debugPrint('Unknown error: ${e.message}');
+          //debugPrint('Server error: ${e.response?.statusCode}');
           break;
         default:
-          debugPrint('Dio error: $e');
+        //debugPrint('Dio error: $e');
       }
 
       return [];
     } catch (e) {
       // Handle JSON parsing or other errors
-      debugPrint('Unexpected error in getBiblioItems: $e');
+      // debugPrint('Unexpected error in getBiblioItems: $e');
       return [];
     } finally {
       dio.close();

@@ -35,10 +35,10 @@ abstract class BookController extends State<BookView> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    _loadData(context);
   }
 
-  Future<void> _loadData() async {
+  Future<void> _loadData(BuildContext context) async {
     final biblioNumber = int.parse(widget.biblioNumber);
 
     BibliosDetails? details;
@@ -57,8 +57,15 @@ abstract class BookController extends State<BookView> {
 
     try {
       items = await BibliosItemsService.getBiblioItems(biblioNumber);
-    } catch (error) {
-      debugPrint('Error loading items: $error');
+    } on TimeoutException catch (_) {
+      //debugPrint('Error loading items: $error');
+      //Snackbar notifying timeout
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.timeoutLoading)),
+      );
+
       itemsError = true;
     }
 
@@ -229,29 +236,5 @@ abstract class BookController extends State<BookView> {
       debugPrint('Error loading finder libraries: $error');
     }
     return bookFinderLibraries;
-  }
-}
-
-class ImageDialog extends StatelessWidget {
-  const ImageDialog({required this.tag, required this.imageUrl, super.key});
-
-  final String tag;
-  final String imageUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      insetPadding: EdgeInsets.all(16.0),
-
-      child: GestureDetector(
-        onTap: () => Navigator.pop(context),
-        child: Hero(
-          tag: tag,
-          child: InteractiveViewer(child: Image.network(imageUrl, scale: 1.2)),
-        ),
-      ),
-    );
   }
 }

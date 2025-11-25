@@ -16,6 +16,7 @@ import 'package:go_router/go_router.dart';
 import 'package:readmore/readmore.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:async';
 
 part '../controllers/book_controller.dart';
 
@@ -350,29 +351,35 @@ class _BookViewState extends BookController {
                                 ),
                               )
                             else
-                              Skeletonizer(
-                                enabled: isLoadingBiblioItems,
-                                child: Text(
-                                  '${AppLocalizations.of(context)!.copies}: ${biblioItems.length}',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
+                              Column(
+                                children: [
+                                  Skeletonizer(
+                                    enabled: isLoadingBiblioItems,
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        '${AppLocalizations.of(context)!.copies}: ${biblioItems.length}',
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  Skeletonizer(
+                                    enabled: isLoadingBiblioItems,
+                                    child: KeysLegend(),
+                                  ),
+
+                                  ListViewLibrariesWidget(
+                                    finderlibraries: _finderLibraries,
+                                    holdingLibraries: holdingLibraries,
+                                    groupedItems: groupedItems,
+                                    navigateToFinderView: navigateToFinderView,
+                                    isLoadingBiblioItems: isLoadingBiblioItems,
+                                  ),
+                                ],
                               ),
-
-                            Skeletonizer(
-                              enabled: isLoadingBiblioItems,
-                              child: KeysLegend(),
-                            ),
-
-                            ListViewLibrariesWidget(
-                              finderlibraries: _finderLibraries,
-                              holdingLibraries: holdingLibraries,
-                              groupedItems: groupedItems,
-                              navigateToFinderView: navigateToFinderView,
-                              isLoadingBiblioItems: isLoadingBiblioItems,
-                            ),
                           ],
                         ),
                       ),
@@ -830,6 +837,30 @@ class SingleBiblioDetailWrap extends StatelessWidget {
         Text('$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
         Text(value),
       ],
+    );
+  }
+}
+
+class ImageDialog extends StatelessWidget {
+  const ImageDialog({required this.tag, required this.imageUrl, super.key});
+
+  final String tag;
+  final String imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      insetPadding: EdgeInsets.all(16.0),
+
+      child: GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: Hero(
+          tag: tag,
+          child: InteractiveViewer(child: Image.network(imageUrl, scale: 1.2)),
+        ),
+      ),
     );
   }
 }
