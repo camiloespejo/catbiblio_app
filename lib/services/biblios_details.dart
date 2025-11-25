@@ -1,9 +1,11 @@
-import 'package:catbiblio_app/models/biblios_details.dart';
+import 'dart:async';
+import 'dart:convert';
+//import 'package:flutter/material.dart' show debugPrint;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
-import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:catbiblio_app/models/biblios_details.dart';
 
 final String _baseUrl = dotenv.env['KOHA_SVC_URL'] ?? '';
 
@@ -100,7 +102,6 @@ class BibliosDetailsService {
                 .trim(),
       );
     } on DioException catch (e) {
-      // Log the error for debugging
       // debugPrint('DioException in getBibliosDetails: ${e.message}');
       // debugPrint('Response data: ${e.response?.data}');
       // debugPrint('Response headers: ${e.response?.headers}');
@@ -109,35 +110,30 @@ class BibliosDetailsService {
 
       // Handle specific error types
       if (e.response?.statusCode == 404) {
-        debugPrint(
-          'BibliosDetails not found (404) for biblionumber $biblioNumber',
-        );
+        // debugPrint(
+        //   'BibliosDetails not found (404) for biblionumber $biblioNumber',
+        // );
         return BibliosDetails(title: '', author: '');
       }
 
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        throw TimeoutException('Request to $_baseUrl timed out');
+      }
+
       switch (e.type) {
-        case DioExceptionType.connectionTimeout:
-        case DioExceptionType.receiveTimeout:
-          debugPrint('Timeout error: Check network connection');
-          break;
         case DioExceptionType.badResponse:
-          debugPrint('Server error: ${e.response?.statusCode}');
-          break;
-        case DioExceptionType.cancel:
-          debugPrint('Request cancelled');
-          break;
-        case DioExceptionType.unknown:
-          debugPrint('Unknown error: ${e.message}');
+          //debugPrint('Server error: ${e.response?.statusCode}');
           break;
         default:
-          debugPrint('Dio error: $e');
+        //debugPrint('Dio error: $e');
       }
 
       rethrow;
       //return BibliosDetails(title: 'Error', author: 'Error');
     } catch (e) {
       // Handle JSON parsing or other errors
-      debugPrint('Unexpected error in getBibliosDetails: $e');
+      // debugPrint('Unexpected error in getBibliosDetails: $e');
       return BibliosDetails(title: '', author: '');
     } finally {
       dio.close();
@@ -178,37 +174,33 @@ class BibliosDetailsService {
         return null;
       }
 
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        throw TimeoutException('Request to $_baseUrl timed out');
+      }
+
       switch (e.type) {
-        case DioExceptionType.connectionTimeout:
-          debugPrint('Connection timeout: Check your internet connection');
-          break;
-        case DioExceptionType.receiveTimeout:
-          debugPrint('Receive timeout: Check network connection');
-          break;
         case DioExceptionType.badResponse:
-          debugPrint('Server error: ${e.response?.statusCode}');
-          break;
-        case DioExceptionType.cancel:
-          debugPrint('Request cancelled');
-          break;
-        case DioExceptionType.unknown:
-          debugPrint('Unknown error: ${e.message}');
+          //debugPrint('Server error: ${e.response?.statusCode}');
           break;
         default:
-          debugPrint('Dio error: $e');
+        //debugPrint('Dio error: $e');
       }
 
       rethrow;
     } catch (e) {
-      debugPrint('Unexpected error in getBibliosMarcPlainText: $e');
+      //debugPrint('Unexpected error in getBibliosMarcPlainText: $e');
       return null;
     } finally {
       dio.close();
     }
   }
 
-  /// Helper function to find all values for a given tag and subfield,
-  /// concatenating them with a pipe '|' if multiple are found.
+  /// Helper function to find all values for a given tag and subfield in a MARC record formatted in JSON,
+  /// concatenating said values with a pipe '|' if multiple are found.
+  ///
+  /// Returns null if no matching subfields are found.
+  ///
   static String? getSubfieldData(
     List<dynamic> fields,
     String tag,

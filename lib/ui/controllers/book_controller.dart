@@ -50,8 +50,14 @@ abstract class BookController extends State<BookView> {
 
     try {
       details = await BibliosDetailsService.getBibliosDetails(biblioNumber);
-    } catch (error) {
-      debugPrint('Error loading details: $error');
+    } on TimeoutException catch (_) {
+      //debugPrint('Error loading details: $error');
+      //Snackbar notifying error
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.timeoutLoading)),
+      );
+
       detailsError = true;
     }
 
