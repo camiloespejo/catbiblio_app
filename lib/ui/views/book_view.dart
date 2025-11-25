@@ -287,12 +287,6 @@ class _BookViewState extends BookController {
                                 children: [
                                   OutlinedButton.icon(
                                     onPressed: () {
-                                      // if (kIsWeb) {
-                                      //   context.go(
-                                      //     '/marc-view/${Uri.encodeComponent(widget.biblioNumber)}',
-                                      //   );
-                                      //   return;
-                                      // }
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

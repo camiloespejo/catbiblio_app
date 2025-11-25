@@ -5,7 +5,6 @@ import 'package:catbiblio_app/models/query_params.dart';
 import 'package:catbiblio_app/ui/views/book_view.dart';
 import 'package:catbiblio_app/ui/views/finder_view.dart';
 import 'package:catbiblio_app/ui/views/home_view.dart';
-import 'package:catbiblio_app/ui/views/marc_view.dart';
 import 'package:catbiblio_app/ui/views/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -69,14 +68,6 @@ class _MainAppState extends State<MainApp> {
             final String biblioNumber =
                 state.pathParameters['biblionumber'] ?? 'No ID Found';
             return BookView(biblioNumber: biblioNumber);
-          },
-        ),
-        GoRoute(
-          path: '/marc-view/:biblionumber',
-          builder: (BuildContext context, GoRouterState state) {
-            final String biblioNumber =
-                state.pathParameters['biblionumber'] ?? 'No ID Found';
-            return MarcView(biblioNumber: biblioNumber);
           },
         ),
         GoRoute(
