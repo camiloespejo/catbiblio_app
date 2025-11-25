@@ -10,18 +10,24 @@ abstract class MarcController extends State<MarcView> {
   @override
   void initState() {
     super.initState();
-    loadMarcData();
+    loadMarcData(context);
   }
 
-  Future<void> loadMarcData() async {
+  Future<void> loadMarcData(BuildContext context) async {
     final biblioNumber = int.parse(widget.biblioNumber);
     try {
       marcData = await BibliosDetailsService.getBibliosMarcPlainText(
         biblioNumber,
       );
-    } catch (e) {
-      debugPrint('Error loading MARC data: $e');
+    } on TimeoutException catch (_) {
+      //debugPrint('Error loading MARC data: $e');
       isError = true;
+
+      //Snackbar notifying timeout
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.timeoutLoading)),
+      );
     } finally {
       if (mounted) {
         setState(() {
