@@ -98,5 +98,6 @@
     "legendAvailable": "Disponible",
     "legendBorrowed": "Prestado",
     "legendFinder": "Localizador",
-    "legendNotForBorrow": "No para préstamo"
+    "legendNotForBorrow": "No para préstamo",
+    "timeoutLoading": "Tiempo de espera agotado al cargar los datos, revise su conexión a Internet e inténtelo de nuevo."
 }

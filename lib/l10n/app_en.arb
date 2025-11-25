@@ -395,5 +395,9 @@
   "legendNotForBorrow": "Not for borrow",
   "@legendNotForBorrow": {
     "description": "Status label indicating that a book copy is not for borrowing"
+  },
+  "timeoutLoading": "Timeout while loading data, please check your internet connection and try again.",
+  "@timeoutLoading": {
+    "description": "Message shown when there is a timeout while loading data"
   }
 }

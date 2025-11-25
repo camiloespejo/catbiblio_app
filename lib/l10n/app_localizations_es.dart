@@ -310,4 +310,8 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get legendNotForBorrow => 'No para préstamo';
+
+  @override
+  String get timeoutLoading =>
+      'Tiempo de espera agotado al cargar los datos, revise su conexión a Internet e inténtelo de nuevo.';
 }

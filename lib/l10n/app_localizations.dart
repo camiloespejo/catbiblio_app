@@ -691,6 +691,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not for borrow'**
   String get legendNotForBorrow;
+
+  /// Message shown when there is a timeout while loading data
+  ///
+  /// In en, this message translates to:
+  /// **'Timeout while loading data, please check your internet connection and try again.'**
+  String get timeoutLoading;
 }
 
 class _AppLocalizationsDelegate

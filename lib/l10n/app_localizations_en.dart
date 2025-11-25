@@ -308,4 +308,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get legendNotForBorrow => 'Not for borrow';
+
+  @override
+  String get timeoutLoading =>
+      'Timeout while loading data, please check your internet connection and try again.';
 }
