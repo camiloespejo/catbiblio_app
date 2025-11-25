@@ -2,11 +2,11 @@ part of '../views/home_view.dart';
 
 /// controller for home view
 abstract class HomeController extends State<HomeView> {
-  late TextEditingController _searchController;
-  late TextEditingController _searchFilterController;
-  late TextEditingController _libraryController;
-  late TextEditingController _libraryServicesController;
-  late TextEditingController _itemTypeController;
+  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchFilterController = TextEditingController();
+  final TextEditingController _libraryController = TextEditingController();
+  final TextEditingController _libraryServicesController = TextEditingController();
+  final TextEditingController _itemTypeController = TextEditingController();
   late Future<List<Library>> _librariesFuture;
   final CarouselController _booksCarouselController = CarouselController();
   final CarouselController _servicesCarouselController = CarouselController();
@@ -69,11 +69,6 @@ abstract class HomeController extends State<HomeView> {
   @override
   initState() {
     super.initState();
-    _searchFilterController = TextEditingController();
-    _libraryController = TextEditingController();
-    _searchController = TextEditingController();
-    _itemTypeController = TextEditingController();
-    _libraryServicesController = TextEditingController();
     _librariesFuture = Future.value([]);
 
     _bookSelectionsFuture = BookSelectionsService.getBookSelections();
@@ -82,8 +77,6 @@ abstract class HomeController extends State<HomeView> {
   }
 
   /// fetches necessary data for home view
-  ///
-  /// Optimized to run independent operations in parallel
   Future<void> fetchData() async {
     try {
       fetchItemTypes();
