@@ -4,9 +4,9 @@ abstract class SearchController extends State<SearchView> {
   final TextEditingController _filterController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _itemTypeController = TextEditingController();
-  ScrollController _scrollController = ScrollController();
+  final TextEditingController _librariesController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   late List<BookPreview> books = [];
-  late final List<DropdownMenuEntry<String>> _filterEntries;
   static const int initialUpperLimit = 8;
   int currentPage = 1;
   int totalPages = 0;
@@ -19,16 +19,60 @@ abstract class SearchController extends State<SearchView> {
   bool isError = false;
   final int screenSizeLimit = 800;
 
+  bool isItemTypesLoading = true;
+  bool isLibrariesLoading = true;
+  List<DropdownMenuEntry<String>> _itemTypeEntries = [];
+  List<DropdownMenuEntry<String>> _libraryEntries = [];
+  List<DropdownMenuEntry<String>> get _filterEntries {
+    return [
+      DropdownMenuEntry(
+        value: 'title',
+        label: AppLocalizations.of(context)!.titleEntry,
+      ),
+      DropdownMenuEntry(
+        value: 'author',
+        label: AppLocalizations.of(context)!.authorEntry,
+      ),
+      DropdownMenuEntry(
+        value: 'subject',
+        label: AppLocalizations.of(context)!.subjectEntry,
+      ),
+      DropdownMenuEntry(
+        value: 'general',
+        label: AppLocalizations.of(context)!.generalEntry,
+      ),
+      DropdownMenuEntry(
+        value: 'isbn',
+        label: AppLocalizations.of(context)!.isbnEntry,
+      ),
+      DropdownMenuEntry(
+        value: 'issn',
+        label: AppLocalizations.of(context)!.issnEntry,
+      ),
+    ];
+  }
+
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
-    _filterEntries = widget.controllersData.filterEntries;
-    final queryParams = Provider.of<QueryParams>(context, listen: false);
-    _searchController.text = queryParams.searchQuery;
     setMiddleSpace = setUpperLimit - 2;
 
     loadSearch();
+
+    if (kIsWeb) {
+      _searchController.value = TextEditingValue(text: widget.webQueryParams?.searchQuery ?? '');  
+      _itemTypeController.value = TextEditingValue(text: widget.webQueryParams?.itemType ?? 'all');  
+      _librariesController.value = TextEditingValue(text: widget.webQueryParams?.library ?? 'all');
+      _filterController.value = TextEditingValue(text: widget.webQueryParams?.filter ?? 'title');
+
+      fetchItemTypes();
+      fetchLibraries();
+      return;
+    }
+
+    final queryParams = Provider.of<QueryParams>(context, listen: false);
+    _searchController.text = queryParams.searchQuery;
+
   }
 
   void loadSearch() {
@@ -63,7 +107,9 @@ abstract class SearchController extends State<SearchView> {
     _filterController.dispose();
     _scrollController.dispose();
     _itemTypeController.dispose();
+    _librariesController.dispose();
     _searchController.dispose();
+
     super.dispose();
   }
 
@@ -169,5 +215,73 @@ abstract class SearchController extends State<SearchView> {
       currentPage = selectedIndex;
       updatePageResults();
     });
+  }
+
+  /// fetches item types
+  Future<void> fetchItemTypes() async {
+    try {
+      final itemTypes = await ItemTypesService.getItemTypes();
+
+      if (mounted) {
+        final itemTypeEntries = itemTypes.map((itemType) {
+          return DropdownMenuEntry(
+            value: itemType.itemTypeId,
+            label: itemType.description,
+          );
+        }).toList();
+
+        final globalProvider = Provider.of<GlobalProvider>(
+          context,
+          listen: false,
+        );
+        globalProvider.setGlobalItemTypeEntries(itemTypeEntries);
+
+        setState(() {
+          isItemTypesLoading = false;
+          _itemTypeEntries = itemTypeEntries;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching item types: $e');
+      if (mounted) {
+        setState(() {
+          isItemTypesLoading = false;
+        });
+      }
+    }
+  }
+
+  /// fetches available libraries
+  Future<void> fetchLibraries() async {
+    try {
+      final libraries = await LibrariesService.getLibraries();
+
+      if (mounted) {
+        final libraryEntries = libraries.map((library) {
+          return DropdownMenuEntry(
+            value: library.libraryId,
+            label: library.name,
+          );
+        }).toList();
+
+        final globalProvider = Provider.of<GlobalProvider>(
+          context,
+          listen: false,
+        );
+        globalProvider.setGlobalLibraryEntries(libraryEntries);
+
+        setState(() {
+          isLibrariesLoading = false;
+          _libraryEntries = libraryEntries;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching libraries: $e');
+      if (mounted) {
+        setState(() {
+          isLibrariesLoading = false;
+        });
+      }
+    }
   }
 }

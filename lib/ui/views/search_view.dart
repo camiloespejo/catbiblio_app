@@ -2,7 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:catbiblio_app/l10n/app_localizations.dart';
 import 'package:catbiblio_app/models/book_preview.dart';
 import 'package:catbiblio_app/models/controllers_data.dart';
+import 'package:catbiblio_app/models/global_provider.dart';
 import 'package:catbiblio_app/models/query_params.dart';
+import 'package:catbiblio_app/models/web_query_params.dart';
+import 'package:catbiblio_app/services/item_types.dart';
+import 'package:catbiblio_app/services/libraries.dart';
 import 'package:catbiblio_app/ui/views/book_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
@@ -18,9 +22,10 @@ part '../controllers/search_controller.dart';
 const Color _primaryColor = CustomColors.primaryColor;
 
 class SearchView extends StatefulWidget {
-  final ControllersData controllersData;
+  final ControllersData? controllersData;
+  final WebQueryParams? webQueryParams;
 
-  const SearchView({super.key, required this.controllersData});
+  const SearchView({super.key, this.controllersData, this.webQueryParams});
 
   @override
   State<SearchView> createState() => _SearchViewState();
@@ -62,7 +67,7 @@ class _SearchViewState extends SearchController {
                               return DropdownItemType(
                                 itemTypeController: _itemTypeController,
                                 itemTypeEntries:
-                                    widget.controllersData.itemTypeEntries,
+                                    widget.controllersData?.itemTypeEntries ?? _itemTypeEntries,
                                 maxWidth: constraints.maxWidth,
                               );
                             },
@@ -71,8 +76,9 @@ class _SearchViewState extends SearchController {
                           LayoutBuilder(
                             builder: (context, constraints) {
                               return DropdownLibraries(
+                                libraryController: _librariesController,
                                 libraryEntries:
-                                    widget.controllersData.libraryEntries,
+                                    widget.controllersData?.libraryEntries ?? _libraryEntries,
                                 widget: widget,
                                 maxWidth: constraints.maxWidth,
                               );
@@ -491,16 +497,20 @@ class DropdownLibraries extends StatelessWidget {
     required this.libraryEntries,
     required this.widget,
     required double maxWidth,
-  }) : _maxWidth = maxWidth;
+    required TextEditingController libraryController,
+  }) : _maxWidth = maxWidth,
+       _libraryController = libraryController;
 
   final List<DropdownMenuEntry<String>> libraryEntries;
   final SearchView widget;
   final double _maxWidth;
+  final TextEditingController _libraryController;
 
   @override
   Widget build(BuildContext context) {
     final queryParams = context.watch<QueryParams>();
     return DropdownMenu(
+      controller: _libraryController,
       label: Text(AppLocalizations.of(context)!.library),
       leadingIcon: const Icon(Icons.location_city, color: _primaryColor),
       initialSelection: queryParams.library,

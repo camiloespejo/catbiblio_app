@@ -26,7 +26,6 @@ abstract class HomeController extends State<HomeView> {
   String currentBookName = '';
   String currentBiblionumber = '';
 
-  // late Future<List<ItemType>> _futureItemTypes;
   late Future<List<BookSelection>> _bookSelectionsFuture;
   late Future<Map<String, List<LibraryService>>> _librariesServicesFuture;
 
@@ -97,7 +96,6 @@ abstract class HomeController extends State<HomeView> {
     _libraryController.dispose();
     _libraryServicesController.dispose();
     _itemTypeController.dispose();
-    _libraryServicesController.dispose();
     _booksCarouselController.dispose();
     _servicesCarouselController.dispose();
     _booksCarouselTimer.cancel();
@@ -137,11 +135,26 @@ abstract class HomeController extends State<HomeView> {
     queryParams.startRecord = 1;
     queryParams.searchQuery = _searchController.text;
 
-    navigateToSearchView(controllersData);
+    WebQueryParams webQueryParams = WebQueryParams(
+      searchQuery: _searchController.value.text,
+      itemType: _itemTypeController.value.text,
+      library: _libraryController.value.text,
+      filter: _searchFilterController.value.text,
+    );
+
+    navigateToSearchView(controllersData, webQueryParams);
   }
 
   /// builds query parameters and navigates to search view
-  void navigateToSearchView(ControllersData controllersData) {
+  void navigateToSearchView(ControllersData controllersData, WebQueryParams webQueryParams) {
+    if (kIsWeb) {
+      context.go('/search' 
+          '?searchQuery=${Uri.encodeComponent(webQueryParams.searchQuery ?? '')}'
+          '&library=${Uri.encodeComponent(webQueryParams.library ?? '')}'
+          '&itemType=${Uri.encodeComponent(webQueryParams.itemType ?? '')}'
+          '&filter=${Uri.encodeComponent(webQueryParams.filter ?? '')}');
+      return;
+    }
     Navigator.push(
       context,
       MaterialPageRoute(

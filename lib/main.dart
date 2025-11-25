@@ -2,10 +2,12 @@ import 'package:catbiblio_app/l10n/app_localizations.dart';
 import 'package:catbiblio_app/models/finder_params.dart';
 import 'package:catbiblio_app/models/global_provider.dart';
 import 'package:catbiblio_app/models/query_params.dart';
+import 'package:catbiblio_app/models/web_query_params.dart';
 import 'package:catbiblio_app/ui/views/book_view.dart';
 import 'package:catbiblio_app/ui/views/finder_view.dart';
 import 'package:catbiblio_app/ui/views/home_view.dart';
 import 'package:catbiblio_app/ui/views/colors.dart';
+import 'package:catbiblio_app/ui/views/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -70,6 +72,21 @@ class _MainAppState extends State<MainApp> {
             return BookView(biblioNumber: biblioNumber);
           },
         ),
+        GoRoute(path: '/search', builder: (BuildContext context, GoRouterState state) {
+          String searchQuery = state.uri.queryParameters['searchQuery'] ?? '';
+          String itemType = state.uri.queryParameters['itemType'] ?? 'all';
+          String library = state.uri.queryParameters['library'] ?? 'all';
+          String filter = state.uri.queryParameters['filter'] ?? 'title';
+          
+          final webQueryParams = WebQueryParams(
+            searchQuery: searchQuery,
+            itemType: itemType,
+            library: library,
+            filter: filter,
+          );
+
+          return SearchView(webQueryParams: webQueryParams);
+        }),
         GoRoute(
           path: '/finder',
           builder: (BuildContext context, GoRouterState state) {

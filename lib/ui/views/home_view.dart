@@ -6,6 +6,7 @@ import 'package:catbiblio_app/models/global_provider.dart';
 import 'package:catbiblio_app/models/image_model.dart';
 import 'package:catbiblio_app/models/library.dart';
 import 'package:catbiblio_app/models/query_params.dart';
+import 'package:catbiblio_app/models/web_query_params.dart';
 import 'package:catbiblio_app/services/book_selections.dart';
 import 'package:catbiblio_app/services/item_types.dart';
 import 'package:catbiblio_app/services/libraries.dart';
