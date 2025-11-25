@@ -1,13 +1,15 @@
+import 'dart:convert' show json;
+import 'package:flutter/material.dart' show debugPrint;
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
-import 'package:flutter/material.dart';
-import 'package:xml/xml.dart' as xml;
-import 'package:collection/collection.dart';
+import 'package:xml/xml.dart' as xml; // DEPRECATED as SRU is not longer used
+import 'package:collection/collection.dart'; // DEPRECATED as SRU is not longer used
+
 import 'package:catbiblio_app/models/query_params.dart';
 import 'package:catbiblio_app/models/book_preview.dart';
 import 'package:catbiblio_app/models/search_result.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'dart:convert';
 
 final String _baseUrl = dotenv.env['KOHA_SVC_URL'] ?? '';
 
