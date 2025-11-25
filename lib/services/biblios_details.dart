@@ -10,6 +10,7 @@ import 'package:catbiblio_app/models/biblios_details.dart';
 
 final String _baseUrl = dotenv.env['KOHA_SVC_URL'] ?? '';
 
+/// Service for fetching detailed relevant bibliographic information from a Koha-based service
 class BibliosDetailsService {
   static const String marcInJson = 'json';
   static const String marcInXml = 'xml';
@@ -46,6 +47,9 @@ class BibliosDetailsService {
 
   /// Fetches detailed bibliographic information for a given biblionumber
   /// from a Koha-based service.
+  ///
+  /// Parameters:
+  /// - [biblioNumber]: The biblionumber of the title to fetch details for.
   ///
   /// Returns a [BibliosDetails] object containing various bibliographic fields.
   ///
@@ -144,6 +148,9 @@ class BibliosDetailsService {
   /// Fetches the MARC record in plain text format for a given biblionumber
   /// from a Koha-based service.
   ///
+  /// Parameters:
+  /// - [biblioNumber]: The biblionumber of the title to fetch the MARC record for.
+  ///
   /// Returns the MARC record as a plain text [String].
   ///
   /// If the biblionumber is invalid (<= 0), returns null.
@@ -200,8 +207,14 @@ class BibliosDetailsService {
   /// Helper function to find all values for a given tag and subfield in a MARC record formatted in JSON,
   /// concatenating said values with a pipe '|' if multiple are found.
   ///
-  /// Returns null if no matching subfields are found.
+  /// Parameters:
+  /// - [fields]: The list of fields from the MARC record in JSON format.
+  /// - [tag]: The MARC tag to search for (e.g., '020').
+  /// - [subfieldCode]: The subfield code to search for within the specified tag (e.g., 'a').
   ///
+  /// Returns a concatenated [String] of all found subfield values separated by ' | '.
+  ///
+  /// Returns null if no matching subfields are found.
   static String? getSubfieldData(
     List<dynamic> fields,
     String tag,

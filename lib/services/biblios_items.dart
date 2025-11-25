@@ -10,6 +10,7 @@ import 'package:catbiblio_app/models/biblio_item.dart';
 
 final String _baseUrl = dotenv.env['KOHA_SVC_URL'] ?? '';
 
+/// Service for fetching bibliographic items from a Koha-based service
 class BibliosItemsService {
   static Dio _createDio() {
     Dio dio = Dio();
@@ -42,7 +43,10 @@ class BibliosItemsService {
 
   /// Fetches the list of items for a given title by its biblionumber from a Koha-based service
   ///
-  /// Returns a `List<BiblioItem>` containing the items for the specified [biblioNumber].
+  /// Parameters:
+  /// - [biblioNumber]: The biblionumber of the title to fetch items for.
+  ///
+  /// Returns a `List<BiblioItem>` containing the items for the specified bibliografic record.
   ///
   /// Returns an empty list if no items are found or in case of an error
   static Future<List<BiblioItem>> getBiblioItems(int biblioNumber) async {

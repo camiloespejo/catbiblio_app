@@ -19,6 +19,7 @@ class ThumbnailResult {
   ThumbnailResult(this.image, this.source);
 }
 
+/// Service for fetching book images from local Koha instance and OpenLibrary
 class ImageService {
   static Dio _createDio() {
     Dio dio = Dio();
@@ -54,11 +55,13 @@ class ImageService {
 
   /// Fetches a book thumbnail, trying local source first, then OpenLibrary.
   ///
+  /// Parameters:
+  /// - [biblionumber]: The biblionumber to fetch the thumbnail from the local Koha instance.
+  /// - [isbn]: The ISBN to fetch the thumbnail from OpenLibrary if local fetch fails
+  ///
+  ///
   /// Returns a [ThumbnailResult] containing the image and its source if found,
   /// otherwise returns null.
-  ///
-  /// [biblionumber] is used to fetch from the local Koha instance.
-  /// [isbn] is used as fallback to fetch from OpenLibrary if local fails.
   static Future<ThumbnailResult?> fetchThumbnail(
     String biblionumber,
     String isbn,
@@ -79,6 +82,10 @@ class ImageService {
   }
 
   /// Fetches an image from the server using the provided [biblionumber].
+  ///
+  /// Parameters:
+  /// - [biblionumber]: The biblionumber to fetch the thumbnail from the local Koha instance.
+  ///
   /// Returns an [Image] widget if the image is found and valid, otherwise returns null.
   static Future<Image?> fetchThumbnailLocal(String biblionumber) async {
     final dio = _createDio();
@@ -106,6 +113,10 @@ class ImageService {
   }
 
   /// Fetches an image from OpenLibrary using the provided [isbn].
+  ///
+  /// Parameters:
+  /// - [isbn]: The ISBN to fetch the thumbnail from OpenLibrary.
+  ///
   /// Returns an [Image] widget if the image is found and valid, otherwise returns null.
   static Future<Image?> fetchThumbnailOpenLibrary(String isbn) async {
     final dio = _createDio();

@@ -7,6 +7,7 @@ import 'package:dio_smart_retry/dio_smart_retry.dart';
 
 final String _baseUrl = dotenv.env['KOHA_SVC_URL'] ?? '';
 
+/// Service for fetching the books selections/new acquisitions from the service
 class BookSelection {
   final String biblionumber;
   final String name;
@@ -51,6 +52,11 @@ class BookSelectionsService {
     return dio;
   }
 
+  /// Fetches the list of book selections/new acquisitions from the service
+  ///
+  /// Returns a `List<BookSelection>` containing the book selections.
+  ///
+  /// Returns an empty list in case of an error
   static Future<List<BookSelection>> getBookSelections() async {
     final dio = _createDio();
 

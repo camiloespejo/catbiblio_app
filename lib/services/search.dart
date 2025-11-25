@@ -34,6 +34,7 @@ class ApiException extends SruException {
   const ApiException(super.message, {this.statusCode});
 }
 
+/// Service for searching books from a Koha-based service
 class SearchService {
   static final Dio _dio = Dio(
     BaseOptions(
@@ -86,7 +87,10 @@ class SearchService {
   static const String _biblioNumberTag = "999";
   static const String _publishingDetailsTag = "260";
 
-  /// Searches for books based on the provided [QueryParams].
+  /// Searches for books based on the provided query parameters.
+  ///
+  /// Parameters:
+  /// - [params]: An instance of [QueryParams] containing the search criteria.
   ///
   /// Returns a [SearchResult] containing a `List<BookPreview>` and the total [int] of records found,
   /// or throws a exception if the request fails.
@@ -132,6 +136,11 @@ class SearchService {
     }
   }
 
+  /// Builds query parameters for the search request based on [QueryParams].
+  ///
+  /// Returns a map of query parameters to be used in the search request.
+  ///
+  /// Throws a [ParseException] if there is an error building the parameters.
   static Map<String, dynamic> buildQueryParameters(QueryParams params) {
     late Map<String, dynamic> queryParameters;
 

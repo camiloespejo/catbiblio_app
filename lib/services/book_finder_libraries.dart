@@ -7,6 +7,7 @@ import 'package:dio_smart_retry/dio_smart_retry.dart';
 
 final String _baseUrl = dotenv.env['KOHA_SVC_URL'] ?? '';
 
+/// Service for fetching the libraries participating in the Book Finder service
 class BookFinderLibraries {
   static Dio _createDio() {
     Dio dio = Dio();
@@ -37,6 +38,11 @@ class BookFinderLibraries {
     return dio;
   }
 
+  /// Fetches the set of library codes that participate in the Book Finder service
+  ///
+  /// Returns a `Set<String>` containing the library codes.
+  ///
+  /// Returns an empty set in case of an error
   static Future<Set<String>> getBookFinderLibrariesSet() async {
     final dio = _createDio();
 

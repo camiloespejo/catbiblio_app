@@ -9,6 +9,7 @@ import 'package:catbiblio_app/models/book_location.dart';
 
 final String _baseUrl = dotenv.env['KOHA_SVC_URL'] ?? '';
 
+/// Service for fetching book locations from a Koha-based service
 class LocationsService {
   static Dio _createDio() {
     Dio dio = Dio();
@@ -39,6 +40,16 @@ class LocationsService {
     return dio;
   }
 
+  /// Fetches the book location based on LCC, collection, and library code from a Koha-based service
+  ///
+  /// Parameters:
+  /// - [lcc]: The Library of Congress Classification code of the book.
+  /// - [collection]: The collection to which the book belongs.
+  /// - [libraryCode]: The code of the library where the book is located.
+  ///
+  /// Returns a `BookLocation` object containing the level and room information.
+  ///
+  /// Returns an empty `BookLocation` (level and room as empty strings) in case of an error.
   static Future<BookLocation> getBookLocation(
     String lcc,
     String collection,

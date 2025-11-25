@@ -9,6 +9,7 @@ import 'package:catbiblio_app/models/library.dart';
 
 final String _baseUrl = dotenv.env['KOHA_SVC_URL'] ?? '';
 
+/// Service for fetching libraries from a Koha-based service
 class LibrariesService {
   static Dio _createDio() {
     Dio dio = Dio();

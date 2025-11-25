@@ -7,6 +7,7 @@ import 'package:dio_smart_retry/dio_smart_retry.dart';
 
 final String _baseUrl = dotenv.env['KOHA_SVC_URL'] ?? '';
 
+/// Data class representing a library in-location service
 class LibraryService {
   final String name;
   final String imageUrl;
@@ -14,6 +15,7 @@ class LibraryService {
   LibraryService({required this.name, required this.imageUrl});
 }
 
+/// Data class representing a collection of services offered by a library
 class LibraryServicesObj {
   final String libraryCode;
   final String libraryName;
@@ -41,6 +43,7 @@ class LibraryServicesObj {
   }
 }
 
+/// Service for fetching library services from a Koha-based service
 class LibraryServices {
   static Dio _createDio() {
     Dio dio = Dio();
@@ -71,6 +74,12 @@ class LibraryServices {
     return dio;
   }
 
+  /// Fetches a map of library codes to their respective services from a Koha-based service
+  ///
+  /// Returns a `Map<String, List<LibraryService>>` where the key is the library code
+  /// and the value is a list of services offered by that library.
+  ///
+  /// Returns an empty map in case of an error.
   static Future<Map<String, List<LibraryService>>>
   getLibraryCodeServicesMap() async {
     final dio = _createDio();

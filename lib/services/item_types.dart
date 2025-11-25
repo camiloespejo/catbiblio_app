@@ -9,6 +9,7 @@ import 'package:catbiblio_app/models/item_type.dart';
 
 final String _baseUrl = dotenv.env['KOHA_SVC_URL'] ?? '';
 
+/// Service for fetching item types from a Koha-based service
 class ItemTypesService {
   static Dio _createDio() {
     Dio dio = Dio();
