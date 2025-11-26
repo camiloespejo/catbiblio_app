@@ -339,7 +339,9 @@ abstract class HomeController extends State<HomeView> {
   }
 
   void onSelectLibraryService(String value) {
-    selectedLibraryServices = value;
+    setState(() {
+      selectedLibraryServices = value;
+    });
   }
 }
 
