@@ -441,6 +441,7 @@ class HeroLayoutCard extends StatelessWidget {
             maxWidth: width * 2,
             minWidth: width,
             child: CachedNetworkImage(
+              useOldImageOnUrlChange: true,
               imageUrl: imageModel.url,
               fit: fit,
               errorWidget: (context, url, error) => const Center(
