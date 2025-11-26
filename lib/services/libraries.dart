@@ -1,5 +1,5 @@
 import 'dart:convert' show json;
-import 'package:flutter/material.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
@@ -57,39 +57,44 @@ class LibrariesService {
           .map((json) => Library.fromJson(json as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
-      // Log the error for debugging
-      debugPrint('DioException in getLibraries: ${e.message}');
-      //debugPrint('Response data: ${e.response?.data}');
-      debugPrint('Status code: ${e.response?.statusCode}');
+      _log('DioException in getLibraries: ${e.message}');
+      // _log('Response data: ${e.response?.data}');
+      // _log('Status code: ${e.response?.statusCode}');
 
       // Handle specific error types
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
-          debugPrint('Connection timeout: Check your internet connection');
+          _log('Connection timeout: Check your internet connection');
           break;
         case DioExceptionType.receiveTimeout:
-          debugPrint('Receive timeout error: Check network connection');
+          _log('Receive timeout error: Check network connection');
           break;
         case DioExceptionType.badResponse:
-          debugPrint('Server error: ${e.response?.statusCode}');
+          _log('Server error: ${e.response?.statusCode}');
           break;
         case DioExceptionType.cancel:
-          debugPrint('Request cancelled');
+          _log('Request cancelled');
           break;
         case DioExceptionType.unknown:
-          debugPrint('Unknown error: ${e.message}');
+          _log('Unknown error: ${e.message}');
           break;
         default:
-          debugPrint('Dio error: $e');
+          _log('Dio error: $e');
       }
 
+      // Return an empty list in case any error
       return [];
     } catch (e) {
-      // Handle JSON parsing or other errors
-      debugPrint('Unexpected error in getLibraries: $e');
+      _log('Unexpected error in getLibraries: $e');
       return [];
     } finally {
       dio.close();
     }
+  }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('libraries service log: $message');
   }
 }

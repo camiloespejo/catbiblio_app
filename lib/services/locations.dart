@@ -1,5 +1,5 @@
 import 'dart:convert' show json;
-import 'package:flutter/material.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
@@ -73,35 +73,41 @@ class LocationsService {
       return bookLocation;
     } on DioException catch (e) {
       // Log the error for debugging
-      debugPrint('DioException in getBookLocation: ${e.message}');
-      debugPrint('Response data: ${e.response?.data}');
-      debugPrint('Status code: ${e.response?.statusCode}');
+      _log('DioException in getBookLocation: ${e.message}');
+      // _log('Response data: ${e.response?.data}');
+      // _log('Status code: ${e.response?.statusCode}');
 
       // Handle specific error types
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.receiveTimeout:
-          debugPrint('Timeout error: Check network connection');
+          _log('Timeout error: Check network connection');
           break;
         case DioExceptionType.badResponse:
-          debugPrint('Server error: ${e.response?.statusCode}');
+          _log('Server error: ${e.response?.statusCode}');
           break;
         case DioExceptionType.cancel:
-          debugPrint('Request cancelled');
+          _log('Request cancelled');
           break;
         case DioExceptionType.unknown:
-          debugPrint('Unknown error: ${e.message}');
+          _log('Unknown error: ${e.message}');
           break;
         default:
-          debugPrint('Dio error: $e');
+          _log('Dio error: $e');
       }
 
       return BookLocation(level: '', room: '');
     } catch (e) {
-      debugPrint('Unexpected error in getBookLocation: $e');
+      _log('Unexpected error in getBookLocation: $e');
       return BookLocation(level: '', room: '');
     } finally {
       dio.close();
     }
+  }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('locations service log: $message');
   }
 }

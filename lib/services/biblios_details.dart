@@ -1,6 +1,6 @@
 import 'dart:async' show TimeoutException;
 import 'dart:convert' show json;
-//import 'package:flutter/material.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
@@ -65,7 +65,7 @@ class BibliosDetailsService {
     final dio = _createDio();
 
     try {
-      //debugPrint('Requesting biblio $biblioNumber from ${dio.options.baseUrl}');
+      _log('Requesting biblio $biblioNumber from ${dio.options.baseUrl}');
 
       final response = await dio.get(
         '/biblios_details',
@@ -107,15 +107,12 @@ class BibliosDetailsService {
                 .trim(),
       );
     } on DioException catch (e) {
-      // debugPrint('DioException in getBibliosDetails: ${e.message}');
-      // debugPrint('Response data: ${e.response?.data}');
-      // debugPrint('Response headers: ${e.response?.headers}');
-      // debugPrint('Status code: ${e.response?.statusCode}');
-      // debugPrint('Request: ${e.requestOptions.uri}');
-
+      _log('DioException in getBibliosDetails: ${e.message}');
+      // _log('Response headers: ${e.response?.headers}');
+      // _log('Status code: ${e.response?.statusCode}');
       // Handle specific error types
       if (e.response?.statusCode == 404) {
-        // debugPrint(
+        // _log(
         //   'BibliosDetails not found (404) for biblionumber $biblioNumber',
         // );
         return BibliosDetails(title: '', author: '');
@@ -128,17 +125,17 @@ class BibliosDetailsService {
 
       switch (e.type) {
         case DioExceptionType.badResponse:
-          //debugPrint('Server error: ${e.response?.statusCode}');
+          _log('Server error: ${e.response?.statusCode}');
           break;
         default:
-        //debugPrint('Dio error: $e');
+          _log('Dio error: $e');
       }
 
       rethrow;
       //return BibliosDetails(title: 'Error', author: 'Error');
     } catch (e) {
       // Handle JSON parsing or other errors
-      // debugPrint('Unexpected error in getBibliosDetails: $e');
+      _log('Unexpected error in getBibliosDetails: $e');
       return BibliosDetails(title: '', author: '');
     } finally {
       dio.close();
@@ -175,7 +172,7 @@ class BibliosDetailsService {
     } on DioException catch (e) {
       // Handle specific error types
       if (e.response?.statusCode == 404) {
-        // debugPrint(
+        // _log(
         //   'BibliosDetails not found (404) for biblionumber $biblioNumber',
         // );
         // Return an empty string for not found items
@@ -189,15 +186,15 @@ class BibliosDetailsService {
 
       switch (e.type) {
         case DioExceptionType.badResponse:
-          //debugPrint('Server error: ${e.response?.statusCode}');
+          _log('Server error: ${e.response?.statusCode}');
           break;
         default:
-        //debugPrint('Dio error: $e');
+          _log('Dio error: $e');
       }
 
       rethrow;
     } catch (e) {
-      //debugPrint('Unexpected error in getBibliosMarcPlainText: $e');
+      _log('Unexpected error in getBibliosMarcPlainText: $e');
       return null;
     } finally {
       dio.close();
@@ -263,11 +260,20 @@ class BibliosDetailsService {
 
     // 8. After checking all fields, process the collected results.
     if (results.isEmpty) {
+      _log(
+        'No matching subfields found for tag $tag and subfield $subfieldCode',
+      );
       // If we looped through everything but found no matching subfields.
       return null;
     } else {
       // Join all found values with a " | " and return the final string.
       return results.join(' | ');
     }
+  }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('biblios_details service log: $message');
   }
 }

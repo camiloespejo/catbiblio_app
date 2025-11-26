@@ -1,5 +1,5 @@
 import 'dart:convert' show json;
-import 'package:flutter/material.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
@@ -98,15 +98,21 @@ class LibraryServices {
           );
     } on DioException catch (e) {
       // Log the error for debugging
-      debugPrint('DioException in getLibraryCodeServicesMap: ${e.message}');
-      debugPrint('Response data: ${e.response?.data}');
-      debugPrint('Status code: ${e.response?.statusCode}');
+      _log('DioException in getLibraryCodeServicesMap: ${e.message}');
+      // _log('Response data: ${e.response?.data}');
+      // _log('Status code: ${e.response?.statusCode}');
       return {};
     } catch (e) {
-      debugPrint('Unexpected error in getLibraryCodeServicesMap: $e');
+      _log('Unexpected error in getLibraryCodeServicesMap: $e');
       return {};
     } finally {
       dio.close();
     }
+  }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('library_services service log: $message');
   }
 }

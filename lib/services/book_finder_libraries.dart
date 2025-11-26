@@ -1,5 +1,5 @@
 import 'dart:convert' show json;
-import 'package:flutter/material.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
@@ -52,16 +52,21 @@ class BookFinderLibraries {
 
       return decodedJson.map((item) => item['library_code'] as String).toSet();
     } on DioException catch (e) {
-      // Log the error for debugging
-      debugPrint('DioException in getBookFinderLibrariesSet: ${e.message}');
-      debugPrint('Response data: ${e.response?.data}');
-      debugPrint('Status code: ${e.response?.statusCode}');
+      _log('DioException in getBookFinderLibrariesSet: ${e.message}');
+      // _log('Response data: ${e.response?.data}');
+      // _log('Status code: ${e.response?.statusCode}');
       return {};
     } catch (e) {
-      debugPrint('Unexpected error in getBookFinderLibrariesSet: $e');
+      _log('Unexpected error in getBookFinderLibrariesSet: $e');
       return {};
     } finally {
       dio.close();
     }
+  }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('book_finder_libraries service log: $message');
   }
 }

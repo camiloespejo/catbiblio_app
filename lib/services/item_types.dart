@@ -1,5 +1,5 @@
 import 'dart:convert' show json;
-import 'package:flutter/material.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
@@ -57,38 +57,43 @@ class ItemTypesService {
           .map((json) => ItemType.fromJson(json as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
-      // Log the error for debugging
-      debugPrint('DioException in getItemTypes: ${e.message}');
-      debugPrint('Response data: ${e.response?.data}');
-      debugPrint('Status code: ${e.response?.statusCode}');
+      _log('DioException in getItemTypes: ${e.message}');
+      // _log('Response data: ${e.response?.data}');
+      // _log('Status code: ${e.response?.statusCode}');
 
       // Handle specific error types
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
-          debugPrint('Connection timeout: Check your internet connection');
+          _log('Connection timeout: Check your internet connection');
           break;
         case DioExceptionType.receiveTimeout:
-          debugPrint('Receive timeout: Check network connection');
+          _log('Receive timeout: Check network connection');
           break;
         case DioExceptionType.badResponse:
           if (e.response?.statusCode == 404) {
-            debugPrint('No item types found (404)');
+            _log('No item types found (404)');
           } else {
-            debugPrint('Server error: ${e.response?.statusCode}');
+            _log('Server error: ${e.response?.statusCode}');
           }
           break;
         default:
-          debugPrint('Unexpected error: ${e.type}');
+          _log('Unexpected error: ${e.type}');
           break;
       }
 
       return [];
     } catch (e) {
       // Catch any other exceptions
-      debugPrint('Unexpected exception in getItemTypes: $e');
+      _log('Unexpected exception in getItemTypes: $e');
       return [];
     } finally {
       dio.close();
     }
+  }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('item_types service log: $message');
   }
 }

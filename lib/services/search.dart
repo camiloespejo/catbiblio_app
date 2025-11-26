@@ -1,5 +1,5 @@
 import 'dart:convert' show json;
-import 'package:flutter/material.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
@@ -12,27 +12,6 @@ import 'package:catbiblio_app/models/book_preview.dart';
 import 'package:catbiblio_app/models/search_result.dart';
 
 final String _baseUrl = dotenv.env['KOHA_SVC_URL'] ?? '';
-
-sealed class SruException implements Exception {
-  final String message;
-  const SruException(this.message);
-
-  @override
-  String toString() => message;
-}
-
-class NetworkException extends SruException {
-  const NetworkException(super.message);
-}
-
-class ParseException extends SruException {
-  const ParseException(super.message);
-}
-
-class ApiException extends SruException {
-  final int? statusCode;
-  const ApiException(super.message, {this.statusCode});
-}
 
 /// Service for searching books from a Koha-based service
 class SearchService {
@@ -75,18 +54,6 @@ class SearchService {
     return dio;
   }
 
-  /// --- DEPRECATED ---
-  /// MARC and SRU namespaces
-  static const String _marcNamespace = "http://www.loc.gov/MARC21/slim";
-  static const String _sruNamespace = "http://www.loc.gov/zing/srw/";
-
-  /// --- DEPRECATED ---
-  /// MARC field tags
-  static const String _titleTag = "245";
-  static const String _authorTag = "100";
-  static const String _biblioNumberTag = "999";
-  static const String _publishingDetailsTag = "260";
-
   /// Searches for books based on the provided query parameters.
   ///
   /// Parameters:
@@ -107,6 +74,7 @@ class SearchService {
     final queryParameters = buildQueryParameters(params);
 
     if (params.searchQuery.isEmpty) {
+      _log('Empty search query provided');
       return SearchResult(books: [], totalRecords: 0);
     }
 
@@ -128,8 +96,10 @@ class SearchService {
         totalRecords: results.isNotEmpty ? results.first.totalRecords : 0,
       );
     } on DioException catch (e) {
+      _log('DioException caught: ${e.message}');
       throw _handleDioException(e);
     } catch (e) {
+      _log('Unexpected error in searchBooks: $e');
       throw ParseException("Unexpected error: $e");
     } finally {
       dio.close();
@@ -165,9 +135,22 @@ class SearchService {
 
       return queryParameters;
     } catch (e) {
+      _log("Error building query parameters: $e");
       throw ParseException("Error building query parameters: $e");
     }
   }
+
+  /// --- DEPRECATED ---
+  /// MARC and SRU namespaces
+  static const String _marcNamespace = "http://www.loc.gov/MARC21/slim";
+  static const String _sruNamespace = "http://www.loc.gov/zing/srw/";
+
+  /// --- DEPRECATED ---
+  /// MARC field tags
+  static const String _titleTag = "245";
+  static const String _authorTag = "100";
+  static const String _biblioNumberTag = "999";
+  static const String _publishingDetailsTag = "260";
 
   /// --- DEPRECATED ---
   ///
@@ -334,14 +317,19 @@ class SearchService {
   static SruException _handleDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
+        _log('Connection timeout: Check your internet connection');
         return const NetworkException(
           "Connection timeout - please check your internet connection",
         );
       case DioExceptionType.receiveTimeout:
+        _log('Receive timeout: Check network connection');
         return const NetworkException(
           "Request timeout - the server took too long to respond",
         );
       case DioExceptionType.badResponse:
+        _log(
+          'Bad response from server: ${e.response?.statusCode} - ${e.response?.statusMessage}',
+        );
         final statusCode = e.response?.statusCode;
         final statusMessage = e.response?.statusMessage;
         return ApiException(
@@ -349,15 +337,46 @@ class SearchService {
           statusCode: statusCode,
         );
       case DioExceptionType.connectionError:
+        _log('Connection error: Unable to reach the server');
         return const NetworkException(
           "Connection error - unable to reach the server",
         );
       case DioExceptionType.cancel:
+        _log('Request was cancelled');
         return const NetworkException("Request was cancelled");
       default:
+        _log('Network error: ${e.message}');
         return NetworkException("Network error: ${e.message}");
     }
   }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('search service log: $message');
+  }
+}
+
+/// --- DEPRECATED ---
+sealed class SruException implements Exception {
+  final String message;
+  const SruException(this.message);
+
+  @override
+  String toString() => message;
+}
+
+class NetworkException extends SruException {
+  const NetworkException(super.message);
+}
+
+class ParseException extends SruException {
+  const ParseException(super.message);
+}
+
+class ApiException extends SruException {
+  final int? statusCode;
+  const ApiException(super.message, {this.statusCode});
 }
 
 /// --- DEPRECATED ---

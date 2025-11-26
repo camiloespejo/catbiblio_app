@@ -1,6 +1,6 @@
 import 'dart:convert' show json;
 import 'dart:async' show TimeoutException;
-//import 'package:flutter/material.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
@@ -53,7 +53,7 @@ class BibliosItemsService {
     final dio = _createDio();
 
     if (biblioNumber <= 0) {
-      //debugPrint('Invalid biblionumber: $biblioNumber');
+      _log('Invalid biblionumber: $biblioNumber');
       return [];
     }
 
@@ -69,9 +69,9 @@ class BibliosItemsService {
           .map((json) => BiblioItem.fromJson(json as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
-      // debugPrint('DioException in getBiblioItems: ${e.message}');
-      // debugPrint('Response data: ${e.response?.data}');
-      // debugPrint('Status code: ${e.response?.statusCode}');
+      _log('DioException in getBiblioItems: ${e.message}');
+      // _log('Response data: ${e.response?.data}');
+      // _log('Status code: ${e.response?.statusCode}');
 
       if (e.response?.statusCode == 404) {
         return [];
@@ -86,19 +86,25 @@ class BibliosItemsService {
       // Handle other specific error types locally (log and return empty)
       switch (e.type) {
         case DioExceptionType.badResponse:
-          //debugPrint('Server error: ${e.response?.statusCode}');
+          _log('Server error: ${e.response?.statusCode}');
           break;
         default:
-        //debugPrint('Dio error: $e');
+          _log('Dio error: $e');
       }
 
       return [];
     } catch (e) {
       // Handle JSON parsing or other errors
-      // debugPrint('Unexpected error in getBiblioItems: $e');
+      _log('Unexpected error in getBiblioItems: $e');
       return [];
     } finally {
       dio.close();
     }
+  }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('biblios_items service log: $message');
   }
 }
