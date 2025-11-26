@@ -5,7 +5,7 @@ import 'package:catbiblio_app/services/images.dart';
 import 'package:catbiblio_app/services/locations.dart';
 import 'colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, debugPrint, kDebugMode;
 
 part '../controllers/finder_controller.dart';
 

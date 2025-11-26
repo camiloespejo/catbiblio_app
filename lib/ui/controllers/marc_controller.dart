@@ -20,7 +20,7 @@ abstract class MarcController extends State<MarcView> {
         biblioNumber,
       );
     } on TimeoutException catch (_) {
-      //debugPrint('Error loading MARC data: $e');
+      // _log('Error loading MARC data: $e');
       isError = true;
 
       //Snackbar notifying timeout
@@ -78,10 +78,16 @@ abstract class MarcController extends State<MarcView> {
           line = '$indent$content ';
         }
       }
-      //debugPrint('Formatted line: $line');
+      _log('Formatted line: $line');
       formattedMarc.writeln(line);
     });
 
     return formattedMarc.toString();
+  }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('marc_controller log: $message');
   }
 }

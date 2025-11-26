@@ -20,11 +20,17 @@ abstract class FinderController extends State<FinderView> {
         widget.params.libraryCode,
       );
     } catch (error) {
-      debugPrint('Error loading details: $error');
+      _log('Error loading details: $error');
     }
 
     setState(() {
       bookLocation = location ?? bookLocation;
     });
+  }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('finder_controller log: $message');
   }
 }

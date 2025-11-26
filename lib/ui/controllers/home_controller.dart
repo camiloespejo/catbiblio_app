@@ -5,7 +5,8 @@ abstract class HomeController extends State<HomeView> {
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _searchFilterController = TextEditingController();
   final TextEditingController _libraryController = TextEditingController();
-  final TextEditingController _libraryServicesController = TextEditingController();
+  final TextEditingController _libraryServicesController =
+      TextEditingController();
   final TextEditingController _itemTypeController = TextEditingController();
   late Future<List<Library>> _librariesFuture;
   final CarouselController _booksCarouselController = CarouselController();
@@ -85,7 +86,7 @@ abstract class HomeController extends State<HomeView> {
       // Build dropdown after library services are loaded
       buildLibraryServicesDropdown();
     } catch (e) {
-      debugPrint('Error in fetchData: $e');
+      _log('Error in fetchData: $e');
     }
   }
 
@@ -146,13 +147,18 @@ abstract class HomeController extends State<HomeView> {
   }
 
   /// builds query parameters and navigates to search view
-  void navigateToSearchView(ControllersData controllersData, WebQueryParams webQueryParams) {
+  void navigateToSearchView(
+    ControllersData controllersData,
+    WebQueryParams webQueryParams,
+  ) {
     if (kIsWeb) {
-      context.go('/search' 
-          '?searchQuery=${Uri.encodeComponent(webQueryParams.searchQuery ?? '')}'
-          '&library=${Uri.encodeComponent(webQueryParams.library ?? '')}'
-          '&itemType=${Uri.encodeComponent(webQueryParams.itemType ?? '')}'
-          '&filter=${Uri.encodeComponent(webQueryParams.filter ?? '')}');
+      context.go(
+        '/search'
+        '?searchQuery=${Uri.encodeComponent(webQueryParams.searchQuery ?? '')}'
+        '&library=${Uri.encodeComponent(webQueryParams.library ?? '')}'
+        '&itemType=${Uri.encodeComponent(webQueryParams.itemType ?? '')}'
+        '&filter=${Uri.encodeComponent(webQueryParams.filter ?? '')}',
+      );
       return;
     }
     Navigator.push(
@@ -209,7 +215,7 @@ abstract class HomeController extends State<HomeView> {
         });
       }
     } catch (e) {
-      debugPrint('Error fetching libraries: $e');
+      _log('Error fetching libraries: $e');
       if (mounted) {
         setState(() {
           isLibrariesLoading = false;
@@ -243,7 +249,7 @@ abstract class HomeController extends State<HomeView> {
         });
       }
     } catch (e) {
-      debugPrint('Error fetching item types: $e');
+      _log('Error fetching item types: $e');
       if (mounted) {
         setState(() {
           isItemTypesLoading = false;
@@ -334,5 +340,11 @@ abstract class HomeController extends State<HomeView> {
 
   void onSelectLibraryService(String value) {
     selectedLibraryServices = value;
+  }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('home_controller log: $message');
   }
 }

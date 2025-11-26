@@ -60,10 +60,18 @@ abstract class SearchController extends State<SearchView> {
     loadSearch();
 
     if (kIsWeb) {
-      _searchController.value = TextEditingValue(text: widget.webQueryParams?.searchQuery ?? '');  
-      _itemTypeController.value = TextEditingValue(text: widget.webQueryParams?.itemType ?? 'all');  
-      _librariesController.value = TextEditingValue(text: widget.webQueryParams?.library ?? 'all');
-      _filterController.value = TextEditingValue(text: widget.webQueryParams?.filter ?? 'title');
+      _searchController.value = TextEditingValue(
+        text: widget.webQueryParams?.searchQuery ?? '',
+      );
+      _itemTypeController.value = TextEditingValue(
+        text: widget.webQueryParams?.itemType ?? 'all',
+      );
+      _librariesController.value = TextEditingValue(
+        text: widget.webQueryParams?.library ?? 'all',
+      );
+      _filterController.value = TextEditingValue(
+        text: widget.webQueryParams?.filter ?? 'title',
+      );
 
       fetchItemTypes();
       fetchLibraries();
@@ -72,7 +80,6 @@ abstract class SearchController extends State<SearchView> {
 
     final queryParams = Provider.of<QueryParams>(context, listen: false);
     _searchController.text = queryParams.searchQuery;
-
   }
 
   void loadSearch() {
@@ -242,7 +249,7 @@ abstract class SearchController extends State<SearchView> {
         });
       }
     } catch (e) {
-      debugPrint('Error fetching item types: $e');
+      _log('Error fetching item types: $e');
       if (mounted) {
         setState(() {
           isItemTypesLoading = false;
@@ -276,12 +283,18 @@ abstract class SearchController extends State<SearchView> {
         });
       }
     } catch (e) {
-      debugPrint('Error fetching libraries: $e');
+      _log('Error fetching libraries: $e');
       if (mounted) {
         setState(() {
           isLibrariesLoading = false;
         });
       }
     }
+  }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('search_controller log: $message');
   }
 }

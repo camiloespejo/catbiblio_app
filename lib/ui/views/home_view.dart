@@ -15,7 +15,7 @@ import 'package:catbiblio_app/ui/views/book_view.dart';
 import 'package:catbiblio_app/ui/views/search_view.dart';
 import 'package:catbiblio_app/ui/views/libraries_view.dart';
 import 'colors.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb, debugPrint;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -112,8 +112,8 @@ class _HomeViewState extends HomeController {
                     ),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width <
-                                screenSizeLimit
+                        maxWidth:
+                            MediaQuery.of(context).size.width < screenSizeLimit
                             ? MediaQuery.of(context).size.width
                             : (MediaQuery.of(context).size.width / 3) * 2,
                       ),
@@ -194,8 +194,7 @@ class _HomeViewState extends HomeController {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => BookView(
-                                      biblioNumber:
-                                          bookSelection.biblionumber,
+                                      biblioNumber: bookSelection.biblionumber,
                                     ),
                                   ),
                                 );

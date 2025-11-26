@@ -32,7 +32,8 @@ class _LibrariesViewState extends LibrariesController {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     minHeight: MediaQuery.of(context).size.height,
-                    maxWidth: MediaQuery.of(context).size.width < screenSizeLimit
+                    maxWidth:
+                        MediaQuery.of(context).size.width < screenSizeLimit
                         ? MediaQuery.of(context).size.width
                         : (MediaQuery.of(context).size.width / 3) * 2,
                   ),
@@ -47,7 +48,9 @@ class _LibrariesViewState extends LibrariesController {
                       } else if (snapshot.hasError) {
                         return Center(
                           child: Text(
-                            AppLocalizations.of(context)!.couldNotFetchLibraries,
+                            AppLocalizations.of(
+                              context,
+                            )!.couldNotFetchLibraries,
                           ),
                         );
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {

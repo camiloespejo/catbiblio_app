@@ -51,7 +51,7 @@ abstract class BookController extends State<BookView> {
     try {
       details = await BibliosDetailsService.getBibliosDetails(biblioNumber);
     } on TimeoutException catch (_) {
-      //debugPrint('Error loading details: $error');
+      //_log('Error loading details: $error');
       //Snackbar notifying error
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -64,7 +64,7 @@ abstract class BookController extends State<BookView> {
     try {
       items = await BibliosItemsService.getBiblioItems(biblioNumber);
     } on TimeoutException catch (_) {
-      //debugPrint('Error loading items: $error');
+      //_log('Error loading items: $error');
       //Snackbar notifying timeout
       if (!context.mounted) return;
 
@@ -239,8 +239,14 @@ abstract class BookController extends State<BookView> {
       bookFinderLibraries =
           await BookFinderLibraries.getBookFinderLibrariesSet();
     } catch (error) {
-      debugPrint('Error loading finder libraries: $error');
+      _log('Error loading finder libraries: $error');
     }
     return bookFinderLibraries;
+  }
+}
+
+void _log(String? message) {
+  if (kDebugMode) {
+    debugPrint('book_controller log: $message');
   }
 }
