@@ -1,12 +1,15 @@
 import 'package:catbiblio_app/l10n/app_localizations.dart';
 import 'package:catbiblio_app/models/finder_params.dart';
 import 'package:catbiblio_app/models/global_provider.dart';
+import 'package:catbiblio_app/models/library.dart';
 import 'package:catbiblio_app/models/query_params.dart';
 import 'package:catbiblio_app/models/web_query_params.dart';
 import 'package:catbiblio_app/ui/views/book_view.dart';
 import 'package:catbiblio_app/ui/views/finder_view.dart';
 import 'package:catbiblio_app/ui/views/home_view.dart';
 import 'package:catbiblio_app/ui/views/colors.dart';
+import 'package:catbiblio_app/ui/views/libraries_view.dart';
+import 'package:catbiblio_app/ui/views/marc_view.dart';
 import 'package:catbiblio_app/ui/views/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -64,6 +67,15 @@ class _MainAppState extends State<MainApp> {
             return HomeView(onLocaleChange: (locale) => setLocale(locale));
           },
         ),
+        GoRoute(path: '/directory', builder: (BuildContext context, GoRouterState state) {
+          final libraries = state.extra as Future<List<Library>>;
+          return LibrariesView(libraries: libraries);
+        }),
+        GoRoute(path: '/marc/:biblionumber', builder: (BuildContext context, GoRouterState state) {
+          final String biblioNumber =
+              state.pathParameters['biblionumber'] ?? 'No ID Found';
+          return MarcView(biblioNumber: biblioNumber);
+        }),
         GoRoute(
           path: '/book-details/:biblionumber',
           builder: (BuildContext context, GoRouterState state) {

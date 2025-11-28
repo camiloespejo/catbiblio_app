@@ -499,12 +499,18 @@ class AppNavigationDrawer extends StatelessWidget {
           leading: const Icon(Icons.map, color: _primaryColor),
           title: Text(AppLocalizations.of(context)!.libraryDirectory),
           enabled: !isLibrariesLoading,
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => LibrariesView(libraries: librariesFuture),
-            ),
-          ),
+          onTap: () {
+            // if (kIsWeb) {
+            //   context.go('/directory', extra: librariesFuture);
+            //   return;
+            // }
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => LibrariesView(libraries: librariesFuture),
+              ),
+            );
+          },
         ),
         ListTile(
           leading: const Icon(Icons.computer, color: _primaryColor),
