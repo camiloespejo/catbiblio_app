@@ -1,7 +1,6 @@
 part of '../views/libraries_view.dart';
 
 abstract class LibrariesController extends State<LibrariesView> {
-  late List<Library> libraries;
   final List<String> regionsList = regions.values.toList();
   final int screenSizeLimit = 800;
 

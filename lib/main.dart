@@ -1,7 +1,6 @@
 import 'package:catbiblio_app/l10n/app_localizations.dart';
 import 'package:catbiblio_app/models/finder_params.dart';
 import 'package:catbiblio_app/models/global_provider.dart';
-import 'package:catbiblio_app/models/library.dart';
 import 'package:catbiblio_app/models/query_params.dart';
 import 'package:catbiblio_app/models/web_query_params.dart';
 import 'package:catbiblio_app/ui/views/book_view.dart';
@@ -68,8 +67,7 @@ class _MainAppState extends State<MainApp> {
           },
         ),
         GoRoute(path: '/directory', builder: (BuildContext context, GoRouterState state) {
-          final libraries = state.extra as Future<List<Library>>;
-          return LibrariesView(libraries: libraries);
+          return LibrariesView();
         }),
         GoRoute(path: '/marc/:biblionumber', builder: (BuildContext context, GoRouterState state) {
           final String biblioNumber =

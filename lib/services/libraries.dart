@@ -1,4 +1,5 @@
 import 'dart:convert' show json;
+import 'dart:async' show TimeoutException;
 import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -61,14 +62,13 @@ class LibrariesService {
       // _log('Response data: ${e.response?.data}');
       // _log('Status code: ${e.response?.statusCode}');
 
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+            throw TimeoutException('Timeout error: Check your internet connection');
+      }
+
       // Handle specific error types
       switch (e.type) {
-        case DioExceptionType.connectionTimeout:
-          _log('Connection timeout: Check your internet connection');
-          break;
-        case DioExceptionType.receiveTimeout:
-          _log('Receive timeout error: Check network connection');
-          break;
         case DioExceptionType.badResponse:
           _log('Server error: ${e.response?.statusCode}');
           break;

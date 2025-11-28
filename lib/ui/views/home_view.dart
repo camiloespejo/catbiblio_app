@@ -500,14 +500,14 @@ class AppNavigationDrawer extends StatelessWidget {
           title: Text(AppLocalizations.of(context)!.libraryDirectory),
           enabled: !isLibrariesLoading,
           onTap: () {
-            // if (kIsWeb) {
-            //   context.go('/directory', extra: librariesFuture);
-            //   return;
-            // }
+            if (kIsWeb) {
+              context.go('/directory');
+              return;
+            }
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => LibrariesView(libraries: librariesFuture),
+                builder: (_) => LibrariesView(),
               ),
             );
           },

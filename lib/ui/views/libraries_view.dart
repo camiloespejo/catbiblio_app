@@ -1,3 +1,4 @@
+import 'package:catbiblio_app/services/libraries.dart' show LibrariesService;
 import 'package:flutter/material.dart';
 
 import 'package:catbiblio_app/l10n/app_localizations.dart';
@@ -9,9 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 part '../controllers/libraries_controller.dart';
 
 class LibrariesView extends StatefulWidget {
-  final Future<List<Library>> libraries;
-
-  const LibrariesView({super.key, required this.libraries});
+  const LibrariesView({super.key});
 
   @override
   State<LibrariesView> createState() => _LibrariesViewState();
@@ -38,7 +37,7 @@ class _LibrariesViewState extends LibrariesController {
                         : (MediaQuery.of(context).size.width / 3) * 2,
                   ),
                   child: FutureBuilder<List<Library>>(
-                    future: widget.libraries,
+                    future: LibrariesService.getLibraries(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const SizedBox(
