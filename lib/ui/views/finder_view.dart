@@ -3,6 +3,7 @@ import 'package:catbiblio_app/models/book_location.dart';
 import 'package:catbiblio_app/models/finder_params.dart';
 import 'package:catbiblio_app/services/images.dart';
 import 'package:catbiblio_app/services/locations.dart';
+import 'package:go_router/go_router.dart';
 import 'colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, debugPrint, kDebugMode;
@@ -21,7 +22,23 @@ class _FinderViewState extends FinderController {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.finderTitle)),
+      appBar: AppBar(
+        title: kIsWeb
+            ? IconButton(
+                icon: Image.asset('assets/images/head-icon.png', height: 40),
+                onPressed: () {
+                  if (kIsWeb) {
+                    context.go('/');
+                  }
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/',
+                    (route) => false,
+                  );
+                },
+              )
+            : Text(AppLocalizations.of(context)!.finderTitle),
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {

@@ -37,7 +37,19 @@ class _SearchViewState extends SearchController {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Image.asset('assets/images/head-icon.png', height: 40),
+        title: IconButton(
+          icon: Image.asset('assets/images/head-icon.png', height: 40),
+          onPressed: () {
+            if (kIsWeb) {
+              context.go('/');
+            }
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/',
+              (route) => false,
+            );
+          },
+        ),
       ),
       body: SafeArea(
         child: CustomScrollView(
