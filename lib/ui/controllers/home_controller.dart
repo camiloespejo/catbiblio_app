@@ -24,8 +24,6 @@ abstract class HomeController extends State<HomeView> {
   bool isLibraryServicesError = false;
   bool isBookSelectionsError = false;
   final int screenSizeLimit = 800;
-  String currentBookName = '';
-  String currentBiblionumber = '';
 
   late Future<List<BookSelection>> _bookSelectionsFuture;
   late Future<Map<String, List<LibraryService>>> _librariesServicesFuture;
