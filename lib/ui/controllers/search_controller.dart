@@ -57,28 +57,19 @@ abstract class SearchController extends State<SearchView> {
     super.initState();
     setMiddleSpace = setUpperLimit - 2;
 
-    loadSearch();
-
+    final queryParams = Provider.of<QueryParams>(context, listen: false);
     if (kIsWeb) {
-      _searchController.value = TextEditingValue(
-        text: widget.webQueryParams?.searchQuery ?? '',
-      );
-      _itemTypeController.value = TextEditingValue(
-        text: widget.webQueryParams?.itemType ?? 'all',
-      );
-      _librariesController.value = TextEditingValue(
-        text: widget.webQueryParams?.library ?? 'all',
-      );
-      _filterController.value = TextEditingValue(
-        text: widget.webQueryParams?.filter ?? 'title',
-      );
-
       fetchItemTypes();
       fetchLibraries();
-      return;
+
+      // set initial QueryParams based on web url query params
+      queryParams.searchQuery = widget.webQueryParams?.searchQuery ?? '';
+      queryParams.itemType = widget.webQueryParams?.itemType ?? 'all';
+      queryParams.library = widget.webQueryParams?.library ?? 'all';
+      queryParams.searchBy = widget.webQueryParams?.filter ?? 'title';
     }
 
-    final queryParams = Provider.of<QueryParams>(context, listen: false);
+    loadSearch();
     _searchController.text = queryParams.searchQuery;
   }
 
@@ -237,6 +228,21 @@ abstract class SearchController extends State<SearchView> {
           );
         }).toList();
 
+        // set initial visual itemType dropdown menu entry based on web query params
+        final initialId = widget.webQueryParams?.itemType;
+        if (initialId != null && initialId != 'all') {
+          try {
+            final matchedItemType = itemTypes.firstWhere(
+              (itemType) => itemType.itemTypeId == initialId,
+            );
+            _itemTypeController.text = matchedItemType.description;
+          } catch (e) {
+            _itemTypeController.text = AppLocalizations.of(context)!.allItemTypes;
+          }
+        } else {
+          _itemTypeController.text = AppLocalizations.of(context)!.allItemTypes;
+        }
+
         final globalProvider = Provider.of<GlobalProvider>(
           context,
           listen: false,
@@ -270,6 +276,21 @@ abstract class SearchController extends State<SearchView> {
             label: library.name,
           );
         }).toList();
+
+        // set initial visual library dropdown menu entry based on web query params
+        final initialId = widget.webQueryParams?.library;
+        if (initialId != null && initialId != 'all') {
+          try {
+            final matchedLibrary = libraries.firstWhere(
+              (library) => library.libraryId == initialId,
+            );
+            _librariesController.text = matchedLibrary.name;
+          } catch (e) {
+            _librariesController.text = AppLocalizations.of(context)!.allLibraries;
+          }
+        } else {
+          _librariesController.text = AppLocalizations.of(context)!.allLibraries;
+        }
 
         final globalProvider = Provider.of<GlobalProvider>(
           context,

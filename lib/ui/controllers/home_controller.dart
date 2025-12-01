@@ -137,10 +137,10 @@ abstract class HomeController extends State<HomeView> {
     queryParams.searchQuery = _searchController.text;
 
     WebQueryParams webQueryParams = WebQueryParams(
-      searchQuery: _searchController.value.text,
-      itemType: _itemTypeController.value.text,
-      library: _libraryController.value.text,
-      filter: _searchFilterController.value.text,
+      searchQuery: queryParams.searchQuery,
+      itemType: queryParams.itemType,
+      library: queryParams.library,
+      filter: queryParams.searchBy,
     );
 
     navigateToSearchView(controllersData, webQueryParams);
