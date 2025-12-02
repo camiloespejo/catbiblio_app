@@ -26,7 +26,6 @@ abstract class HomeController extends State<HomeView> {
   final int screenSizeLimit = 800;
 
   late Future<List<BookSelection>> _bookSelectionsFuture;
-  late Future<Map<String, List<LibraryService>>> _librariesServicesFuture;
 
   late Timer _booksCarouselTimer;
   late Timer _servicesCarouselTimer;
@@ -70,7 +69,6 @@ abstract class HomeController extends State<HomeView> {
     _librariesFuture = Future.value([]);
 
     _bookSelectionsFuture = BookSelectionsService.getBookSelections();
-    _librariesServicesFuture = LibraryServices.getLibraryCodeServicesMap();
     fetchData();
   }
 
@@ -336,7 +334,7 @@ abstract class HomeController extends State<HomeView> {
     _libraryServicesController.text =
         'Unidad de Servicios Bibliotecarios y de Información Xalapa';
     _startServicesCarouselTimer();
-    
+
     setState(() {
       isLibraryServicesLoading = false;
       isLibraryServicesError = _librariesServices.isEmpty;
