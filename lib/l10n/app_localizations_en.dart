@@ -312,4 +312,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get timeoutLoading =>
       'Timeout while loading data, please check your internet connection and try again.';
+
+  @override
+  String get errorLoadingLibraryServices => 'Error loading library services';
 }

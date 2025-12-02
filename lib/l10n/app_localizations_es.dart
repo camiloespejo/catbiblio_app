@@ -314,4 +314,8 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get timeoutLoading =>
       'Tiempo de espera agotado al cargar los datos, revise su conexión a Internet e inténtelo de nuevo.';
+
+  @override
+  String get errorLoadingLibraryServices =>
+      'Error al cargar los servicios de la biblioteca';
 }

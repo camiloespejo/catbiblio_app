@@ -328,12 +328,19 @@ abstract class HomeController extends State<HomeView> {
   }
 
   /// builds the library services dropdown based on previously fetched libraries
-  void buildLibraryServicesDropdown() {
+  void buildLibraryServicesDropdown() async {
+    _librariesServices = await LibraryServices.getLibraryCodeServicesMap();
     _enabledHomeLibrariesEntries = _libraryEntries
         .where((entry) => _librariesServices.containsKey(entry.value))
         .toList();
     _libraryServicesController.text =
         'Unidad de Servicios Bibliotecarios y de Información Xalapa';
+    _startServicesCarouselTimer();
+    
+    setState(() {
+      isLibraryServicesLoading = false;
+      isLibraryServicesError = _librariesServices.isEmpty;
+    });
   }
 
   void onSelectLibraryService(String value) {

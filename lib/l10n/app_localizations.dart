@@ -697,6 +697,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Timeout while loading data, please check your internet connection and try again.'**
   String get timeoutLoading;
+
+  /// Message shown when there is an error loading the library services
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading library services'**
+  String get errorLoadingLibraryServices;
 }
 
 class _AppLocalizationsDelegate

@@ -238,54 +238,52 @@ class _HomeViewState extends HomeController {
                       onSelected: onSelectLibraryService,
                     ),
                   ),
-                  FutureBuilder(
-                    future: _librariesServicesFuture,
-                    builder: (context, asyncSnapshot) {
-                      if (asyncSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (asyncSnapshot.hasError) {
-                        return Center(
-                          child: Text(
-                            'error',
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        );
-                      }
 
-                      _librariesServices = asyncSnapshot.data ?? {};
-                      _startServicesCarouselTimer();
-
-                      return ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxHeight: MediaQuery.of(context).size.height / 2,
-                        ),
-                        child: IgnorePointer(
-                          ignoring: kIsWeb,
-                          child: CarouselView.weighted(
-                            flexWeights: [1, 4, 1],
-                            elevation: 2.0,
-                            scrollDirection: Axis.horizontal,
-                            itemSnapping: true,
-                            controller: _servicesCarouselController,
-                            enableSplash: false,
-                            children:
-                                _librariesServices[selectedLibraryServices]
-                                    ?.map((libraryService) {
-                                      return HeroLayoutCard(
-                                        fit: BoxFit.fitWidth,
-                                        imageModel: ImageModel(
-                                          libraryService.name,
-                                          libraryService.imageUrl,
-                                        ),
-                                      );
-                                    })
-                                    .toList() ??
-                                [],
-                          ),
-                        ),
-                      );
-                    },
+                  if (isLibraryServicesLoading)
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(_primaryColor),
+                      ),
+                    )
+                  else if (isLibraryServicesError)
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        AppLocalizations.of(context)!
+                            .errorLoadingLibraryServices,
+                      ),
+                    )
+                  else
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height / 2,
+                    ),
+                    child: IgnorePointer(
+                      ignoring: kIsWeb,
+                      child: CarouselView.weighted(
+                        flexWeights: [1, 4, 1],
+                        elevation: 2.0,
+                        scrollDirection: Axis.horizontal,
+                        itemSnapping: true,
+                        controller: _servicesCarouselController,
+                        enableSplash: false,
+                        children:
+                            _librariesServices[selectedLibraryServices]?.map((
+                              libraryService,
+                            ) {
+                              return HeroLayoutCard(
+                                fit: BoxFit.fitWidth,
+                                imageModel: ImageModel(
+                                  libraryService.name,
+                                  libraryService.imageUrl,
+                                ),
+                              );
+                            }).toList() ??
+                            [],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -506,9 +504,7 @@ class AppNavigationDrawer extends StatelessWidget {
             }
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => LibrariesView(),
-              ),
+              MaterialPageRoute(builder: (_) => LibrariesView()),
             );
           },
         ),

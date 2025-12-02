@@ -99,5 +99,6 @@
     "legendBorrowed": "Prestado",
     "legendFinder": "Localizador",
     "legendNotForBorrow": "No para préstamo",
-    "timeoutLoading": "Tiempo de espera agotado al cargar los datos, revise su conexión a Internet e inténtelo de nuevo."
+    "timeoutLoading": "Tiempo de espera agotado al cargar los datos, revise su conexión a Internet e inténtelo de nuevo.",
+    "errorLoadingLibraryServices": "Error al cargar los servicios de la biblioteca"
 }
