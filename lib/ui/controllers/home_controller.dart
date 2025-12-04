@@ -67,7 +67,6 @@ abstract class HomeController extends State<HomeView> {
   initState() {
     super.initState();
     _librariesFuture = Future.value([]);
-
     _bookSelectionsFuture = BookSelectionsService.getBookSelections();
     fetchData();
   }
@@ -104,6 +103,7 @@ abstract class HomeController extends State<HomeView> {
     _searchController.clear();
   }
 
+  /// changes app locale when selected on menu
   void changeLocale(Locale locale) {
     widget.onLocaleChange(locale);
     // Clear cached filter entries to rebuild with new locale
@@ -254,6 +254,7 @@ abstract class HomeController extends State<HomeView> {
     }
   }
 
+  /// starts the books carousel timer
   void _startBooksCarouselTimer() {
     if (_isBooksTimerStarted) return;
 
@@ -292,6 +293,7 @@ abstract class HomeController extends State<HomeView> {
     _isBooksTimerStarted = true;
   }
 
+  /// starts the services carousel timer
   void _startServicesCarouselTimer() {
     if (_isServicesTimerStarted) return;
 
@@ -348,6 +350,7 @@ abstract class HomeController extends State<HomeView> {
   }
 }
 
+/// Logs messages to the console if in debug mode
 void _log(String? message) {
   if (kDebugMode) {
     debugPrint('home_controller log: $message');

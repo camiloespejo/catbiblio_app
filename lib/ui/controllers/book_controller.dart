@@ -38,6 +38,7 @@ abstract class BookController extends State<BookView> {
     _loadData(context);
   }
 
+  /// Loads book details and items based on the provided biblio number
   Future<void> _loadData(BuildContext context) async {
     final biblioNumber = int.parse(widget.biblioNumber);
 
@@ -101,6 +102,7 @@ abstract class BookController extends State<BookView> {
     });
   }
 
+  /// Displays an image dialog with the provided tag and image URL
   void _showImageDialog(BuildContext context, String tag, String imageUrl) {
     showDialog(
       context: context,
@@ -111,6 +113,7 @@ abstract class BookController extends State<BookView> {
     );
   }
 
+  /// Shows a share dialog with options to share via WhatsApp or Email
   void showShareDialog(
     BuildContext context,
     String title,
@@ -162,6 +165,7 @@ abstract class BookController extends State<BookView> {
     );
   }
 
+  /// Shares the provided message via Whatsapp client
   Future<void> _shareOnWhatsApp(BuildContext context, String message) async {
     final Uri whatsappUrl = Uri.parse(
       "https://wa.me/?text=${Uri.encodeComponent(message)}",
@@ -179,6 +183,7 @@ abstract class BookController extends State<BookView> {
     }
   }
 
+  /// Navigates to the FinderView with the provided parameters
   void navigateToFinderView(
     String callNumber,
     String collection,
@@ -216,6 +221,7 @@ abstract class BookController extends State<BookView> {
     );
   }
 
+  /// Shares the provided message via email client
   Future<void> _shareViaEmail(BuildContext context, String message) async {
     final Uri emailUri = Uri.parse(
       'mailto:?subject=&body=${Uri.encodeComponent(message)}',
@@ -245,6 +251,7 @@ abstract class BookController extends State<BookView> {
   }
 }
 
+/// Logs messages to the console if in debug mode
 void _log(String? message) {
   if (kDebugMode) {
     debugPrint('book_controller log: $message');

@@ -188,6 +188,12 @@ class _SearchViewState extends SearchController {
   }
 }
 
+/// PaginationButtonRow widget
+/// It displays a row of pagination buttons for navigating through pages.
+/// The [paginationBehavior] function is called when a button is pressed.
+/// The [setLowerLimit] and [setUpperLimit] functions set the limits for pagination.
+/// The [totalPages] and [currentPage] parameters indicate the total number of pages and the current page.
+/// The [setMiddleSpace] parameter is used to determine the middle space for pagination.
 class PaginationButtonRow extends StatelessWidget {
   const PaginationButtonRow({
     super.key,
@@ -262,6 +268,11 @@ class PaginationButtonRow extends StatelessWidget {
   }
 }
 
+/// BookList widget
+/// It displays a list of books with their details.
+/// It handles loading states and errors.
+/// The [books] parameter is a list of [BookPreview] objects.
+/// The [isPageLoading] and [isInitialRequestLoading] parameters indicate the loading state
 class BookList extends StatelessWidget {
   const BookList({
     super.key,
@@ -471,6 +482,9 @@ class BookList extends StatelessWidget {
   }
 }
 
+/// TextField for search input
+/// It allows users to enter search queries.
+/// The [onSubmitted] callback is triggered when the user submits the search.
 class TextFieldSearchWidget extends StatelessWidget {
   const TextFieldSearchWidget({
     super.key,
@@ -503,6 +517,10 @@ class TextFieldSearchWidget extends StatelessWidget {
   }
 }
 
+/// Dropdown for selecting libraries
+/// It allows users to filter search results by library.
+/// It uses a [TextEditingController] to manage the selected library.
+/// The dropdown entries are provided as a list of [DropdownMenuEntry<String>].
 class DropdownLibraries extends StatelessWidget {
   const DropdownLibraries({
     super.key,
@@ -540,6 +558,10 @@ class DropdownLibraries extends StatelessWidget {
   }
 }
 
+/// Dropdown for selecting filters
+/// It allows users to filter search results by specific criteria.
+/// It uses a [TextEditingController] to manage the selected filter.
+/// The dropdown entries are provided as a list of [DropdownMenuEntry<String>].
 class DropdownFilter extends StatelessWidget {
   const DropdownFilter({
     super.key,
@@ -573,6 +595,10 @@ class DropdownFilter extends StatelessWidget {
   }
 }
 
+/// Dropdown for selecting item types
+/// It allows users to filter search results by item type.
+/// It uses a [TextEditingController] to manage the selected item type.
+/// The dropdown entries are provided as a list of [DropdownMenuEntry<String>].
 class DropdownItemType extends StatelessWidget {
   const DropdownItemType({
     super.key,

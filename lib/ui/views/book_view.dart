@@ -98,7 +98,6 @@ class _BookViewState extends BookController {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Imagen real cuando esté disponible, si está cargando mostramos un mock.
                                     if (isLoadingDetails)
                                       SizedBox(
                                         width: 120,
@@ -207,7 +206,6 @@ class _BookViewState extends BookController {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          // Texto mock mientras carga, título real cuando esté disponible.
                                           SelectionArea(
                                             child: Text(
                                               isLoadingDetails
@@ -404,6 +402,7 @@ class _BookViewState extends BookController {
   }
 }
 
+/// Widget to display the legend for item status icons
 class KeysLegend extends StatelessWidget {
   const KeysLegend({super.key});
 
@@ -472,6 +471,9 @@ class KeysLegend extends StatelessWidget {
   }
 }
 
+/// Widget to display a list of libraries and their bibliographic items
+/// It shows an expandable list of libraries with their items.
+/// Each item shows its details and a button to navigate to the finder view if applicable.
 class ListViewLibrariesWidget extends StatelessWidget {
   const ListViewLibrariesWidget({
     super.key,
@@ -691,6 +693,9 @@ class ListViewLibrariesWidget extends StatelessWidget {
   }
 }
 
+/// Widget to display bibliographic details
+/// It shows various details like author, editor, description, ISBN, language, etc.
+/// Includes mock data for loading state.
 class BibliographicDetails extends StatelessWidget {
   const BibliographicDetails({
     super.key,
@@ -829,6 +834,7 @@ class BibliographicDetails extends StatelessWidget {
   final mockLoc = 'QA76.XX XX XXX';
 }
 
+/// Widget to display a single bibliographic detail with label and value
 class SingleBiblioDetailWrap extends StatelessWidget {
   const SingleBiblioDetailWrap({
     super.key,
@@ -850,6 +856,11 @@ class SingleBiblioDetailWrap extends StatelessWidget {
   }
 }
 
+/// Dialog to display an image
+/// It uses a [Hero] widget for smooth transitions.
+/// The [tag] is used to identify the image in the hero animation.
+/// The [imageUrl] is the URL of the image to be displayed.
+/// The dialog is displayed when the user taps on the image.
 class ImageDialog extends StatelessWidget {
   const ImageDialog({required this.tag, required this.imageUrl, super.key});
 

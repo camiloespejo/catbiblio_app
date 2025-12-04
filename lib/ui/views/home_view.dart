@@ -77,6 +77,7 @@ class _HomeViewState extends HomeController {
       ),
       drawerEnableOpenDragGesture: true,
       body: SafeArea(
+        /// Search filters section
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
@@ -127,6 +128,11 @@ class _HomeViewState extends HomeController {
                 ],
               ),
             ),
+
+            /// BookSelections Carousel
+            /// It displays a carousel of book selections.
+            /// Using future builder to load book selections asynchronously.
+            /// The carousel is displayed only if there are book selections available.
             SliverToBoxAdapter(
               child: Container(
                 decoration: BoxDecoration(color: _primaryColor),
@@ -217,6 +223,12 @@ class _HomeViewState extends HomeController {
                 ),
               ),
             ),
+
+            /// Libraries Services Carousel
+            /// It displays a carousel of library services.
+            /// Using future builder to load library services asynchronously.
+            /// The carousel is displayed only if there are library services available.
+            /// It will default to USBI-X
             SliverToBoxAdapter(
               child: Column(
                 children: [
@@ -295,6 +307,9 @@ class _HomeViewState extends HomeController {
   }
 }
 
+/// ItemTypes widget 
+/// It displays a dropdown menu for selecting item types.
+/// The [screenSizeLimit] parameter is used to set the maximum width of the dropdown.
 class ItemTypes extends StatelessWidget {
   const ItemTypes({
     super.key,
@@ -418,6 +433,10 @@ class Filters extends StatelessWidget {
   }
 }
 
+/// HeroLayoutCard widget
+/// It displays a card with an image and title.
+/// The image is loaded from a URL and the title is displayed at the bottom of the card
+/// Used for both carousels book selections and library services.
 class HeroLayoutCard extends StatelessWidget {
   const HeroLayoutCard({
     super.key,
@@ -474,6 +493,8 @@ class HeroLayoutCard extends StatelessWidget {
   }
 }
 
+/// AppNavigationDrawer widget
+/// It provides a navigation drawer with various options for the user.
 class AppNavigationDrawer extends StatelessWidget {
   const AppNavigationDrawer({
     super.key,
@@ -577,6 +598,10 @@ class AppNavigationDrawer extends StatelessWidget {
   }
 }
 
+/// DropdownLibrariesServicesWidget
+/// It allows users to select a library service from a dropdown menu.
+/// This widget information depends on the libraries list previously loaded.
+/// This cannot be used before the libraries are loaded.
 class DropdownLibrariesServicesWidget extends StatelessWidget {
   const DropdownLibrariesServicesWidget({
     super.key,
@@ -608,6 +633,8 @@ class DropdownLibrariesServicesWidget extends StatelessWidget {
   }
 }
 
+/// DropdownFilters widget
+/// It allows users to select a filter for search results.
 class DropdownFilters extends StatelessWidget {
   const DropdownFilters({
     super.key,
@@ -637,6 +664,8 @@ class DropdownFilters extends StatelessWidget {
   }
 }
 
+/// SearchView widget
+/// It allows users to search for items in the catalog based on the previous filters.
 class TextFieldSearchWidget extends StatelessWidget {
   const TextFieldSearchWidget({
     super.key,
@@ -667,6 +696,8 @@ class TextFieldSearchWidget extends StatelessWidget {
   }
 }
 
+/// DropdownLibrariesWidget
+/// It allows users to select a library for filtering search results.
 class DropdownLibrariesWidget extends StatelessWidget {
   const DropdownLibrariesWidget({
     super.key,
@@ -697,6 +728,8 @@ class DropdownLibrariesWidget extends StatelessWidget {
   }
 }
 
+/// DropdownItemTypesWidget
+/// It allows users to select an item type for filtering search results.
 class DropdownItemTypesWidget extends StatelessWidget {
   const DropdownItemTypesWidget({
     super.key,

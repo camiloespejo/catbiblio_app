@@ -37,6 +37,7 @@ abstract class MarcController extends State<MarcView> {
     }
   }
 
+  /// Formats MARC data into an alternative style for better readability
   static String? formatAltMarcStyle(String? marc) {
     if (marc == null) return null;
 
@@ -86,6 +87,7 @@ abstract class MarcController extends State<MarcView> {
   }
 }
 
+/// Logs messages to the console if in debug mode
 void _log(String? message) {
   if (kDebugMode) {
     debugPrint('marc_controller log: $message');

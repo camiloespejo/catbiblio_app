@@ -73,6 +73,7 @@ abstract class SearchController extends State<SearchView> {
     _searchController.text = queryParams.searchQuery;
   }
 
+  /// Loads the initial search results based on the current query parameters
   void loadSearch() {
     isInitialRequestLoading = true;
     isError = false;
@@ -120,6 +121,7 @@ abstract class SearchController extends State<SearchView> {
     super.didChangeDependencies();
   }
 
+  /// Handles the submission of a new search query
   void onSubmitAction(String searchQuery) {
     if (searchQuery.isEmpty) return;
     final queryParams = Provider.of<QueryParams>(context, listen: false);
@@ -135,6 +137,7 @@ abstract class SearchController extends State<SearchView> {
     });
   }
 
+  /// Updates the search results based on the current page and query parameters
   void updatePageResults() {
     final queryParams = Provider.of<QueryParams>(context, listen: false);
     queryParams.startRecord = (currentPage - 1) * 10;
@@ -162,6 +165,7 @@ abstract class SearchController extends State<SearchView> {
         });
   }
 
+ /// Handles pagination behavior based on the selected index
   void paginationBehavior(int selectedIndex) {
     if (isPageLoading || currentPage == selectedIndex) return;
 
@@ -314,6 +318,7 @@ abstract class SearchController extends State<SearchView> {
   }
 }
 
+/// Logs messages to the console if in debug mode
 void _log(String? message) {
   if (kDebugMode) {
     debugPrint('search_controller log: $message');

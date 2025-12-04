@@ -10,6 +10,7 @@ abstract class FinderController extends State<FinderView> {
     _loadData();
   }
 
+  /// Loads book location data based on the provided finder parameters
   Future<void> _loadData() async {
     BookLocation? location;
 
@@ -29,6 +30,7 @@ abstract class FinderController extends State<FinderView> {
   }
 }
 
+/// Logs messages to the console if in debug mode
 void _log(String? message) {
   if (kDebugMode) {
     debugPrint('finder_controller log: $message');
