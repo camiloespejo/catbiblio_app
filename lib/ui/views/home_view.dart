@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb, debugPrint;
+import 'package:flutter/material.dart';
 
 import 'package:catbiblio_app/l10n/app_localizations.dart';
 import 'package:catbiblio_app/models/controllers_data.dart';
@@ -14,16 +16,15 @@ import 'package:catbiblio_app/services/library_services.dart';
 import 'package:catbiblio_app/ui/views/book_view.dart';
 import 'package:catbiblio_app/ui/views/search_view.dart';
 import 'package:catbiblio_app/ui/views/libraries_view.dart';
-import 'colors.dart';
-import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb, debugPrint;
-import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 import 'package:url_launcher/url_launcher.dart';
+
+import 'colors.dart';
 
 part '../controllers/home_controller.dart';
 
