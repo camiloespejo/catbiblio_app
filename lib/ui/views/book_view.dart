@@ -2,12 +2,6 @@ import 'dart:async' show TimeoutException;
 import 'package:flutter/foundation.dart' show kIsWeb, debugPrint, kDebugMode;
 import 'package:flutter/material.dart';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:go_router/go_router.dart';
-import 'package:readmore/readmore.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'package:catbiblio_app/l10n/app_localizations.dart';
 import 'package:catbiblio_app/models/biblio_item.dart';
 import 'package:catbiblio_app/models/biblios_details.dart';
@@ -18,6 +12,12 @@ import 'package:catbiblio_app/services/images.dart';
 import 'package:catbiblio_app/services/biblios_details.dart';
 import 'package:catbiblio_app/ui/views/finder_view.dart';
 import 'package:catbiblio_app/ui/views/marc_view.dart';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:go_router/go_router.dart';
+import 'package:readmore/readmore.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'colors.dart';
 
