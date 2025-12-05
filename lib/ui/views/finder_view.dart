@@ -1,12 +1,15 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb, debugPrint, kDebugMode;
+
 import 'package:catbiblio_app/l10n/app_localizations.dart';
 import 'package:catbiblio_app/models/book_location.dart';
 import 'package:catbiblio_app/models/finder_params.dart';
 import 'package:catbiblio_app/services/images.dart';
 import 'package:catbiblio_app/services/locations.dart';
+
 import 'package:go_router/go_router.dart';
+
 import 'colors.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb, debugPrint, kDebugMode;
 
 part '../controllers/finder_controller.dart';
 
