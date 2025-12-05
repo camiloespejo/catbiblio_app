@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:catbiblio_app/l10n/app_localizations.dart';
 import 'package:catbiblio_app/models/finder_params.dart';
 import 'package:catbiblio_app/models/global_provider.dart';
@@ -10,7 +12,7 @@ import 'package:catbiblio_app/ui/views/colors.dart';
 import 'package:catbiblio_app/ui/views/libraries_view.dart';
 import 'package:catbiblio_app/ui/views/marc_view.dart';
 import 'package:catbiblio_app/ui/views/search_view.dart';
-import 'package:flutter/material.dart';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
