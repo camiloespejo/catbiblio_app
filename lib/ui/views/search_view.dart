@@ -1,21 +1,24 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode, debugPrint;
+
 import 'package:catbiblio_app/l10n/app_localizations.dart';
 import 'package:catbiblio_app/models/book_preview.dart';
 import 'package:catbiblio_app/models/controllers_data.dart';
 import 'package:catbiblio_app/models/global_provider.dart';
 import 'package:catbiblio_app/models/query_params.dart';
 import 'package:catbiblio_app/models/web_query_params.dart';
+import 'package:catbiblio_app/services/search.dart';
 import 'package:catbiblio_app/services/item_types.dart';
 import 'package:catbiblio_app/services/libraries.dart';
 import 'package:catbiblio_app/ui/views/book_view.dart';
-import 'package:flutter/foundation.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
-import 'colors.dart';
-import 'package:flutter/material.dart';
-import 'package:catbiblio_app/services/search.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+import 'colors.dart';
 
 part '../controllers/search_controller.dart';
 
