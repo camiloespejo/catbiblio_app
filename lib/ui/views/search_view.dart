@@ -38,7 +38,14 @@ class _SearchViewState extends SearchController {
       appBar: AppBar(
         centerTitle: true,
         title: IconButton(
-          icon: Image.asset('assets/images/head-icon.png', height: 40),
+          icon: kIsWeb
+              ? const Image(
+                image: AssetImage('assets/images/head-icon-medium.png'),
+                height: 40)
+              : const Image(
+                  image: AssetImage('assets/images/head-icon.png'),
+                  height: 40,
+                ),
           onPressed: () {
             if (kIsWeb) {
               context.go('/');

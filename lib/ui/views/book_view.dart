@@ -44,7 +44,7 @@ class _BookViewState extends BookController {
                   context.go('/');
                 },
                 child: Image(
-                  image: const AssetImage('assets/images/head.png'),
+                  image: const AssetImage('assets/images/head-medium.png'),
                   height: 40,
                 ),
               )

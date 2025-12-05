@@ -64,8 +64,10 @@ class _HomeViewState extends HomeController {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Image(
-          image: AssetImage('assets/images/head.png'),
+        title: Image(
+          image: kIsWeb
+              ? AssetImage('assets/images/head-medium.png')
+              : AssetImage('assets/images/head.png'),
           height: 40,
         ),
       ),
