@@ -65,7 +65,7 @@ class BibliosDetailsService {
     final dio = _createDio();
 
     try {
-      _log('Requesting biblio $biblioNumber from ${dio.options.baseUrl}');
+      // _log('Requesting biblio $biblioNumber from ${dio.options.baseUrl}');
 
       final response = await dio.get(
         '/biblios_details',
@@ -260,9 +260,9 @@ class BibliosDetailsService {
 
     // 8. After checking all fields, process the collected results.
     if (results.isEmpty) {
-      _log(
-        'No matching subfields found for tag $tag and subfield $subfieldCode',
-      );
+      // _log(
+      //   'No matching subfields found for tag $tag and subfield $subfieldCode',
+      // );
       // If we looped through everything but found no matching subfields.
       return null;
     } else {
