@@ -121,10 +121,41 @@ class _HomeViewState extends HomeController {
                             ? MediaQuery.of(context).size.width
                             : (MediaQuery.of(context).size.width / 3) * 2,
                       ),
-                      child: TextFieldSearchWidget(
-                        searchController: _searchController,
-                        onSubmitted: (value) => onSubmitAction(),
-                        clearSearchController: clearSearchController,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextFieldSearchWidget(
+                              searchController: _searchController,
+                              onSubmitted: (value) => onSubmitAction(),
+                              clearSearchController: clearSearchController,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _primaryColor,
+                              foregroundColor: Colors.white,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 20,
+                              ),
+                              minimumSize: const Size(48, 20),
+                            ),
+                            onPressed: () => onSubmitAction(), 
+                            child: Row(
+                              children: [
+                                Icon(Icons.search, size: 16, color: Colors.white),
+                                if (MediaQuery.of(context).size.width > screenSizeLimit) 
+                                  Row(
+                                    children: [
+                                      const SizedBox(width: 4),
+                                      Text(AppLocalizations.of(context)!.search),
+                                    ]
+                                  ),
+                              ],
+                            )
+                          )
+                        ],
                       ),
                     ),
                   ),

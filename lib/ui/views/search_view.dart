@@ -118,10 +118,41 @@ class _SearchViewState extends SearchController {
                             },
                           ),
                           const SizedBox(height: 12),
-                          TextFieldSearchWidget(
-                            searchController: _searchController,
-                            onSubmitted: onSubmitAction,
-                            clearSearchController: clearSearchController,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFieldSearchWidget(
+                                  searchController: _searchController,
+                                  onSubmitted: onSubmitAction,
+                                  clearSearchController: clearSearchController,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _primaryColor,
+                                  foregroundColor: Colors.white,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 20,
+                                  ),
+                                  minimumSize: const Size(48, 20),
+                                ),
+                                onPressed: () => onSubmitAction(_searchController.text), 
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.search, size: 16, color: Colors.white),
+                                    if (MediaQuery.of(context).size.width > screenSizeLimit) 
+                                      Row(
+                                        children: [
+                                          const SizedBox(width: 4),
+                                          Text(AppLocalizations.of(context)!.search),
+                                        ]
+                                      ),
+                                  ],
+                                )
+                              )
+                            ],
                           ),
                         ],
                       ),
