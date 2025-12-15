@@ -20,7 +20,7 @@ import 'package:catbiblio_app/ui/views/libraries_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -141,20 +141,27 @@ class _HomeViewState extends HomeController {
                               ),
                               minimumSize: const Size(48, 20),
                             ),
-                            onPressed: () => onSubmitAction(), 
+                            onPressed: () => onSubmitAction(),
                             child: Row(
                               children: [
-                                Icon(Icons.search, size: 16, color: Colors.white),
-                                if (MediaQuery.of(context).size.width > screenSizeLimit) 
+                                Icon(
+                                  Icons.search,
+                                  size: 16,
+                                  color: Colors.white,
+                                ),
+                                if (MediaQuery.of(context).size.width >
+                                    screenSizeLimit)
                                   Row(
                                     children: [
                                       const SizedBox(width: 4),
-                                      Text(AppLocalizations.of(context)!.search),
-                                    ]
+                                      Text(
+                                        AppLocalizations.of(context)!.search,
+                                      ),
+                                    ],
                                   ),
                               ],
-                            )
-                          )
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -252,6 +259,56 @@ class _HomeViewState extends HomeController {
                           );
                         },
                       ),
+                      // button icon with icon arrow left
+                      SizedBox(height: 16.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 8.0,
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              if (_currentBookIndex == 0) return;
+
+                              _booksCarouselController.animateToItem(
+                                _currentBookIndex - 1,
+                                // duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                              setState(() {
+                                _currentBookIndex--;
+                              });
+                            },
+                            label: const Icon(Icons.arrow_left, size: 32),
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              if (MediaQuery.of(context).size.width < 600) {
+                                if (_currentBookIndex >= _bookSelections.length) {
+                                  return;
+                                }
+                              } else {
+                                if (_currentBookIndex >= _bookSelections.length - 4 - 1) {
+                                  return;
+                                }
+                              }
+
+                              _booksCarouselController.animateToItem(
+                                _currentBookIndex + 1,
+                                // duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                              setState(() {
+                                _currentBookIndex++;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: _primaryColor,
+                            ),
+                            label: const Icon(Icons.arrow_right, size: 32),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -289,25 +346,25 @@ class _HomeViewState extends HomeController {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(_primaryColor),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          _primaryColor,
+                        ),
                       ),
                     )
                   else if (isLibraryServicesError)
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        AppLocalizations.of(context)!
-                            .errorLoadingLibraryServices,
+                        AppLocalizations.of(
+                          context,
+                        )!.errorLoadingLibraryServices,
                       ),
                     )
                   else
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height / 2,
-                    ),
-                    child: IgnorePointer(
-                      ignoring: kIsWeb,
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height / 2,
+                      ),
                       child: CarouselView.weighted(
                         flexWeights: [1, 4, 1],
                         elevation: 2.0,
@@ -330,6 +387,51 @@ class _HomeViewState extends HomeController {
                             [],
                       ),
                     ),
+                  SizedBox(height: 16.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 8.0,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          if (_currentServiceIndex == 0) return;
+
+                          _servicesCarouselController.animateToItem(
+                            _currentServiceIndex - 1,
+                            // duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                          setState(() {
+                            _currentServiceIndex--;
+                          });
+                        },
+                        label: const Icon(Icons.arrow_left, size: 32),
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          if (_currentServiceIndex >=
+                              (_librariesServices[selectedLibraryServices]
+                                          ?.length ??
+                                      1) -
+                                  1) {
+                            return;
+                          }
+                          _servicesCarouselController.animateToItem(
+                            _currentServiceIndex + 1,
+                            // duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                          setState(() {
+                            _currentServiceIndex++;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _primaryColor,
+                          foregroundColor: Colors.white,
+                        ),
+                        label: const Icon(Icons.arrow_right, size: 32),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -341,7 +443,7 @@ class _HomeViewState extends HomeController {
   }
 }
 
-/// ItemTypes widget 
+/// ItemTypes widget
 /// It displays a dropdown menu for selecting item types.
 /// The [screenSizeLimit] parameter is used to set the maximum width of the dropdown.
 class ItemTypes extends StatelessWidget {
@@ -491,14 +593,7 @@ class HeroLayoutCard extends StatelessWidget {
           child: OverflowBox(
             maxWidth: width * 2,
             minWidth: width,
-            child: CachedNetworkImage(
-              useOldImageOnUrlChange: true,
-              imageUrl: imageModel.url,
-              fit: fit,
-              errorWidget: (context, url, error) => const Center(
-                child: Icon(Icons.broken_image, color: Colors.grey, size: 40),
-              ),
-            ),
+            child: Image.network(imageModel.url, fit: fit),
           ),
         ),
         Container(
@@ -547,7 +642,11 @@ class AppNavigationDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return NavigationDrawer(
       children: [
-        DrawerHeader(child: Image.asset('assets/images/head.png')),
+        DrawerHeader(
+          child: kIsWeb
+              ? Image.asset('assets/images/head-medium.png')
+              : Image.asset('assets/images/head.png'),
+        ),
         ListTile(
           leading: const Icon(Icons.map, color: _primaryColor),
           title: Text(AppLocalizations.of(context)!.libraryDirectory),

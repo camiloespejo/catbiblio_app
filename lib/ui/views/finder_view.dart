@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, debugPrint, kDebugMode;
 
@@ -119,7 +120,7 @@ class MapSection extends StatelessWidget {
             panEnabled: true,
             minScale: 0.5,
             maxScale: 4,
-            child: Image.asset('assets/images/croquis1.png'),
+            child: CachedNetworkImage(imageUrl: bookLocation.imgUrl),
           ),
         ],
       ),

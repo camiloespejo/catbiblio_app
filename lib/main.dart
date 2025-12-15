@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:catbiblio_app/l10n/app_localizations.dart';
@@ -140,6 +141,16 @@ class _MainAppState extends State<MainApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       locale: _locale,
       theme: ThemeData(
+        pageTransitionsTheme: PageTransitionsTheme(builders: kIsWeb
+              ? {
+                  for (final platform in TargetPlatform.values)
+                    platform:const NoTransitionsBuilder(),
+                }
+              : const {
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
+              }),
         useMaterial3: true,
         fontFamily: 'Inter',
         drawerTheme: DrawerThemeData(
@@ -155,5 +166,21 @@ class _MainAppState extends State<MainApp> {
       ),
       routerConfig: _router,
     );
+  }
+}
+
+class NoTransitionsBuilder extends PageTransitionsBuilder {
+  const NoTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T>? route,
+    BuildContext? context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget? child,
+  ) {
+    // only return the child without warping it with animations
+    return child!;
   }
 }
