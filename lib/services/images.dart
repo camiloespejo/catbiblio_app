@@ -9,6 +9,8 @@ final String _baseUrl =
 
 const String _openLibraryBaseUrl = 'https://covers.openlibrary.org';
 
+const contentType = 'content-type';
+
 /// Represents a fetched thumbnail together with its source.
 class ThumbnailResult {
   /// The fetched image widget.
@@ -94,9 +96,9 @@ class ImageService {
       final response = await dio.get(
         '$_baseUrl/cgi-bin/koha/opac-image.pl?thumbnail=1&biblionumber=$biblionumber',
       );
-      if (response.headers.value('content-type') != null &&
+      if (response.headers.value(contentType) != null &&
           response.headers
-              .value('content-type')!
+              .value(contentType)!
               .toLowerCase()
               .contains('image/png') &&
           response.statusCode == 200) {
@@ -123,9 +125,9 @@ class ImageService {
 
     try {
       final response = await dio.get('$_openLibraryBaseUrl/b/isbn/$isbn-M.jpg');
-      if (response.headers.value('content-type') != null &&
+      if (response.headers.value(contentType) != null &&
           response.headers
-              .value('content-type')!
+              .value(contentType)!
               .toLowerCase()
               .contains('image/jpeg') &&
           response.statusCode == 200) {
