@@ -296,17 +296,25 @@ class PaginationButtonRow extends StatelessWidget {
                         minimumSize: const Size(36, 36),
                         padding: EdgeInsets.zero,
                       ),
-                child: i == _setUpperLimit
-                    ? const Icon(Icons.arrow_forward)
-                    : i == _setLowerLimit && i > _setMiddleSpace
-                    ? const Icon(Icons.arrow_back)
-                    : Text('$i'),
+                child: arrowTypeWidget(i, _setUpperLimit, _setLowerLimit, _setMiddleSpace),
               ),
           ],
         ),
       ),
     );
   }
+}
+
+Widget arrowTypeWidget(int i, int setUpperLimit, int setLowerLimit, int setMiddleSpace) {
+  if (i == setUpperLimit) {
+    return const Icon(Icons.arrow_forward);
+  } 
+  
+  if (i == setLowerLimit && i > setMiddleSpace) {
+    return const Icon(Icons.arrow_back);
+  }
+
+  return Text('$i');
 }
 
 /// BookList widget
