@@ -353,23 +353,23 @@ class BookList extends StatelessWidget {
                         color: Colors.grey.shade300,
                       ),
                       const SizedBox(width: 10),
-                      Expanded(
+                      const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                           Text(
                               '---------------------------------',
                               style: TextStyle(fontSize: 25),
                             ),
-                            const Text(
+                            Text(
                               '---------------------------',
                               style: TextStyle(fontSize: 18),
                             ),
-                            const Text(
+                            Text(
                               '-------------------------------',
                               style: TextStyle(fontSize: 18),
                             ),
-                            const Text(
+                            Text(
                               '---------------------',
                               style: TextStyle(fontSize: 18),
                             ),
