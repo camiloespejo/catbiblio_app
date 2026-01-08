@@ -1,5 +1,5 @@
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void configureAppUrlStrategy() {
-  setUrlStrategy(HashUrlStrategy());
+  setUrlStrategy(const HashUrlStrategy());
 }
