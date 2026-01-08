@@ -19,8 +19,7 @@ class BiblioItem {
   int? notForLoanStatus;
   String? checkedOutDate;
   bool borrowedStatus; // Not in json, calculated based on checkedOutDate
-  int
-  overAllStatus; // Not in json, to be calculated later 0 = available, 1 = borrowed, 2 = not for loan
+  int overAllStatus; // Not in json, to be calculated later
   /*
   ItemLocation
   location; // Used for geographical location - not in json: to be calculated later
@@ -41,13 +40,24 @@ class BiblioItem {
     this.notForLoanStatus,
     this.checkedOutDate,
     this.borrowedStatus = false,
-    //ItemLocation? location,
-  }) : overAllStatus = notForLoanStatus != statusAvailable
+    this.overAllStatus = statusNotForLoan,
+  });
+  /* : overAllStatus = notForLoanStatus != statusAvailable
            ? statusNotForLoan
-           : (checkedOutDate != null ? statusBorrowed : statusAvailable);
+           : (checkedOutDate != null ? statusBorrowed : statusAvailable); */
   /*: location =
            location ??
            ItemLocation(floor: '', room: '', shelf: '', shelfSide: '');*/
+
+  static int getOverallStatus(int? notForLoanStatus, String? checkedOutDate) {
+    if (notForLoanStatus != statusAvailable) {
+      return statusNotForLoan;
+    } else if (checkedOutDate != null) {
+      return statusBorrowed;
+    } else {
+      return statusAvailable;
+    }
+  }
 
   factory BiblioItem.fromJson(Map<String, dynamic> json) {
     final checkedOutDate = json['checked_out_date'] as String?;
@@ -67,6 +77,7 @@ class BiblioItem {
       notForLoanStatus: notForLoanStatus,
       checkedOutDate: checkedOutDate,
       borrowedStatus: checkedOutDate != null,
+      overAllStatus: getOverallStatus(notForLoanStatus, checkedOutDate),
     );
   }
 
