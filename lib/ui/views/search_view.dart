@@ -546,13 +546,13 @@ class TextFieldSearchWidget extends StatelessWidget {
       controller: _searchController,
       onSubmitted: (value) => _onSubmitted(value),
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.search, color: _primaryColor),
+        prefixIcon: const Icon(Icons.search, color: _primaryColor),
         suffixIcon: IconButton(
-          icon: Icon(Icons.clear),
+          icon: const Icon(Icons.clear),
           onPressed: () => _clearSearchController(),
         ),
         labelText: AppLocalizations.of(context)!.search,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
     );
   }
