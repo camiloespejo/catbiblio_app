@@ -366,7 +366,7 @@ class _HomeViewState extends HomeController {
                         maxHeight: MediaQuery.of(context).size.height / 2,
                       ),
                       child: CarouselView.weighted(
-                        flexWeights: [1, 4, 1],
+                        flexWeights: const [1, 4, 1],
                         elevation: 2.0,
                         scrollDirection: Axis.horizontal,
                         itemSnapping: true,

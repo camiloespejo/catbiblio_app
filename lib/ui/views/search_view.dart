@@ -357,21 +357,21 @@ class BookList extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               '---------------------------------',
-                              style: const TextStyle(fontSize: 25),
+                              style: TextStyle(fontSize: 25),
                             ),
-                            Text(
+                            const Text(
                               '---------------------------',
-                              style: const TextStyle(fontSize: 18),
+                              style: TextStyle(fontSize: 18),
                             ),
-                            Text(
+                            const Text(
                               '-------------------------------',
-                              style: const TextStyle(fontSize: 18),
+                              style: TextStyle(fontSize: 18),
                             ),
-                            Text(
+                            const Text(
                               '---------------------',
-                              style: const TextStyle(fontSize: 18),
+                              style: TextStyle(fontSize: 18),
                             ),
                           ],
                         ),
