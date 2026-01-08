@@ -7,7 +7,7 @@ import 'package:dio_smart_retry/dio_smart_retry.dart';
 final String _baseUrl =
     dotenv.env['KOHA_BASE_URL'] ?? 'https://catbiblio.uv.mx';
 
-final String _openLibraryBaseUrl = 'https://covers.openlibrary.org';
+const String _openLibraryBaseUrl = 'https://covers.openlibrary.org';
 
 /// Represents a fetched thumbnail together with its source.
 class ThumbnailResult {
