@@ -65,7 +65,7 @@ class _HomeViewState extends HomeController {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Image(
+        title: const Image(
           image: kIsWeb
               ? AssetImage('assets/images/head-medium.png')
               : AssetImage('assets/images/head.png'),
@@ -135,7 +135,7 @@ class _HomeViewState extends HomeController {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: _primaryColor,
                               foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 16,
                                 vertical: 20,
                               ),
@@ -144,7 +144,7 @@ class _HomeViewState extends HomeController {
                             onPressed: () => onSubmitAction(),
                             child: Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.search,
                                   size: 16,
                                   color: Colors.white,
@@ -176,7 +176,7 @@ class _HomeViewState extends HomeController {
             /// The carousel is displayed only if there are book selections available.
             SliverToBoxAdapter(
               child: Container(
-                decoration: BoxDecoration(color: _primaryColor),
+                decoration: const BoxDecoration(color: _primaryColor),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Column(
@@ -189,7 +189,7 @@ class _HomeViewState extends HomeController {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(height: 16.0),
+                      const SizedBox(height: 16.0),
                       FutureBuilder(
                         future: _bookSelectionsFuture,
                         builder: (context, asyncSnapshot) {
@@ -283,11 +283,13 @@ class _HomeViewState extends HomeController {
                           ElevatedButton.icon(
                             onPressed: () {
                               if (MediaQuery.of(context).size.width < 600) {
-                                if (_currentBookIndex >= _bookSelections.length) {
+                                if (_currentBookIndex >=
+                                    _bookSelections.length) {
                                   return;
                                 }
                               } else {
-                                if (_currentBookIndex >= _bookSelections.length - 4 - 1) {
+                                if (_currentBookIndex >=
+                                    _bookSelections.length - 4 - 1) {
                                   return;
                                 }
                               }
@@ -593,25 +595,30 @@ class HeroLayoutCard extends StatelessWidget {
           child: OverflowBox(
             maxWidth: width * 2,
             minWidth: width,
-            child: Image.network(imageModel.url, loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(_secondaryColor),
-                ),
-              );
-            }, errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: Colors.grey[300],
-                width: double.infinity,
-                height: double.infinity,
-                child: Icon(
-                  Icons.broken_image,
-                  size: 64,
-                  color: Colors.grey[600],
-                ),
-              );
-            }, fit: fit),
+            child: Image.network(
+              imageModel.url,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(_secondaryColor),
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: Colors.grey[300],
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Icon(
+                    Icons.broken_image,
+                    size: 64,
+                    color: Colors.grey[600],
+                  ),
+                );
+              },
+              fit: fit,
+            ),
           ),
         ),
         Container(
