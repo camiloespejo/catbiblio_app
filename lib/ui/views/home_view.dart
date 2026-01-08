@@ -593,7 +593,25 @@ class HeroLayoutCard extends StatelessWidget {
           child: OverflowBox(
             maxWidth: width * 2,
             minWidth: width,
-            child: Image.network(imageModel.url, fit: fit, errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, color: Colors.grey, size: 48)),
+            child: Image.network(imageModel.url, loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(_secondaryColor),
+                ),
+              );
+            }, errorBuilder: (context, error, stackTrace) {
+              return Container(
+                color: Colors.grey[300],
+                width: double.infinity,
+                height: double.infinity,
+                child: Icon(
+                  Icons.broken_image,
+                  size: 64,
+                  color: Colors.grey[600],
+                ),
+              );
+            }, fit: fit),
           ),
         ),
         Container(
