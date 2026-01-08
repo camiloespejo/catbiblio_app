@@ -676,7 +676,7 @@ class AppNavigationDrawer extends StatelessWidget {
             }
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => LibrariesView()),
+              MaterialPageRoute(builder: (_) => const LibrariesView()),
             );
           },
         ),

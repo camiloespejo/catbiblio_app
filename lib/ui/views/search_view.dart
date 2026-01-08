@@ -132,7 +132,7 @@ class _SearchViewState extends SearchController {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: _primaryColor,
                                   foregroundColor: Colors.white,
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     horizontal: 16,
                                     vertical: 20,
                                   ),
@@ -141,7 +141,7 @@ class _SearchViewState extends SearchController {
                                 onPressed: () => onSubmitAction(_searchController.text), 
                                 child: Row(
                                   children: [
-                                    Icon(Icons.search, size: 16, color: Colors.white),
+                                    const Icon(Icons.search, size: 16, color: Colors.white),
                                     if (MediaQuery.of(context).size.width > screenSizeLimit) 
                                       Row(
                                         children: [
@@ -353,23 +353,23 @@ class BookList extends StatelessWidget {
                         color: Colors.grey.shade300,
                       ),
                       const SizedBox(width: 10),
-                      Expanded(
+                      const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                           Text(
                               '---------------------------------',
                               style: TextStyle(fontSize: 25),
                             ),
-                            const Text(
+                            Text(
                               '---------------------------',
                               style: TextStyle(fontSize: 18),
                             ),
-                            const Text(
+                            Text(
                               '-------------------------------',
                               style: TextStyle(fontSize: 18),
                             ),
-                            const Text(
+                            Text(
                               '---------------------',
                               style: TextStyle(fontSize: 18),
                             ),
@@ -546,13 +546,13 @@ class TextFieldSearchWidget extends StatelessWidget {
       controller: _searchController,
       onSubmitted: (value) => _onSubmitted(value),
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.search, color: _primaryColor),
+        prefixIcon: const Icon(Icons.search, color: _primaryColor),
         suffixIcon: IconButton(
-          icon: Icon(Icons.clear),
+          icon: const Icon(Icons.clear),
           onPressed: () => _clearSearchController(),
         ),
         labelText: AppLocalizations.of(context)!.search,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
     );
   }
