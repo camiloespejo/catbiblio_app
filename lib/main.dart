@@ -70,14 +70,20 @@ class _MainAppState extends State<MainApp> {
             return HomeView(onLocaleChange: (locale) => setLocale(locale));
           },
         ),
-        GoRoute(path: '/directory', builder: (BuildContext context, GoRouterState state) {
-          return LibrariesView();
-        }),
-        GoRoute(path: '/marc/:biblionumber', builder: (BuildContext context, GoRouterState state) {
-          final String biblioNumber =
-              state.pathParameters['biblionumber'] ?? 'No ID Found';
-          return MarcView(biblioNumber: biblioNumber);
-        }),
+        GoRoute(
+          path: '/directory',
+          builder: (BuildContext context, GoRouterState state) {
+            return const LibrariesView();
+          },
+        ),
+        GoRoute(
+          path: '/marc/:biblionumber',
+          builder: (BuildContext context, GoRouterState state) {
+            final String biblioNumber =
+                state.pathParameters['biblionumber'] ?? 'No ID Found';
+            return MarcView(biblioNumber: biblioNumber);
+          },
+        ),
         GoRoute(
           path: '/book-details/:biblionumber',
           builder: (BuildContext context, GoRouterState state) {
@@ -86,21 +92,24 @@ class _MainAppState extends State<MainApp> {
             return BookView(biblioNumber: biblioNumber);
           },
         ),
-        GoRoute(path: '/search', builder: (BuildContext context, GoRouterState state) {
-          String searchQuery = state.uri.queryParameters['searchQuery'] ?? '';
-          String itemType = state.uri.queryParameters['itemType'] ?? 'all';
-          String library = state.uri.queryParameters['library'] ?? 'all';
-          String filter = state.uri.queryParameters['filter'] ?? 'title';
-          
-          final webQueryParams = WebQueryParams(
-            searchQuery: searchQuery,
-            itemType: itemType,
-            library: library,
-            filter: filter,
-          );
+        GoRoute(
+          path: '/search',
+          builder: (BuildContext context, GoRouterState state) {
+            String searchQuery = state.uri.queryParameters['searchQuery'] ?? '';
+            String itemType = state.uri.queryParameters['itemType'] ?? 'all';
+            String library = state.uri.queryParameters['library'] ?? 'all';
+            String filter = state.uri.queryParameters['filter'] ?? 'title';
 
-          return SearchView(webQueryParams: webQueryParams);
-        }),
+            final webQueryParams = WebQueryParams(
+              searchQuery: searchQuery,
+              itemType: itemType,
+              library: library,
+              filter: filter,
+            );
+
+            return SearchView(webQueryParams: webQueryParams);
+          },
+        ),
         GoRoute(
           path: '/finder',
           builder: (BuildContext context, GoRouterState state) {
@@ -141,23 +150,25 @@ class _MainAppState extends State<MainApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       locale: _locale,
       theme: ThemeData(
-        pageTransitionsTheme: PageTransitionsTheme(builders: kIsWeb
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: kIsWeb
               ? {
                   for (final platform in TargetPlatform.values)
-                    platform:const NoTransitionsBuilder(),
+                    platform: const NoTransitionsBuilder(),
                 }
               : const {
-                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-                TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-                TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
-              }),
+                  TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                  TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+                  TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
+                },
+        ),
         useMaterial3: true,
         fontFamily: 'Inter',
-        drawerTheme: DrawerThemeData(
+        drawerTheme: const DrawerThemeData(
           backgroundColor: Colors.white,
           surfaceTintColor: CustomColors.primaryColor,
         ),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
           surfaceTintColor: CustomColors.primaryColor,
         ),
