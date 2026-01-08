@@ -181,7 +181,7 @@ class TitleSection extends StatelessWidget {
         ),
 
         Padding(
-          padding: EdgeInsetsGeometry.all(16.0),
+          padding: const EdgeInsetsGeometry.all(16.0),
           child: Column(
             children: [
               const SizedBox(height: 8.0),
@@ -227,14 +227,14 @@ class TitleSection extends StatelessWidget {
                           ),
                           Text(
                             AppLocalizations.of(context)!.level,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             bookLocation.level,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                             ),
@@ -255,14 +255,14 @@ class TitleSection extends StatelessWidget {
                           ),
                           Text(
                             AppLocalizations.of(context)!.room,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             bookLocation.room,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                             ),
@@ -283,14 +283,14 @@ class TitleSection extends StatelessWidget {
                           ),
                           Text(
                             AppLocalizations.of(context)!.collection,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             widget.params.collection,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                             ),
