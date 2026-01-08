@@ -43,8 +43,8 @@ class _BookViewState extends BookController {
                 onPressed: () {
                   context.go('/');
                 },
-                child: Image(
-                  image: const AssetImage('assets/images/head-medium.png'),
+                child: const Image(
+                  image: AssetImage('assets/images/head-medium.png'),
                   height: 40,
                 ),
               )
@@ -379,7 +379,7 @@ class _BookViewState extends BookController {
                                   ),
                                   Skeletonizer(
                                     enabled: isLoadingBiblioItems,
-                                    child: KeysLegend(),
+                                    child: const KeysLegend(),
                                   ),
 
                                   ListViewLibrariesWidget(
@@ -435,7 +435,7 @@ class KeysLegend extends StatelessWidget {
           ),
           Row(
             children: [
-              Icon(Icons.check_circle, color: Colors.green, size: 20.0),
+              const Icon(Icons.check_circle, color: Colors.green, size: 20.0),
               const SizedBox(width: 4.0),
               Text(
                 AppLocalizations.of(context)!.legendAvailable,
@@ -509,7 +509,7 @@ class ListViewLibrariesWidget extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: 3, // Show 3 placeholder items
         itemBuilder: (context, index) {
-          return Skeletonizer.zone(
+          return const Skeletonizer.zone(
             child: Card(
               child: ListTile(
                 title: Bone.text(words: 4),
@@ -876,7 +876,7 @@ class ImageDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      insetPadding: EdgeInsets.all(16.0),
+      insetPadding: const EdgeInsets.all(16.0),
 
       child: GestureDetector(
         onTap: () => Navigator.pop(context),
