@@ -132,7 +132,7 @@ class _SearchViewState extends SearchController {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: _primaryColor,
                                   foregroundColor: Colors.white,
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     horizontal: 16,
                                     vertical: 20,
                                   ),
@@ -141,7 +141,7 @@ class _SearchViewState extends SearchController {
                                 onPressed: () => onSubmitAction(_searchController.text), 
                                 child: Row(
                                   children: [
-                                    Icon(Icons.search, size: 16, color: Colors.white),
+                                    const Icon(Icons.search, size: 16, color: Colors.white),
                                     if (MediaQuery.of(context).size.width > screenSizeLimit) 
                                       Row(
                                         children: [
