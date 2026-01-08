@@ -335,7 +335,11 @@ class _BookViewState extends BookController {
                                       size: 48,
                                     ),
                                     const SizedBox(height: 8.0),
-                                    Text('Error loading item copies'),
+                                    Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.errorLoadingItemCopies,
+                                    ),
                                   ],
                                 ),
                               )

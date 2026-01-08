@@ -315,4 +315,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorLoadingLibraryServices => 'Error loading library services';
+
+  @override
+  String get errorLoadingItemCopies => 'Error loading item copies';
 }

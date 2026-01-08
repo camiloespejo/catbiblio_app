@@ -318,4 +318,8 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get errorLoadingLibraryServices =>
       'Error al cargar los servicios de la biblioteca';
+
+  @override
+  String get errorLoadingItemCopies =>
+      'Error al cargar las existencias del ejemplar';
 }

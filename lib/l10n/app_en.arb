@@ -403,5 +403,9 @@
   "errorLoadingLibraryServices": "Error loading library services",
   "@errorLoadingLibraryServices": {
     "description": "Message shown when there is an error loading the library services"
+  },
+  "errorLoadingItemCopies": "Error loading item copies",
+  "@errorLoadingItemCopies": {
+    "description": "Message shown when there is an error loading the item copies"
   }
 }

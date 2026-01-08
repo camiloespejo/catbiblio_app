@@ -703,6 +703,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error loading library services'**
   String get errorLoadingLibraryServices;
+
+  /// Message shown when there is an error loading the item copies
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading item copies'**
+  String get errorLoadingItemCopies;
 }
 
 class _AppLocalizationsDelegate
