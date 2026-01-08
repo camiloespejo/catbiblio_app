@@ -203,10 +203,10 @@ class _HomeViewState extends HomeController {
                               ),
                             );
                           } else if (asyncSnapshot.hasError) {
-                            return Center(
+                            return const Center(
                               child: Text(
                                 'error',
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.white),
                               ),
                             );
                           }
@@ -260,7 +260,7 @@ class _HomeViewState extends HomeController {
                         },
                       ),
                       // button icon with icon arrow left
-                      SizedBox(height: 16.0),
+                      const SizedBox(height: 16.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 8.0,
@@ -325,11 +325,11 @@ class _HomeViewState extends HomeController {
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Center(
                     child: Text(
                       AppLocalizations.of(context)!.libraryServices,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -345,8 +345,8 @@ class _HomeViewState extends HomeController {
                   ),
 
                   if (isLibraryServicesLoading)
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
                       child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(
                           _primaryColor,
@@ -389,7 +389,7 @@ class _HomeViewState extends HomeController {
                             [],
                       ),
                     ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     spacing: 8.0,
