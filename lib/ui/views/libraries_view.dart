@@ -37,7 +37,7 @@ class _LibrariesViewState extends LibrariesController {
                         : (MediaQuery.of(context).size.width / 3) * 2,
                   ),
                   child: FutureBuilder<List<Library>>(
-                    future: LibrariesService.getLibraries(),
+                    future: librariesFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const SizedBox(
