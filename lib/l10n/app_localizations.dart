@@ -709,6 +709,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error loading item copies'**
   String get errorLoadingItemCopies;
+
+  /// Title for the legend section in book view
+  ///
+  /// In en, this message translates to:
+  /// **'Legend'**
+  String get legendTitle;
 }
 
 class _AppLocalizationsDelegate

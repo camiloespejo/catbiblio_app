@@ -407,5 +407,9 @@
   "errorLoadingItemCopies": "Error loading item copies",
   "@errorLoadingItemCopies": {
     "description": "Message shown when there is an error loading the item copies"
+  },
+  "legendTitle": "Legend",
+  "@legendTitle": {
+    "description": "Title for the legend section in book view"
   }
 }

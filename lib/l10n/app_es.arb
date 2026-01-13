@@ -101,5 +101,6 @@
     "legendNotForBorrow": "No para préstamo",
     "timeoutLoading": "Tiempo de espera agotado al cargar los datos, revise su conexión a Internet e inténtelo de nuevo.",
     "errorLoadingLibraryServices": "Error al cargar los servicios de la biblioteca",
-    "errorLoadingItemCopies": "Error al cargar las existencias del ejemplar"
+    "errorLoadingItemCopies": "Error al cargar las existencias del ejemplar",
+    "legendTitle": "Leyenda"
 }

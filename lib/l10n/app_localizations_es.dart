@@ -322,4 +322,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get errorLoadingItemCopies =>
       'Error al cargar las existencias del ejemplar';
+
+  @override
+  String get legendTitle => 'Leyenda';
 }

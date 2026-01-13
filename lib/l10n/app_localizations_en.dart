@@ -318,4 +318,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorLoadingItemCopies => 'Error loading item copies';
+
+  @override
+  String get legendTitle => 'Legend';
 }
