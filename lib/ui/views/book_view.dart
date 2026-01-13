@@ -412,65 +412,97 @@ class KeysLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.pin_drop,
-                color: CustomColors.customRed,
-                size: 20.0,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.legendTitle,
+              style: TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[600],
+                letterSpacing: 1.0,
               ),
-              const SizedBox(width: 4.0),
-              Text(
-                AppLocalizations.of(context)!.legendFinder,
-                style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSimpleItem(
+                  context,
+                  Icons.pin_drop,
+                  CustomColors.customRed,
+                  AppLocalizations.of(context)!.legendFinder,
                 ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.green, size: 20.0),
-              const SizedBox(width: 4.0),
-              Text(
-                AppLocalizations.of(context)!.legendAvailable,
-                style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
+                const SizedBox(width: 10.0),
+
+                _buildSimpleItem(
+                  context,
+                  Icons.check_circle,
+                  Colors.green,
+                  AppLocalizations.of(context)!.legendAvailable,
                 ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              const Icon(Icons.watch_later, color: Colors.orange, size: 20.0),
-              const SizedBox(width: 4.0),
-              Text(
-                AppLocalizations.of(context)!.legendBorrowed,
-                style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
+                const SizedBox(width: 10.0),
+
+                _buildSimpleItem(
+                  context,
+                  Icons.watch_later,
+                  Colors.orange,
+                  AppLocalizations.of(context)!.legendBorrowed,
                 ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              const Icon(Icons.lock, color: Colors.red, size: 20.0),
-              const SizedBox(width: 4.0),
-              Text(
-                AppLocalizations.of(context)!.legendNotForBorrow,
-                style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
+                const SizedBox(width: 10.0),
+
+                Flexible(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.lock, color: Colors.red, size: 20.0),
+                      const SizedBox(width: 1.0),
+                      Flexible(
+                        child: Text(
+                          AppLocalizations.of(context)!.legendNotForBorrow,
+                          style: TextStyle(
+                            fontSize: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.fontSize,
+                            height: 1.1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildSimpleItem(
+    BuildContext context,
+    IconData icon,
+    Color color,
+    String text,
+  ) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: color, size: 20.0),
+        const SizedBox(width: 1.0),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
+          ),
+        ),
+      ],
     );
   }
 }
