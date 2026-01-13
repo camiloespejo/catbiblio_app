@@ -49,7 +49,7 @@ class BiblioItem {
            location ??
            ItemLocation(floor: '', room: '', shelf: '', shelfSide: '');*/
 
-  static int getOverallStatus(int? notForLoanStatus, String? checkedOutDate) {
+  static int _getOverallStatus(int? notForLoanStatus, String? checkedOutDate) {
     if (notForLoanStatus != statusAvailable) {
       return statusNotForLoan;
     } else if (checkedOutDate != null) {
@@ -61,7 +61,7 @@ class BiblioItem {
 
   factory BiblioItem.fromJson(Map<String, dynamic> json) {
     final checkedOutDate = json['checked_out_date'] as String?;
-    final notForLoanStatus = json['not_for_loan_status'];
+    final notForLoanStatus = json['not_for_loan_status'] ?? 0;
     return BiblioItem(
       itemTypeId: json['item_type_id'] ?? 'N/D',
       itemType: json['item_type'] ?? 'N/D',
@@ -77,7 +77,7 @@ class BiblioItem {
       notForLoanStatus: notForLoanStatus,
       checkedOutDate: checkedOutDate,
       borrowedStatus: checkedOutDate != null,
-      overAllStatus: getOverallStatus(notForLoanStatus, checkedOutDate),
+      overAllStatus: _getOverallStatus(notForLoanStatus, checkedOutDate),
     );
   }
 
