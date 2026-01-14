@@ -3,24 +3,29 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BookPreview model fromJson factory', () {
-    test('fromJson creates a valid BookPreview instance', () {
-      final json = {
-        'full_title': 'Test Book',
-        'biblionumber': '12345',
-        'author': 'John Doe',
-        'place': 'New York',
-        'publishercode': 'Test Publisher',
-        'copyrightdate': 2020,
-        'libraries_count': 2,
-        'total_results': 6,
-      };
+    test(
+      'fromJson creates a valid BookPreview instance with all publishing details',
+      () {
+        final json = {
+          'full_title': 'Test Book',
+          'biblionumber': '12345',
+          'author': 'John Doe',
+          'place': 'New York',
+          'publishercode': 'Test Publisher',
+          'copyrightdate': 2020,
+          'libraries_count': 2,
+          'total_results': 6,
+        };
 
-      final bookPreview = BookPreview.fromJson(json);
-      final expectedPublishingDetails = 'New York Test Publisher 2020';
+        const expectedPublishingDetails = 'New York Test Publisher 2020';
 
-      expect(bookPreview, isA<BookPreview>());
-      expect(bookPreview.publishingDetails, expectedPublishingDetails);
-    });
+        final actualBookPreview = BookPreview.fromJson(json);
+        final actualPublishingDetails = actualBookPreview.publishingDetails;
+
+        expect(actualBookPreview, isA<BookPreview>());
+        expect(actualPublishingDetails, expectedPublishingDetails);
+      },
+    );
 
     test(
       'fromJson creates a valid BookPreview instance: only publishing place',
@@ -36,9 +41,13 @@ void main() {
           'total_results': 6,
         };
 
-        final bookPreview = BookPreview.fromJson(json);
+        const expectedPublishingDetails = 'New York';
 
-        expect(bookPreview, isA<BookPreview>());
+        final actualBookPreview = BookPreview.fromJson(json);
+        final actualPublishingDetails = actualBookPreview.publishingDetails;
+
+        expect(actualBookPreview, isA<BookPreview>());
+        expect(actualPublishingDetails, expectedPublishingDetails);
       },
     );
 
@@ -56,9 +65,13 @@ void main() {
           'total_results': 6,
         };
 
-        final bookPreview = BookPreview.fromJson(json);
+        final expectedPublishingDetails = 'Publisher Test';
 
-        expect(bookPreview, isA<BookPreview>());
+        final actualBookPreview = BookPreview.fromJson(json);
+        final actualPublishingDetails = actualBookPreview.publishingDetails;
+
+        expect(actualBookPreview, isA<BookPreview>());
+        expect(actualPublishingDetails, expectedPublishingDetails);
       },
     );
 
@@ -76,9 +89,13 @@ void main() {
           'total_results': 6,
         };
 
-        final bookPreview = BookPreview.fromJson(json);
+        const expectedPublishingDetails = '2020';
 
-        expect(bookPreview, isA<BookPreview>());
+        final actualBookPreview = BookPreview.fromJson(json);
+        final actualPublishingDetails = actualBookPreview.publishingDetails;
+
+        expect(actualBookPreview, isA<BookPreview>());
+        expect(actualPublishingDetails, expectedPublishingDetails);
       },
     );
 
@@ -96,121 +113,39 @@ void main() {
           'total_results': 6,
         };
 
-        final bookPreview = BookPreview.fromJson(json);
+        const expectedPublishingDetails = 'New York 2020';
 
-        expect(bookPreview, isA<BookPreview>());
+        final actualBookPreview = BookPreview.fromJson(json);
+        final actualPublishingDetails = actualBookPreview.publishingDetails;
+
+        expect(actualBookPreview, isA<BookPreview>());
+        expect(actualPublishingDetails, expectedPublishingDetails);
       },
     );
-  });
 
-  group('BookPreview model buildPublishingDetails', () {
-    test('buildPublishingDetails: all fields', () {
-      final json = {
-        'full_title': 'Test Book',
-        'biblionumber': '12345',
-        'author': 'John Doe',
-        'place': 'New York',
-        'publishercode': 'Publisher Test',
-        'copyrightdate': 2020,
-        'libraries_count': 2,
-        'total_results': 6,
-      };
+    test(
+      'fromJson creates a valid BookPreview instance: empty publisshing fields',
+      () {
+        final json = {
+          'full_title': 'Test Book',
+          'biblionumber': '12345',
+          'author': 'John Doe',
+          'place': null,
+          'publishercode': null,
+          'copyrightdate': null,
+          'libraries_count': 2,
+          'total_results': 6,
+        };
 
-      final expectedPublishingDetails = 'New York Publisher Test 2020';
-      final actualPublishingDetails = BookPreview.buildPublishingDetails(json);
+        const expectedPublishingDetails = '';
 
-      expect(actualPublishingDetails, expectedPublishingDetails);
-    });
+        final actualBookPreview = BookPreview.fromJson(json);
+        final actualPublishingDetails = actualBookPreview.publishingDetails;
 
-    test('buildPublishingDetails: empty publishing fields', () {
-      final json = {
-        'full_title': 'Test Book',
-        'biblionumber': '12345',
-        'author': 'John Doe',
-        'place': null,
-        'publishercode': null,
-        'copyrightdate': null,
-        'libraries_count': 2,
-        'total_results': 6,
-      };
-
-      final expectedPublishingDetails = '';
-      final actualPublishingDetails = BookPreview.buildPublishingDetails(json);
-
-      expect(actualPublishingDetails, expectedPublishingDetails);
-    });
-
-    test('buildPublishingDetails: only place', () {
-      final json = {
-        'full_title': 'Test Book',
-        'biblionumber': '12345',
-        'author': 'John Doe',
-        'place': 'New York',
-        'publishercode': null,
-        'copyrightdate': null,
-        'libraries_count': 2,
-        'total_results': 6,
-      };
-
-      final expectedPublishingDetails = 'New York';
-      final actualPublishingDetails = BookPreview.buildPublishingDetails(json);
-
-      expect(actualPublishingDetails, expectedPublishingDetails);
-    });
-
-    test('buildPublishingDetails: only publishercode', () {
-      final json = {
-        'full_title': 'Test Book',
-        'biblionumber': '12345',
-        'author': 'John Doe',
-        'place': null,
-        'publishercode': 'Publisher Test',
-        'copyrightdate': null,
-        'libraries_count': 2,
-        'total_results': 6,
-      };
-
-      final expectedPublishingDetails = 'Publisher Test';
-      final actualPublishingDetails = BookPreview.buildPublishingDetails(json);
-
-      expect(actualPublishingDetails, expectedPublishingDetails);
-    });
-
-    test('buildPublishingDetails: only copyrightdate', () {
-      final json = {
-        'full_title': 'Test Book',
-        'biblionumber': '12345',
-        'author': 'John Doe',
-        'place': null,
-        'publishercode': null,
-        'copyrightdate': 2020,
-        'libraries_count': 2,
-        'total_results': 6,
-      };
-
-      final expectedPublishingDetails = '2020';
-      final actualPublishingDetails = BookPreview.buildPublishingDetails(json);
-
-      expect(actualPublishingDetails, expectedPublishingDetails);
-    });
-
-    test('buildPublishingDetails: only 2 of 3 fields present', () {
-      final json = {
-        'full_title': 'Test Book',
-        'biblionumber': '12345',
-        'author': 'John Doe',
-        'place': 'New York',
-        'publishercode': null,
-        'copyrightdate': 2020,
-        'libraries_count': 2,
-        'total_results': 6,
-      };
-
-      final expectedPublishingDetails = 'New York 2020';
-      final actualPublishingDetails = BookPreview.buildPublishingDetails(json);
-
-      expect(actualPublishingDetails, expectedPublishingDetails);
-    });
+        expect(actualBookPreview, isA<BookPreview>());
+        expect(actualPublishingDetails, expectedPublishingDetails);
+      },
+    );
   });
 
   group('BookPreview model toString method', () {

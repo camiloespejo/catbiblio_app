@@ -27,7 +27,7 @@ class BookPreview {
       author: json['author'] as String? ?? '',
       coverUrl: json['cover_url'] as String? ?? '',
       biblioNumber: json['biblionumber'] as String,
-      publishingDetails: buildPublishingDetails(json),
+      publishingDetails: _buildPublishingDetails(json),
       totalRecords: json['total_results'] as int? ?? 0,
       locatedInLibraries: json['libraries_count'] as int? ?? 0,
       isbn: json['isbn'] as String? ?? '',
@@ -35,7 +35,7 @@ class BookPreview {
     );
   }
 
-  static String buildPublishingDetails(Map<String, dynamic> json) {
+  static String _buildPublishingDetails(Map<String, dynamic> json) {
     final place = json['place']?.toString().trim() ?? '';
     final publisher = json['publishercode']?.toString().trim() ?? '';
     final copyright = json['copyrightdate']?.toString().trim() ?? '';
