@@ -12,8 +12,8 @@ void main() {
     await dotenv.load();
   });
 
-  group('SruService requests', () {
-    debugPrint('Testing SruService searchBooks method');
+  group('SearchService requests', () {
+    debugPrint('Testing SearchService searchBooks method');
     // general search tests
     test('test searchBooks: general search and branch', () async {
       final queryParams = QueryParams(
@@ -484,8 +484,8 @@ void main() {
       }
     });
   });
-  group('SruService helper methods', () {
-    debugPrint('Testing SruService helper methods');
+  group('SearchService helper methods', () {
+    debugPrint('Testing SearchService helper methods');
     test('test buildQueryParameters general filter and branch', () {
       final params = QueryParams(
         library: 'USBI-X',
