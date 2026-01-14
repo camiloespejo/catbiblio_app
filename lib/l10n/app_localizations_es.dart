@@ -255,7 +255,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noLibrariesFound => 'No se encontraron bibliotecas';
 
   @override
-  String get finderTitle => 'Localizador';
+  String get finderTitle => 'Localizable';
 
   @override
   String get location => 'Ubicación';
@@ -306,7 +306,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get legendBorrowed => 'Prestado';
 
   @override
-  String get legendFinder => 'Localizador';
+  String get legendFinder => 'Localizable';
 
   @override
   String get legendNotForBorrow => 'No para préstamo';
@@ -324,5 +324,5 @@ class AppLocalizationsEs extends AppLocalizations {
       'Error al cargar las existencias del ejemplar';
 
   @override
-  String get legendTitle => 'Leyenda';
+  String get legendTitle => 'Leyenda de estado';
 }

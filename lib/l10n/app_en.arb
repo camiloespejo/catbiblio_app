@@ -388,7 +388,7 @@
   "@legendBorrowed": {
     "description": "Status label indicating that a book copy is borrowed"
   },
-  "legendFinder": "Finder",
+  "legendFinder": "Findable",
   "@legendFinder": {
     "description": "Status label indicating that a book copy is located using the finder"
   },
@@ -408,7 +408,7 @@
   "@errorLoadingItemCopies": {
     "description": "Message shown when there is an error loading the item copies"
   },
-  "legendTitle": "Legend",
+  "legendTitle": "Status legend",
   "@legendTitle": {
     "description": "Title for the legend section in book view"
   }

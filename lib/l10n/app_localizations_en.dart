@@ -304,7 +304,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get legendBorrowed => 'Borrowed';
 
   @override
-  String get legendFinder => 'Finder';
+  String get legendFinder => 'Findable';
 
   @override
   String get legendNotForBorrow => 'Not for borrow';
@@ -320,5 +320,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorLoadingItemCopies => 'Error loading item copies';
 
   @override
-  String get legendTitle => 'Legend';
+  String get legendTitle => 'Status legend';
 }

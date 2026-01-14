@@ -683,7 +683,7 @@ abstract class AppLocalizations {
   /// Status label indicating that a book copy is located using the finder
   ///
   /// In en, this message translates to:
-  /// **'Finder'**
+  /// **'Findable'**
   String get legendFinder;
 
   /// Status label indicating that a book copy is not for borrowing
@@ -713,7 +713,7 @@ abstract class AppLocalizations {
   /// Title for the legend section in book view
   ///
   /// In en, this message translates to:
-  /// **'Legend'**
+  /// **'Status legend'**
   String get legendTitle;
 }
 

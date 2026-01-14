@@ -81,7 +81,7 @@
     "libraries": "Bibliotecas",
     "couldNotFetchLibraries": "No se pudieron obtener las bibliotecas, verifique su conexión a Internet o inténtelo de nuevo más tarde.",
     "noLibrariesFound": "No se encontraron bibliotecas",
-    "finderTitle": "Localizador",
+    "finderTitle": "Localizable",
     "location": "Ubicación",
     "allItemTypes": "Todos",
     "room": "Sala",
@@ -97,10 +97,10 @@
     "localCoverIMGAlt": "Imagen de cubierta local",
     "legendAvailable": "Disponible",
     "legendBorrowed": "Prestado",
-    "legendFinder": "Localizador",
+    "legendFinder": "Localizable",
     "legendNotForBorrow": "No para préstamo",
     "timeoutLoading": "Tiempo de espera agotado al cargar los datos, revise su conexión a Internet e inténtelo de nuevo.",
     "errorLoadingLibraryServices": "Error al cargar los servicios de la biblioteca",
     "errorLoadingItemCopies": "Error al cargar las existencias del ejemplar",
-    "legendTitle": "Leyenda"
+    "legendTitle": "Leyenda de estado"
 }
