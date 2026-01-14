@@ -64,7 +64,7 @@ void main() {
           'copyrightdate': null,
         };
 
-        final expectedPublishingDetails = 'Publisher Test';
+        const expectedPublishingDetails = 'Publisher Test';
 
         final actualBookPreview = BookPreview.fromJson(json);
         final actualPublishingDetails = actualBookPreview.publishingDetails;
