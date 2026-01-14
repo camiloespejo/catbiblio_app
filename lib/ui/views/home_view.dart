@@ -400,7 +400,6 @@ class _HomeViewState extends HomeController {
 
                           _servicesCarouselController.animateToItem(
                             _currentServiceIndex - 1,
-                            // duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut,
                           );
                           setState(() {
