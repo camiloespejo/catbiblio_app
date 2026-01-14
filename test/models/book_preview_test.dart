@@ -3,18 +3,25 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BookPreview model fromJson factory', () {
+    const jsonBookPreview = {
+      'full_title': 'Test Book',
+      'biblionumber': '12345',
+      'author': 'John Doe',
+      //'place': 'New York', // changed in each unit test
+      // 'publishercode': 'Test Publisher', // changed in each unit test
+      // 'copyrightdate': 2020, // changed in each unit test
+      'libraries_count': 2,
+      'total_results': 6,
+    };
+
     test(
       'fromJson creates a valid BookPreview instance with all publishing details',
       () {
         final json = {
-          'full_title': 'Test Book',
-          'biblionumber': '12345',
-          'author': 'John Doe',
+          ...jsonBookPreview,
           'place': 'New York',
           'publishercode': 'Test Publisher',
           'copyrightdate': 2020,
-          'libraries_count': 2,
-          'total_results': 6,
         };
 
         const expectedPublishingDetails = 'New York Test Publisher 2020';
@@ -31,14 +38,10 @@ void main() {
       'fromJson creates a valid BookPreview instance: only publishing place',
       () {
         final json = {
-          'full_title': 'Test Book',
-          'biblionumber': '12345',
-          'author': 'John Doe',
+          ...jsonBookPreview,
           'place': 'New York',
           'publishercode': null,
           'copyrightdate': null,
-          'libraries_count': 2,
-          'total_results': 6,
         };
 
         const expectedPublishingDetails = 'New York';
@@ -55,14 +58,10 @@ void main() {
       'fromJson creates a valid BookPreview instance: only publisher code',
       () {
         final json = {
-          'full_title': 'Test Book',
-          'biblionumber': '12345',
-          'author': 'John Doe',
+          ...jsonBookPreview,
           'place': null,
           'publishercode': 'Publisher Test',
           'copyrightdate': null,
-          'libraries_count': 2,
-          'total_results': 6,
         };
 
         final expectedPublishingDetails = 'Publisher Test';
@@ -79,14 +78,10 @@ void main() {
       'fromJson creates a valid BookPreview instance: only copyrightdate',
       () {
         final json = {
-          'full_title': 'Test Book',
-          'biblionumber': '12345',
-          'author': 'John Doe',
+          ...jsonBookPreview,
           'place': null,
           'publishercode': null,
           'copyrightdate': 2020,
-          'libraries_count': 2,
-          'total_results': 6,
         };
 
         const expectedPublishingDetails = '2020';
@@ -103,14 +98,10 @@ void main() {
       'fromJson creates a valid BookPreview instance: only publishing place and copyrightdate',
       () {
         final json = {
-          'full_title': 'Test Book',
-          'biblionumber': '12345',
-          'author': 'John Doe',
+          ...jsonBookPreview,
           'place': 'New York',
           'publishercode': null,
           'copyrightdate': 2020,
-          'libraries_count': 2,
-          'total_results': 6,
         };
 
         const expectedPublishingDetails = 'New York 2020';
@@ -127,14 +118,10 @@ void main() {
       'fromJson creates a valid BookPreview instance: empty publisshing fields',
       () {
         final json = {
-          'full_title': 'Test Book',
-          'biblionumber': '12345',
-          'author': 'John Doe',
+          ...jsonBookPreview,
           'place': null,
           'publishercode': null,
           'copyrightdate': null,
-          'libraries_count': 2,
-          'total_results': 6,
         };
 
         const expectedPublishingDetails = '';

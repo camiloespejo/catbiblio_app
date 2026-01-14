@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BiblioItem model fromJson factory', () {
-    final jsonItem = {
+    const jsonItem = {
       "bookable": 0,
       "item_id": 1047254,
       "barcode": "VBR020064542",
