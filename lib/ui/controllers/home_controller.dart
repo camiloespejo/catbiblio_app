@@ -11,6 +11,8 @@ abstract class HomeController extends State<HomeView> {
   late Future<List<Library>> _librariesFuture;
   final CarouselController _booksCarouselController = CarouselController();
   final CarouselController _servicesCarouselController = CarouselController();
+  VoidCallback? _booksControllerListener;
+  VoidCallback? _servicesControllerListener;
   late List<DropdownMenuEntry<String>> _libraryEntries = [];
   late List<DropdownMenuEntry<String>> _itemTypeEntries = [];
   late List<DropdownMenuEntry<String>> _enabledHomeLibrariesEntries = [];
@@ -69,6 +71,7 @@ abstract class HomeController extends State<HomeView> {
     _librariesFuture = Future.value([]);
     _bookSelectionsFuture = BookSelectionsService.getBookSelections();
     fetchData();
+    _attachCarouselListeners();
   }
 
   /// fetches necessary data for home view
@@ -92,11 +95,81 @@ abstract class HomeController extends State<HomeView> {
     _libraryController.dispose();
     _libraryServicesController.dispose();
     _itemTypeController.dispose();
+    if (_booksControllerListener != null) {
+      _booksCarouselController.removeListener(_booksControllerListener!);
+    }
+    if (_servicesControllerListener != null) {
+      _servicesCarouselController.removeListener(_servicesControllerListener!);
+    }
     _booksCarouselController.dispose();
     _servicesCarouselController.dispose();
     _booksCarouselTimer.cancel();
     _servicesCarouselTimer.cancel();
     super.dispose();
+  }
+
+  void _attachCarouselListeners() {
+    _booksControllerListener = () {
+      if (!_booksCarouselController.hasClients) return;
+      final ScrollPosition pos = _booksCarouselController.positions.first;
+      final double pixels = pos.pixels;
+      final double viewport = pos.viewportDimension;
+      if (viewport == 0 || _bookSelections.isEmpty) return;
+
+      final bool narrow = MediaQuery.of(context).size.width < 600;
+      final List<int> weights = narrow ? <int>[1, 3, 1] : <int>[1, 1, 1, 1, 1];
+      final double fraction = weights.first / weights.reduce((a, b) => a + b);
+
+      final double actual =
+          (pixels.clamp(0.0, double.infinity)) / (viewport * fraction);
+      final double round = actual.roundToDouble();
+      final double item = (actual - round).abs() < 1e-6 ? round : actual;
+      int newIndex = item.round().toInt();
+      newIndex = newIndex.clamp(0, _bookSelections.length - 1);
+
+      if (newIndex != _currentBookIndex) {
+        setState(() {
+          _currentBookIndex = newIndex;
+        });
+        if (_isBooksTimerStarted) {
+          _booksCarouselTimer.cancel();
+          _isBooksTimerStarted = false;
+          _startBooksCarouselTimer();
+        }
+      }
+    };
+    _booksCarouselController.addListener(_booksControllerListener!);
+
+    _servicesControllerListener = () {
+      if (!_servicesCarouselController.hasClients) return;
+      final ScrollPosition pos = _servicesCarouselController.positions.first;
+      final double pixels = pos.pixels;
+      final double viewport = pos.viewportDimension;
+      final currentList = _librariesServices[selectedLibraryServices];
+      if (viewport == 0 || currentList == null || currentList.isEmpty) return;
+
+      final List<int> weights = <int>[1, 4, 1];
+      final double fraction = weights.first / weights.reduce((a, b) => a + b);
+
+      final double actual =
+          (pixels.clamp(0.0, double.infinity)) / (viewport * fraction);
+      final double round = actual.roundToDouble();
+      final double item = (actual - round).abs() < 1e-6 ? round : actual;
+      int newIndex = item.round().toInt();
+      newIndex = newIndex.clamp(0, currentList.length - 1);
+
+      if (newIndex != _currentServiceIndex) {
+        setState(() {
+          _currentServiceIndex = newIndex;
+        });
+        if (_isServicesTimerStarted) {
+          _servicesCarouselTimer.cancel();
+          _isServicesTimerStarted = false;
+          _startServicesCarouselTimer();
+        }
+      }
+    };
+    _servicesCarouselController.addListener(_servicesControllerListener!);
   }
 
   void clearText() {
