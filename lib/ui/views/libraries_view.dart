@@ -36,8 +36,8 @@ class _LibrariesViewState extends LibrariesController {
                         ? MediaQuery.of(context).size.width
                         : (MediaQuery.of(context).size.width / 3) * 2,
                   ),
-                  child: FutureBuilder<List<Library>>(
-                    future: librariesFuture,
+                  child: FutureBuilder<List<MapEntry<String, List<Library>>>>(
+                    future: groupedEntriesFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const SizedBox(
@@ -59,9 +59,11 @@ class _LibrariesViewState extends LibrariesController {
                           ),
                         );
                       } else {
-                        final libraries = snapshot.data!;
+                        final entries = snapshot.data!;
                         return Column(
-                          children: regionsList.map((item) {
+                          children: entries.map((entry) {
+                            final item = entry.key;
+                            final libraries = entry.value;
                             return Card(
                               color: Colors.grey[100],
                               margin: const EdgeInsets.symmetric(
@@ -85,52 +87,48 @@ class _LibrariesViewState extends LibrariesController {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  children: libraries
-                                      .where((lib) => lib.region == item)
-                                      .map((library) {
-                                        return ListTile(
-                                          title: Text(library.name),
-                                          subtitle: Text(
-                                            '${library.city}, ${library.state}',
-                                          ),
-                                          trailing: library.url.isNotEmpty
-                                              ? IconButton(
-                                                  icon: const Icon(Icons.link),
-                                                  color: Colors.blue,
-                                                  onPressed: () =>
-                                                      openLink(library.url),
-                                                )
-                                              : null,
-                                          onTap: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  title: Text(library.name),
-                                                  content: LibraryDialogBody(
-                                                    library: library,
-                                                    context: context,
+                                  children: libraries.map((library) {
+                                    return ListTile(
+                                      title: Text(library.name),
+                                      subtitle: Text(
+                                        '${library.city}, ${library.state}',
+                                      ),
+                                      trailing: library.url.isNotEmpty
+                                          ? IconButton(
+                                              icon: const Icon(Icons.link),
+                                              color: Colors.blue,
+                                              onPressed: () =>
+                                                  openLink(library.url),
+                                            )
+                                          : null,
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text(library.name),
+                                              content: LibraryDialogBody(
+                                                library: library,
+                                                context: context,
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(
+                                                    context,
+                                                  ).pop(),
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.close,
                                                   ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.of(
-                                                            context,
-                                                          ).pop(),
-                                                      child: Text(
-                                                        AppLocalizations.of(
-                                                          context,
-                                                        )!.close,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
+                                                ),
+                                              ],
                                             );
                                           },
                                         );
-                                      })
-                                      .toList(),
+                                      },
+                                    );
+                                  }).toList(),
                                 ),
                               ),
                             );
