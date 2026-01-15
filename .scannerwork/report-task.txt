@@ -1,7 +1,0 @@
-organization=camiloespejo
-projectKey=camiloespejo_catbiblio_app
-serverUrl=https://sonarcloud.io
-serverVersion=8.0.0.78371
-dashboardUrl=https://sonarcloud.io/dashboard?id=camiloespejo_catbiblio_app
-ceTaskId=AZuz6iCXj4Ttv7fX1xru
-ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZuz6iCXj4Ttv7fX1xru

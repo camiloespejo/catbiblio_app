@@ -265,6 +265,9 @@ DerivedData/
 .swiftpm/
 migrate_working_dir/
 
+# SonarQube scanner temp files
+.scannerwork/
+
 # Google API key and other resources
 GoogleService-Info.plist
 google-services.json
