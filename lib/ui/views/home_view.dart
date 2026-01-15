@@ -675,7 +675,6 @@ class AppNavigationDrawer extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.map, color: _primaryColor),
           title: Text(AppLocalizations.of(context)!.libraryDirectory),
-          enabled: !isLibrariesLoading,
           onTap: () {
             if (kIsWeb) {
               context.go('/directory');
