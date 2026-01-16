@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb, debugPrint;
 import 'package:flutter/material.dart';
 
@@ -595,17 +596,23 @@ class HeroLayoutCard extends StatelessWidget {
           child: OverflowBox(
             maxWidth: width * 2,
             minWidth: width,
-            child: Image.network(
-              imageModel.url,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return const Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(_secondaryColor),
-                  ),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) {
+            child: CachedNetworkImage(
+              imageUrl: imageModel.url,
+              imageBuilder: (context, imageProvider) => Image(
+                image: imageProvider,
+                width: double.infinity,
+                height: double.infinity,
+                fit: fit,
+              ),
+              placeholder: (context, url) => Container(
+                color: Colors.grey[300],
+                width: double.infinity,
+                height: double.infinity,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              errorWidget: (context, url, error) {
                 return Container(
                   color: Colors.grey[300],
                   width: double.infinity,
