@@ -204,6 +204,7 @@ class _SearchViewState extends SearchController {
               books: books,
               isPageLoading: isPageLoading,
               isInitialRequestLoading: isInitialRequestLoading,
+              goToBookView: goToBookView
             ),
 
             // Bottom pagination
@@ -328,11 +329,13 @@ class BookList extends StatelessWidget {
     required this.books,
     required this.isPageLoading,
     required this.isInitialRequestLoading,
+    required this.goToBookView,
   });
 
   final List<BookPreview> books;
   final bool isPageLoading;
   final bool isInitialRequestLoading;
+  final Function(String) goToBookView;
 
   static final String _baseUrl =
       dotenv.env['KOHA_BASE_URL'] ?? 'https://catbiblio.uv.mx';
@@ -403,15 +406,7 @@ class BookList extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {
-                if (kIsWeb) {
-                  context.go('/book-details/${book.biblioNumber}');
-                }
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => BookView(biblioNumber: book.biblioNumber),
-                  ),
-                );
+                goToBookView(book.biblioNumber);
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(

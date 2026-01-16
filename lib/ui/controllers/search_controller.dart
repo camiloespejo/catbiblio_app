@@ -73,6 +73,18 @@ abstract class SearchController extends State<SearchView> {
     _searchController.text = queryParams.searchQuery;
   }
 
+  void goToBookView(String biblioNumber) {
+    if (kIsWeb) {
+      context.go('/book-details/$biblioNumber');
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BookView(biblioNumber: biblioNumber),
+      ),
+    );
+  }
+
   /// Loads the initial search results based on the current query parameters
   void loadSearch() {
     isInitialRequestLoading = true;
@@ -165,7 +177,7 @@ abstract class SearchController extends State<SearchView> {
         });
   }
 
- /// Handles pagination behavior based on the selected index
+  /// Handles pagination behavior based on the selected index
   void paginationBehavior(int selectedIndex) {
     if (isPageLoading || currentPage == selectedIndex) return;
 
@@ -241,7 +253,9 @@ abstract class SearchController extends State<SearchView> {
             );
             _itemTypeController.text = matchedItemType.description;
           } catch (e) {
-            _itemTypeController.text = AppLocalizations.of(context)!.allItemTypes;
+            _itemTypeController.text = AppLocalizations.of(
+              context,
+            )!.allItemTypes;
           }
         } else {
           _itemTypeController.text = AppLocalizations.of(context)!.allItemTypes;
@@ -290,10 +304,14 @@ abstract class SearchController extends State<SearchView> {
             );
             _librariesController.text = matchedLibrary.name;
           } catch (e) {
-            _librariesController.text = AppLocalizations.of(context)!.allLibraries;
+            _librariesController.text = AppLocalizations.of(
+              context,
+            )!.allLibraries;
           }
         } else {
-          _librariesController.text = AppLocalizations.of(context)!.allLibraries;
+          _librariesController.text = AppLocalizations.of(
+            context,
+          )!.allLibraries;
         }
 
         final globalProvider = Provider.of<GlobalProvider>(
