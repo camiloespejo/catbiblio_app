@@ -1,26 +1,21 @@
 part of '../views/book_view.dart';
 
 abstract class BookController extends State<BookView> {
-  late BibliosDetails bibliosDetails = BibliosDetails(title: '', author: '');
-  late List<BiblioItem> biblioItems = [];
+  late BibliosDetails _bibliosDetails = BibliosDetails(title: '', author: '');
+  late List<BiblioItem> _biblioItems = [];
   late Set<String> _finderLibraries = {};
-  bool isLoadingDetails = true;
-  bool isErrorLoadingDetails = false;
-  bool isLoadingBiblioItems = true;
-  bool isErrorLoadingBiblioItems = false;
+
   final Map<String, List<BiblioItem>> groupedItems = {};
   final List<String> holdingLibraries = [];
-  final int screenSizeLimit = 800;
-  bool hasImage = false;
 
+  final int _screenSizeLimit = 800;
   final String _baseUrl =
       dotenv.env['KOHA_BASE_URL'] ?? 'https://catbiblio.uv.mx';
   final String _openLibraryBaseUrl = 'https://covers.openlibrary.org';
+  final String _mockTitle =
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
 
-  final mockTitle =
-      'Título de ejemplo para mostrar en la interfaz de usuario mientras se cargan los datos reales del libro.';
-
-  Map<String, String> get languageMap => {
+  Map<String, String> get _languageMap => {
     'eng': AppLocalizations.of(context)!.english,
     'spa': AppLocalizations.of(context)!.spanish,
     'fre': AppLocalizations.of(context)!.french,
@@ -31,6 +26,12 @@ abstract class BookController extends State<BookView> {
     'rus': AppLocalizations.of(context)!.russian,
     'chi': AppLocalizations.of(context)!.chinese,
   };
+
+  bool _isLoadingDetails = true;
+  bool _isErrorLoadingDetails = false;
+  bool _isLoadingBiblioItems = true;
+  bool _isErrorLoadingBiblioItems = false;
+  bool hasImage = false;
 
   @override
   void initState() {
@@ -86,8 +87,8 @@ abstract class BookController extends State<BookView> {
     }
 
     setState(() {
-      bibliosDetails = details ?? bibliosDetails;
-      biblioItems = items;
+      _bibliosDetails = details ?? _bibliosDetails;
+      _biblioItems = items;
       _finderLibraries = finderLibraries;
       groupedItems.clear();
       groupedItems.addAll(grouped);
@@ -95,10 +96,10 @@ abstract class BookController extends State<BookView> {
         ..clear()
         ..addAll(grouped.keys);
 
-      isLoadingDetails = false;
-      isLoadingBiblioItems = false;
-      isErrorLoadingDetails = detailsError;
-      isErrorLoadingBiblioItems = itemsError;
+      _isLoadingDetails = false;
+      _isLoadingBiblioItems = false;
+      _isErrorLoadingDetails = detailsError;
+      _isErrorLoadingBiblioItems = itemsError;
     });
   }
 
@@ -193,7 +194,7 @@ abstract class BookController extends State<BookView> {
   ) {
     FinderParams params = FinderParams(
       biblioNumber: widget.biblioNumber,
-      title: bibliosDetails.title,
+      title: _bibliosDetails.title,
       classification: callNumber,
       collection: collection,
       collectionCode: collectionCode,

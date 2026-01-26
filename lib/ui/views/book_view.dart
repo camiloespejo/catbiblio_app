@@ -59,13 +59,13 @@ class _BookViewState extends BookController {
                   constraints: BoxConstraints(
                     minHeight: MediaQuery.of(context).size.height,
                     maxWidth:
-                        MediaQuery.of(context).size.width < screenSizeLimit
+                        MediaQuery.of(context).size.width < _screenSizeLimit
                         ? MediaQuery.of(context).size.width
                         : (MediaQuery.of(context).size.width / 3) * 2,
                   ),
                   child: Column(
                     children: [
-                      if (isErrorLoadingDetails)
+                      if (_isErrorLoadingDetails)
                         Center(
                           child: Column(
                             children: [
@@ -88,7 +88,7 @@ class _BookViewState extends BookController {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Skeletonizer(
-                              enabled: isLoadingDetails,
+                              enabled: _isLoadingDetails,
                               child: Container(
                                 color: _primaryColor,
                                 padding: const EdgeInsets.symmetric(
@@ -98,7 +98,7 @@ class _BookViewState extends BookController {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    if (isLoadingDetails)
+                                    if (_isLoadingDetails)
                                       SizedBox(
                                         width: 120,
                                         height: 160,
@@ -117,7 +117,7 @@ class _BookViewState extends BookController {
                                       FutureBuilder<ThumbnailResult?>(
                                         future: ImageService.fetchThumbnail(
                                           widget.biblioNumber,
-                                          bibliosDetails.isbn,
+                                          _bibliosDetails.isbn,
                                         ),
                                         builder: (context, snapshot) {
                                           // Error or no image found: show placeholder
@@ -161,7 +161,7 @@ class _BookViewState extends BookController {
                                                 _showImageDialog(
                                                   context,
                                                   'biblioImage',
-                                                  '$_openLibraryBaseUrl/b/isbn/${bibliosDetails.isbn}-L.jpg',
+                                                  '$_openLibraryBaseUrl/b/isbn/${_bibliosDetails.isbn}-L.jpg',
                                                 );
                                               }
                                             },
@@ -208,9 +208,9 @@ class _BookViewState extends BookController {
                                         children: [
                                           SelectionArea(
                                             child: Text(
-                                              isLoadingDetails
-                                                  ? mockTitle
-                                                  : bibliosDetails.title,
+                                              _isLoadingDetails
+                                                  ? _mockTitle
+                                                  : _bibliosDetails.title,
                                               style: const TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w500,
@@ -239,7 +239,7 @@ class _BookViewState extends BookController {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Skeletonizer(
-                                        enabled: isLoadingDetails,
+                                        enabled: _isLoadingDetails,
                                         child: Text(
                                           AppLocalizations.of(
                                             context,
@@ -257,9 +257,9 @@ class _BookViewState extends BookController {
                                         ),
                                         child: SelectionArea(
                                           child: BibliographicDetails(
-                                            bibliosDetails: bibliosDetails,
-                                            languageMap: languageMap,
-                                            isLoadingDetails: isLoadingDetails,
+                                            bibliosDetails: _bibliosDetails,
+                                            languageMap: _languageMap,
+                                            isLoadingDetails: _isLoadingDetails,
                                           ),
                                         ),
                                       ),
@@ -282,7 +282,7 @@ class _BookViewState extends BookController {
                             const Divider(),
                             Skeletonizer(
                               enabled:
-                                  isLoadingDetails || isErrorLoadingDetails,
+                                  _isLoadingDetails || _isErrorLoadingDetails,
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -311,7 +311,7 @@ class _BookViewState extends BookController {
                                     onPressed: () {
                                       showShareDialog(
                                         context,
-                                        bibliosDetails.title,
+                                        _bibliosDetails.title,
                                         widget.biblioNumber,
                                       );
                                     },
@@ -325,7 +325,7 @@ class _BookViewState extends BookController {
                             ),
                             const Divider(),
 
-                            if (isErrorLoadingBiblioItems)
+                            if (_isErrorLoadingBiblioItems)
                               Center(
                                 child: Column(
                                   children: [
@@ -343,7 +343,7 @@ class _BookViewState extends BookController {
                                   ],
                                 ),
                               )
-                            else if (biblioItems.isEmpty && !isLoadingDetails)
+                            else if (_biblioItems.isEmpty && !_isLoadingDetails)
                               Center(
                                 child: Column(
                                   children: [
@@ -365,11 +365,11 @@ class _BookViewState extends BookController {
                               Column(
                                 children: [
                                   Skeletonizer(
-                                    enabled: isLoadingBiblioItems,
+                                    enabled: _isLoadingBiblioItems,
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        '${AppLocalizations.of(context)!.copies}: ${biblioItems.length}',
+                                        '${AppLocalizations.of(context)!.copies}: ${_biblioItems.length}',
                                         style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w500,
@@ -378,7 +378,7 @@ class _BookViewState extends BookController {
                                     ),
                                   ),
                                   Skeletonizer(
-                                    enabled: isLoadingBiblioItems,
+                                    enabled: _isLoadingBiblioItems,
                                     child: const KeysLegend(),
                                   ),
 
@@ -387,7 +387,7 @@ class _BookViewState extends BookController {
                                     holdingLibraries: holdingLibraries,
                                     groupedItems: groupedItems,
                                     navigateToFinderView: navigateToFinderView,
-                                    isLoadingBiblioItems: isLoadingBiblioItems,
+                                    isLoadingBiblioItems: _isLoadingBiblioItems,
                                   ),
                                 ],
                               ),
