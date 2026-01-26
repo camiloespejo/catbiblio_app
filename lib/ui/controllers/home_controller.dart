@@ -434,6 +434,29 @@ abstract class HomeController extends State<HomeView> {
     _isServicesTimerStarted = true;
   }
 
+  /// Navigate carousel to previous item safely and update state.
+  void carouselPrev({
+    required CarouselController controller,
+    required int currentIndex,
+    required ValueSetter<int> updateIndex,
+  }) {
+    if (currentIndex == 0) return;
+    controller.animateToItem(currentIndex - 1, curve: Curves.easeInOut);
+    setState(() => updateIndex(currentIndex - 1));
+  }
+
+  /// Navigate carousel to next item safely and update state.
+  void carouselNext({
+    required CarouselController controller,
+    required int currentIndex,
+    required int maxIndex,
+    required ValueSetter<int> updateIndex,
+  }) {
+    if (currentIndex >= maxIndex) return;
+    controller.animateToItem(currentIndex + 1, curve: Curves.easeInOut);
+    setState(() => updateIndex(currentIndex + 1));
+  }
+
   /// builds the library services dropdown based on previously fetched libraries
   void buildLibraryServicesDropdown() async {
     _librariesServices = await LibraryServices.getLibraryCodeServicesMap();

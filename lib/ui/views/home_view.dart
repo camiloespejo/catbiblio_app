@@ -262,56 +262,46 @@ class _HomeViewState extends HomeController {
                       ),
                       // button icon with icon arrow left
                       const SizedBox(height: 16.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: 8.0,
-                        children: [
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              if (_currentBookIndex == 0) return;
-
-                              _booksCarouselController.animateToItem(
-                                _currentBookIndex - 1,
-                                // duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                              );
-                              setState(() {
-                                _currentBookIndex--;
-                              });
-                            },
-                            label: const Icon(Icons.arrow_left, size: 32),
-                          ),
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              if (MediaQuery.of(context).size.width < 600) {
-                                if (_currentBookIndex >=
-                                    _bookSelections.length) {
-                                  return;
-                                }
-                              } else {
-                                if (_currentBookIndex >=
-                                    _bookSelections.length - 4 - 1) {
-                                  return;
-                                }
-                              }
-
-                              _booksCarouselController.animateToItem(
-                                _currentBookIndex + 1,
-                                // duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                              );
-                              setState(() {
-                                _currentBookIndex++;
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: _primaryColor,
+                      Theme.of(context).platform == TargetPlatform.iOS ||
+                              Theme.of(context).platform ==
+                                  TargetPlatform.android
+                          ? const SizedBox.shrink()
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 8.0,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: () => carouselPrev(
+                                    controller: _booksCarouselController,
+                                    currentIndex: _currentBookIndex,
+                                    updateIndex: (v) => _currentBookIndex = v,
+                                  ),
+                                  label: const Icon(Icons.arrow_left, size: 32),
+                                ),
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    final maxIndex =
+                                        MediaQuery.of(context).size.width < 600
+                                        ? (_bookSelections.length - 1)
+                                        : (_bookSelections.length - 4 - 1);
+                                    carouselNext(
+                                      controller: _booksCarouselController,
+                                      currentIndex: _currentBookIndex,
+                                      maxIndex: maxIndex < 0 ? 0 : maxIndex,
+                                      updateIndex: (v) => _currentBookIndex = v,
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: _primaryColor,
+                                  ),
+                                  label: const Icon(
+                                    Icons.arrow_right,
+                                    size: 32,
+                                  ),
+                                ),
+                              ],
                             ),
-                            label: const Icon(Icons.arrow_right, size: 32),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
                 ),
@@ -391,50 +381,43 @@ class _HomeViewState extends HomeController {
                       ),
                     ),
                   const SizedBox(height: 16.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 8.0,
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          if (_currentServiceIndex == 0) return;
-
-                          _servicesCarouselController.animateToItem(
-                            _currentServiceIndex - 1,
-                            curve: Curves.easeInOut,
-                          );
-                          setState(() {
-                            _currentServiceIndex--;
-                          });
-                        },
-                        label: const Icon(Icons.arrow_left, size: 32),
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          if (_currentServiceIndex >=
-                              (_librariesServices[selectedLibraryServices]
-                                          ?.length ??
-                                      1) -
-                                  1) {
-                            return;
-                          }
-                          _servicesCarouselController.animateToItem(
-                            _currentServiceIndex + 1,
-                            // duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                          setState(() {
-                            _currentServiceIndex++;
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _primaryColor,
-                          foregroundColor: Colors.white,
+                  Theme.of(context).platform == TargetPlatform.iOS ||
+                          Theme.of(context).platform == TargetPlatform.android
+                      ? const SizedBox.shrink()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: 8.0,
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () => carouselPrev(
+                                controller: _servicesCarouselController,
+                                currentIndex: _currentServiceIndex,
+                                updateIndex: (v) => _currentServiceIndex = v,
+                              ),
+                              label: const Icon(Icons.arrow_left, size: 32),
+                            ),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                final maxIndex =
+                                    (_librariesServices[selectedLibraryServices]
+                                            ?.length ??
+                                        1) -
+                                    1;
+                                carouselNext(
+                                  controller: _servicesCarouselController,
+                                  currentIndex: _currentServiceIndex,
+                                  maxIndex: maxIndex < 0 ? 0 : maxIndex,
+                                  updateIndex: (v) => _currentServiceIndex = v,
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: _primaryColor,
+                                foregroundColor: Colors.white,
+                              ),
+                              label: const Icon(Icons.arrow_right, size: 32),
+                            ),
+                          ],
                         ),
-                        label: const Icon(Icons.arrow_right, size: 32),
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 16.0),
                 ],
               ),
@@ -608,9 +591,7 @@ class HeroLayoutCard extends StatelessWidget {
                 color: Colors.grey[300],
                 width: double.infinity,
                 height: double.infinity,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
+                child: const Center(child: CircularProgressIndicator()),
               ),
               errorWidget: (context, url, error) {
                 return Container(
