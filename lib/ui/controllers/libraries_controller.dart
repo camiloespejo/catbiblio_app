@@ -1,9 +1,6 @@
 part of '../views/libraries_view.dart';
 
 abstract class LibrariesController extends State<LibrariesView> {
-  final List<String> regionsList = regions.values.toList();
-  final int screenSizeLimit = 800;
-
   late Future<List<Library>> librariesFuture;
 
   /// A future that yields an ordered list of region -> libraries entries.
@@ -11,6 +8,10 @@ abstract class LibrariesController extends State<LibrariesView> {
   /// whose `region` is empty or not present in `regionsList` are grouped
   /// under the "Sin región" entry (the value for key `0` in `regions`).
   late Future<List<MapEntry<String, List<Library>>>> groupedEntriesFuture;
+
+  final List<String> _regionsList = regions.values.toList();
+
+  final int _screenSizeLimit = 800;
 
   @override
   void initState() {
@@ -36,7 +37,7 @@ abstract class LibrariesController extends State<LibrariesView> {
 
   /// Initialize empty groups for each known region
   Map<String, List<Library>> _initializeRegionGroups() {
-    return {for (var regionEntry in regionsList) regionEntry: <Library>[]};
+    return {for (var regionEntry in _regionsList) regionEntry: <Library>[]};
   }
 
   /// Categorize libraries into their respective region groups
@@ -79,7 +80,7 @@ abstract class LibrariesController extends State<LibrariesView> {
     final List<MapEntry<String, List<Library>>> entries = [];
 
     // Add regions in order from regionsList
-    for (var regionEntry in regionsList) {
+    for (var regionEntry in _regionsList) {
       final list = groups[regionEntry];
       if (list != null && list.isNotEmpty) {
         entries.add(MapEntry(regionEntry, list));
