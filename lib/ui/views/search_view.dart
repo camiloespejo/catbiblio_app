@@ -43,8 +43,9 @@ class _SearchViewState extends SearchController {
         title: IconButton(
           icon: kIsWeb
               ? const Image(
-                image: AssetImage('assets/images/head-icon-medium.png'),
-                height: 40)
+                  image: AssetImage('assets/images/head-icon-medium.png'),
+                  height: 40,
+                )
               : const Image(
                   image: AssetImage('assets/images/head-icon.png'),
                   height: 40,
@@ -53,11 +54,7 @@ class _SearchViewState extends SearchController {
             if (kIsWeb) {
               context.go('/');
             }
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/',
-              (route) => false,
-            );
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
           },
         ),
       ),
@@ -89,7 +86,8 @@ class _SearchViewState extends SearchController {
                               return DropdownItemType(
                                 itemTypeController: _itemTypeController,
                                 itemTypeEntries:
-                                    widget.controllersData?.itemTypeEntries ?? _itemTypeEntries,
+                                    widget.controllersData?.itemTypeEntries ??
+                                    _itemTypeEntries,
                                 maxWidth: constraints.maxWidth,
                               );
                             },
@@ -100,7 +98,8 @@ class _SearchViewState extends SearchController {
                               return DropdownLibraries(
                                 libraryController: _librariesController,
                                 libraryEntries:
-                                    widget.controllersData?.libraryEntries ?? _libraryEntries,
+                                    widget.controllersData?.libraryEntries ??
+                                    _libraryEntries,
                                 widget: widget,
                                 maxWidth: constraints.maxWidth,
                               );
@@ -138,20 +137,30 @@ class _SearchViewState extends SearchController {
                                   ),
                                   minimumSize: const Size(48, 20),
                                 ),
-                                onPressed: () => onSubmitAction(_searchController.text), 
+                                onPressed: () =>
+                                    onSubmitAction(_searchController.text),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.search, size: 16, color: Colors.white),
-                                    if (MediaQuery.of(context).size.width > screenSizeLimit) 
+                                    const Icon(
+                                      Icons.search,
+                                      size: 16,
+                                      color: Colors.white,
+                                    ),
+                                    if (MediaQuery.of(context).size.width >
+                                        screenSizeLimit)
                                       Row(
                                         children: [
                                           const SizedBox(width: 4),
-                                          Text(AppLocalizations.of(context)!.search),
-                                        ]
+                                          Text(
+                                            AppLocalizations.of(
+                                              context,
+                                            )!.search,
+                                          ),
+                                        ],
                                       ),
                                   ],
-                                )
-                              )
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -169,31 +178,31 @@ class _SearchViewState extends SearchController {
                       scrollController: _scrollController,
                     ),
                     const SizedBox(height: 8),
-                    if (isInitialRequestLoading)
+                    if (_isInitialRequestLoading)
                       const Center(child: LinearProgressIndicator()),
-                    if (isError)
+                    if (_isError)
                       Text(
                         AppLocalizations.of(context)!.errorOccurred,
                         textAlign: TextAlign.center,
                       ),
                     if (books.isEmpty &&
-                        !isInitialRequestLoading &&
-                        !isError &&
-                        !isPageLoading)
+                        !_isInitialRequestLoading &&
+                        !_isError &&
+                        !_isPageLoading)
                       Text(
                         AppLocalizations.of(context)!.noResults,
                         textAlign: TextAlign.center,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       )
-                    else if (!isInitialRequestLoading &&
-                        !isError &&
-                        !isPageLoading)
+                    else if (!_isInitialRequestLoading &&
+                        !_isError &&
+                        !_isPageLoading)
                       Text(
                         '$totalRecords ${AppLocalizations.of(context)!.totalResults}',
                         textAlign: TextAlign.center,
                       ),
                     const Divider(color: Colors.grey),
-                    if (isPageLoading)
+                    if (_isPageLoading)
                       const Center(child: LinearProgressIndicator()),
                   ],
                 ),
@@ -202,13 +211,13 @@ class _SearchViewState extends SearchController {
 
             BookList(
               books: books,
-              isPageLoading: isPageLoading,
-              isInitialRequestLoading: isInitialRequestLoading,
-              goToBookView: goToBookView
+              isPageLoading: _isPageLoading,
+              isInitialRequestLoading: _isInitialRequestLoading,
+              goToBookView: goToBookView,
             ),
 
             // Bottom pagination
-            if (!isPageLoading && books.length > 5)
+            if (!_isPageLoading && books.length > 5)
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 16),
@@ -297,7 +306,12 @@ class PaginationButtonRow extends StatelessWidget {
                         minimumSize: const Size(36, 36),
                         padding: EdgeInsets.zero,
                       ),
-                child: arrowTypeWidget(i, _setUpperLimit, _setLowerLimit, _setMiddleSpace),
+                child: arrowTypeWidget(
+                  i,
+                  _setUpperLimit,
+                  _setLowerLimit,
+                  _setMiddleSpace,
+                ),
               ),
           ],
         ),
@@ -306,11 +320,16 @@ class PaginationButtonRow extends StatelessWidget {
   }
 }
 
-Widget arrowTypeWidget(int i, int setUpperLimit, int setLowerLimit, int setMiddleSpace) {
+Widget arrowTypeWidget(
+  int i,
+  int setUpperLimit,
+  int setLowerLimit,
+  int setMiddleSpace,
+) {
   if (i == setUpperLimit) {
     return const Icon(Icons.arrow_forward);
-  } 
-  
+  }
+
   if (i == setLowerLimit && i > setMiddleSpace) {
     return const Icon(Icons.arrow_back);
   }
@@ -368,7 +387,7 @@ class BookList extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                           Text(
+                            Text(
                               '---------------------------------',
                               style: TextStyle(fontSize: 25),
                             ),
