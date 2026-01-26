@@ -76,7 +76,7 @@ class _HomeViewState extends HomeController {
       drawer: AppNavigationDrawer(
         onLocaleChange: widget.onLocaleChange,
         openLink: openExternalLink,
-        isLibrariesLoading: isLibrariesLoading,
+        isLibrariesLoading: _isLibrariesLoading,
         librariesFuture: _librariesFuture,
       ),
       drawerEnableOpenDragGesture: true,
@@ -88,7 +88,7 @@ class _HomeViewState extends HomeController {
               child: Column(
                 children: [
                   Skeletonizer(
-                    enabled: isItemTypesLoading,
+                    enabled: _isItemTypesLoading,
                     child: ItemTypes(
                       screenSizeLimit: screenSizeLimit,
                       itemTypeController: _itemTypeController,
@@ -96,7 +96,7 @@ class _HomeViewState extends HomeController {
                     ),
                   ),
                   Skeletonizer(
-                    enabled: isLibrariesLoading,
+                    enabled: _isLibrariesLoading,
                     child: Libraries(
                       screenSizeLimit: screenSizeLimit,
                       libraryController: _libraryController,
@@ -335,7 +335,7 @@ class _HomeViewState extends HomeController {
                     ),
                   ),
 
-                  if (isLibraryServicesLoading)
+                  if (_isLibraryServicesLoading)
                     const Padding(
                       padding: EdgeInsets.all(16.0),
                       child: CircularProgressIndicator(
@@ -344,7 +344,7 @@ class _HomeViewState extends HomeController {
                         ),
                       ),
                     )
-                  else if (isLibraryServicesError)
+                  else if (_isLibraryServicesError)
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(

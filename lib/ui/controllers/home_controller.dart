@@ -2,39 +2,51 @@ part of '../views/home_view.dart';
 
 /// controller for home view
 abstract class HomeController extends State<HomeView> {
+  // Text controllers
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _searchFilterController = TextEditingController();
   final TextEditingController _libraryController = TextEditingController();
   final TextEditingController _libraryServicesController =
       TextEditingController();
   final TextEditingController _itemTypeController = TextEditingController();
-  late Future<List<Library>> _librariesFuture;
+
+  // Carousel controllers & listeners
   final CarouselController _booksCarouselController = CarouselController();
   final CarouselController _servicesCarouselController = CarouselController();
   VoidCallback? _booksControllerListener;
   VoidCallback? _servicesControllerListener;
-  late List<DropdownMenuEntry<String>> _libraryEntries = [];
-  late List<DropdownMenuEntry<String>> _itemTypeEntries = [];
-  late List<DropdownMenuEntry<String>> _enabledHomeLibrariesEntries = [];
-  late Map<String, List<LibraryService>> _librariesServices = {};
-  late List<BookSelection> _bookSelections = [];
-  String selectedLibraryServices = 'USBI-X';
-  bool isItemTypesLoading = true;
-  bool isLibrariesLoading = true;
-  bool isLibraryServicesLoading = true;
-  bool isBookSelectionsLoading = true;
-  bool isLibraryServicesError = false;
-  bool isBookSelectionsError = false;
-  final int screenSizeLimit = 800;
 
-  late Future<List<BookSelection>> _bookSelectionsFuture;
-
+  // Timers, indexes and timer state
   late Timer _booksCarouselTimer;
   late Timer _servicesCarouselTimer;
   int _currentBookIndex = 0;
   int _currentServiceIndex = 0;
   bool _isBooksTimerStarted = false;
   bool _isServicesTimerStarted = false;
+
+  // Futures
+  late Future<List<Library>> _librariesFuture;
+  late Future<List<BookSelection>> _bookSelectionsFuture;
+
+  // Data collections
+  late List<DropdownMenuEntry<String>> _libraryEntries = [];
+  late List<DropdownMenuEntry<String>> _itemTypeEntries = [];
+  late List<DropdownMenuEntry<String>> _enabledHomeLibrariesEntries = [];
+  late Map<String, List<LibraryService>> _librariesServices = {};
+  late List<BookSelection> _bookSelections = [];
+
+  // Selected values & constants
+  String selectedLibraryServices = 'USBI-X';
+  final int screenSizeLimit = 800;
+
+  // Loading & error flags
+  bool _isItemTypesLoading = true;
+  bool _isLibrariesLoading = true;
+  bool _isLibraryServicesLoading = true;
+  bool _isLibraryServicesError = false;
+  // TODO: implement error handling for book selections
+  bool _isBookSelectionsLoading = true;
+  bool _isBookSelectionsError = false;
 
   List<DropdownMenuEntry<String>> get _filterEntries {
     return [
@@ -312,7 +324,7 @@ abstract class HomeController extends State<HomeView> {
         globalProvider.setGlobalLibraryEntries(libraryEntries);
 
         setState(() {
-          isLibrariesLoading = false;
+          _isLibrariesLoading = false;
           _librariesFuture = Future.value(libraries);
           _libraryEntries = libraryEntries;
         });
@@ -321,7 +333,7 @@ abstract class HomeController extends State<HomeView> {
       _log('Error fetching libraries: $e');
       if (mounted) {
         setState(() {
-          isLibrariesLoading = false;
+          _isLibrariesLoading = false;
         });
       }
     }
@@ -347,7 +359,7 @@ abstract class HomeController extends State<HomeView> {
         globalProvider.setGlobalItemTypeEntries(itemTypeEntries);
 
         setState(() {
-          isItemTypesLoading = false;
+          _isItemTypesLoading = false;
           _itemTypeEntries = itemTypeEntries;
         });
       }
@@ -355,7 +367,7 @@ abstract class HomeController extends State<HomeView> {
       _log('Error fetching item types: $e');
       if (mounted) {
         setState(() {
-          isItemTypesLoading = false;
+          _isItemTypesLoading = false;
         });
       }
     }
@@ -468,8 +480,8 @@ abstract class HomeController extends State<HomeView> {
     _startServicesCarouselTimer();
 
     setState(() {
-      isLibraryServicesLoading = false;
-      isLibraryServicesError = _librariesServices.isEmpty;
+      _isLibraryServicesLoading = false;
+      _isLibraryServicesError = _librariesServices.isEmpty;
     });
   }
 
