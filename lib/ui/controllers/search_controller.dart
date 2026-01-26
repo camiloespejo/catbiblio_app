@@ -5,22 +5,17 @@ abstract class SearchController extends State<SearchView> {
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _itemTypeController = TextEditingController();
   final TextEditingController _librariesController = TextEditingController();
+
   final ScrollController _scrollController = ScrollController();
-  late List<BookPreview> books = [];
-  static const int initialUpperLimit = 8;
+
   int currentPage = 1;
   int totalPages = 0;
   int setUpperLimit = initialUpperLimit;
   int setMiddleSpace = 0;
   int setLowerLimit = 1;
   int totalRecords = 0;
-  bool isInitialRequestLoading = false;
-  bool isPageLoading = false;
-  bool isError = false;
-  final int screenSizeLimit = 800;
 
-  bool isItemTypesLoading = true;
-  bool isLibrariesLoading = true;
+  late List<BookPreview> _books = [];
   List<DropdownMenuEntry<String>> _itemTypeEntries = [];
   List<DropdownMenuEntry<String>> _libraryEntries = [];
   List<DropdownMenuEntry<String>> get _filterEntries {
@@ -52,6 +47,15 @@ abstract class SearchController extends State<SearchView> {
     ];
   }
 
+  static const int initialUpperLimit = 8;
+  final int screenSizeLimit = 800;
+
+  bool isItemTypesLoading = true;
+  bool isLibrariesLoading = true;
+  bool _isInitialRequestLoading = false;
+  bool _isPageLoading = false;
+  bool _isError = false;
+
   @override
   void initState() {
     super.initState();
@@ -79,32 +83,30 @@ abstract class SearchController extends State<SearchView> {
     }
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => BookView(biblioNumber: biblioNumber),
-      ),
+      MaterialPageRoute(builder: (_) => BookView(biblioNumber: biblioNumber)),
     );
   }
 
   /// Loads the initial search results based on the current query parameters
   void loadSearch() {
-    isInitialRequestLoading = true;
-    isError = false;
+    _isInitialRequestLoading = true;
+    _isError = false;
     final queryParams = Provider.of<QueryParams>(context, listen: false);
     SearchService.searchBooks(queryParams)
         .then((result) {
           if (!mounted) return;
           setState(() {
-            books = result.books;
+            _books = result.books;
             totalRecords = result.totalRecords;
             totalPages = (totalRecords / 10).ceil();
-            isInitialRequestLoading = false;
+            _isInitialRequestLoading = false;
           });
         })
         .catchError((error) {
           if (!mounted) return;
           setState(() {
-            isInitialRequestLoading = false;
-            isError = true;
+            _isInitialRequestLoading = false;
+            _isError = true;
           });
         });
   }
@@ -139,7 +141,7 @@ abstract class SearchController extends State<SearchView> {
     final queryParams = Provider.of<QueryParams>(context, listen: false);
     setState(() {
       queryParams.searchQuery = searchQuery;
-      books.clear();
+      _books.clear();
       totalRecords = 0;
       currentPage = 1;
       setUpperLimit = initialUpperLimit;
@@ -155,31 +157,31 @@ abstract class SearchController extends State<SearchView> {
     queryParams.startRecord = (currentPage - 1) * 10;
 
     setState(() {
-      isPageLoading = true;
+      _isPageLoading = true;
     });
     SearchService.searchBooks(queryParams)
         .then((result) {
           setState(() {
-            books = result.books;
+            _books = result.books;
             totalRecords = result.totalRecords;
             totalPages = (totalRecords / 10).ceil();
-            isInitialRequestLoading = false;
-            isError = false;
-            isPageLoading = false;
+            _isInitialRequestLoading = false;
+            _isError = false;
+            _isPageLoading = false;
           });
         })
         .catchError((error) {
           setState(() {
-            isInitialRequestLoading = false;
-            isError = true;
-            isPageLoading = false;
+            _isInitialRequestLoading = false;
+            _isError = true;
+            _isPageLoading = false;
           });
         });
   }
 
   /// Handles pagination behavior based on the selected index
   void paginationBehavior(int selectedIndex) {
-    if (isPageLoading || currentPage == selectedIndex) return;
+    if (_isPageLoading || currentPage == selectedIndex) return;
 
     /// This allows for pagination to continue forward.
     if (currentPage + 1 == setUpperLimit && selectedIndex == setUpperLimit) {
