@@ -27,9 +27,9 @@ class _MarcViewState extends MarcController {
           '${AppLocalizations.of(context)!.marcView} - ${widget.biblioNumber}',
         ),
       ),
-      body: isLoading
+      body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : isError
+          : _isError
           ? Center(child: Text(AppLocalizations.of(context)!.errorLoadingMarc))
           : SafeArea(
               child: SingleChildScrollView(
@@ -38,7 +38,7 @@ class _MarcViewState extends MarcController {
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       maxWidth:
-                          MediaQuery.of(context).size.width < screenSizeLimit
+                          MediaQuery.of(context).size.width < _screenSizeLimit
                           ? MediaQuery.of(context).size.width
                           : (MediaQuery.of(context).size.width / 3) * 2.2,
                     ),
@@ -57,8 +57,10 @@ class _MarcViewState extends MarcController {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               formattedMarcData =
-                                  MarcController.formatAltMarcStyle(marcData) ??
-                                  marcData ??
+                                  MarcController.formatAltMarcStyle(
+                                    _marcData,
+                                  ) ??
+                                  _marcData ??
                                   AppLocalizations.of(
                                     context,
                                   )!.noMarcDataAvailable,

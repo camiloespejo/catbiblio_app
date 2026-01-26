@@ -1,11 +1,13 @@
 part of '../views/marc_view.dart';
 
 abstract class MarcController extends State<MarcView> {
-  String? marcData;
+  String? _marcData;
   String? formattedMarcData;
-  bool isLoading = true;
-  bool isError = false;
-  final int screenSizeLimit = 800;
+
+  final int _screenSizeLimit = 800;
+
+  bool _isLoading = true;
+  bool _isError = false;
 
   @override
   void initState() {
@@ -16,12 +18,12 @@ abstract class MarcController extends State<MarcView> {
   Future<void> loadMarcData(BuildContext context) async {
     final biblioNumber = int.parse(widget.biblioNumber);
     try {
-      marcData = await BibliosDetailsService.getBibliosMarcPlainText(
+      _marcData = await BibliosDetailsService.getBibliosMarcPlainText(
         biblioNumber,
       );
     } on TimeoutException catch (_) {
       // _log('Error loading MARC data: $e');
-      isError = true;
+      _isError = true;
 
       //Snackbar notifying timeout
       if (!context.mounted) return;
@@ -31,7 +33,7 @@ abstract class MarcController extends State<MarcView> {
     } finally {
       if (mounted) {
         setState(() {
-          isLoading = false;
+          _isLoading = false;
         });
       }
     }
