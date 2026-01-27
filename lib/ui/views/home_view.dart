@@ -194,6 +194,15 @@ class _HomeViewState extends HomeController {
                       FutureBuilder(
                         future: _bookSelectionsFuture,
                         builder: (context, asyncSnapshot) {
+                          if (_isBookSelectionsLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            );
+                          }
                           if (asyncSnapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const Center(

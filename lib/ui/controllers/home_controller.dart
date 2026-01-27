@@ -44,7 +44,6 @@ abstract class HomeController extends State<HomeView> {
   bool _isLibrariesLoading = true;
   bool _isLibraryServicesLoading = true;
   bool _isLibraryServicesError = false;
-  // TODO: implement error handling for book selections
   bool _isBookSelectionsLoading = true;
   bool _isBookSelectionsError = false;
 
@@ -81,7 +80,7 @@ abstract class HomeController extends State<HomeView> {
   initState() {
     super.initState();
     _librariesFuture = Future.value([]);
-    _bookSelectionsFuture = BookSelectionsService.getBookSelections();
+    _bookSelectionsFuture = Future.value([]);
     fetchData();
     _attachCarouselListeners();
   }
@@ -92,6 +91,9 @@ abstract class HomeController extends State<HomeView> {
       fetchItemTypes();
       // Fetch libraries first (needed for services dropdown)
       await fetchLibraries();
+
+      // Fetch book selections
+      await fetchBookSelections();
 
       // Build dropdown after library services are loaded
       buildLibraryServicesDropdown();
@@ -339,6 +341,30 @@ abstract class HomeController extends State<HomeView> {
     }
   }
 
+  Future<void> fetchBookSelections() async {
+    try {
+      final bookSelections = await BookSelectionsService.getBookSelections();
+
+      if (mounted) {
+        setState(() {
+          _isBookSelectionsLoading = false;
+          _bookSelections = bookSelections;
+          _bookSelectionsFuture = Future.value(bookSelections);
+          _isBookSelectionsError = _bookSelections.isEmpty;
+        });
+        _startBooksCarouselTimer();
+      }
+    } catch (e) {
+      _log('Error fetching book selections: $e');
+      if (mounted) {
+        setState(() {
+          _isBookSelectionsLoading = false;
+          _isBookSelectionsError = true;
+        });
+      }
+    }
+  }
+
   /// fetches item types
   Future<void> fetchItemTypes() async {
     try {
@@ -391,6 +417,9 @@ abstract class HomeController extends State<HomeView> {
       _currentBookIndex++;
       final listLength = _bookSelections.length;
 
+      // If there are no items, skip animation to avoid invalid clamp ranges
+      if (listLength == 0) return;
+
       // Logic to determine when to reset the index
       if (MediaQuery.of(context).size.width < 600) {
         if (_currentBookIndex >= listLength) {
@@ -403,8 +432,10 @@ abstract class HomeController extends State<HomeView> {
         }
       }
 
+      // Ensure the target index is within valid bounds before animating
+      final targetIndex = _currentBookIndex.clamp(0, listLength - 1);
       _booksCarouselController.animateToItem(
-        _currentBookIndex,
+        targetIndex,
         duration: const Duration(milliseconds: 800),
         curve: Curves.easeInOut,
       );
