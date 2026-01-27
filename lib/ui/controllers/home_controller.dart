@@ -350,6 +350,7 @@ abstract class HomeController extends State<HomeView> {
           _isBookSelectionsLoading = false;
           _bookSelections = bookSelections;
           _bookSelectionsFuture = Future.value(bookSelections);
+          // If no book selections, set error flag to true to hide carousel
           _isBookSelectionsError = _bookSelections.isEmpty;
         });
         _startBooksCarouselTimer();

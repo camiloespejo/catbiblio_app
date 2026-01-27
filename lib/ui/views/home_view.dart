@@ -175,147 +175,155 @@ class _HomeViewState extends HomeController {
             /// It displays a carousel of book selections.
             /// Using future builder to load book selections asynchronously.
             /// The carousel is displayed only if there are book selections available.
-            SliverToBoxAdapter(
-              child: Container(
-                decoration: const BoxDecoration(color: _primaryColor),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.bookSelections,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
+            if (!_isBookSelectionsError)
+              SliverToBoxAdapter(
+                child: Container(
+                  decoration: const BoxDecoration(color: _primaryColor),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.bookSelections,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 16.0),
-                      FutureBuilder(
-                        future: _bookSelectionsFuture,
-                        builder: (context, asyncSnapshot) {
-                          if (_isBookSelectionsLoading) {
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
+                        const SizedBox(height: 16.0),
+                        FutureBuilder(
+                          future: _bookSelectionsFuture,
+                          builder: (context, asyncSnapshot) {
+                            if (_isBookSelectionsLoading) {
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
-                          if (asyncSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
+                              );
+                            }
+                            if (asyncSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
                                 ),
-                              ),
-                            );
-                          } else if (asyncSnapshot.hasError) {
-                            return const Center(
-                              child: Text(
-                                'error',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            );
-                          }
+                              );
+                            } else if (asyncSnapshot.hasError) {
+                              return const Center(
+                                child: Text(
+                                  'error',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              );
+                            }
 
-                          _bookSelections = asyncSnapshot.data ?? [];
-                          _startBooksCarouselTimer();
+                            _bookSelections = asyncSnapshot.data ?? [];
+                            _startBooksCarouselTimer();
 
-                          return ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxHeight: MediaQuery.of(context).size.height / 2,
-                            ),
-                            child: CarouselView.weighted(
-                              flexWeights:
-                                  MediaQuery.of(context).size.width < 600
-                                  ? const [1, 3, 1]
-                                  : const [1, 1, 1, 1, 1],
-                              scrollDirection: Axis.horizontal,
-                              itemSnapping: true,
-                              elevation: 2.0,
-                              controller: _booksCarouselController,
-                              enableSplash: true,
-                              backgroundColor: _primaryColor,
-                              onTap: (index) {
-                                final bookSelection = _bookSelections[index];
-                                if (kIsWeb) {
-                                  context.go(
-                                    '/book-details/${bookSelection.biblionumber}',
-                                  );
-                                  return;
-                                }
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BookView(
-                                      biblioNumber: bookSelection.biblionumber,
+                            return ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.of(context).size.height / 2,
+                              ),
+                              child: CarouselView.weighted(
+                                flexWeights:
+                                    MediaQuery.of(context).size.width < 600
+                                    ? const [1, 3, 1]
+                                    : const [1, 1, 1, 1, 1],
+                                scrollDirection: Axis.horizontal,
+                                itemSnapping: true,
+                                elevation: 2.0,
+                                controller: _booksCarouselController,
+                                enableSplash: true,
+                                backgroundColor: _primaryColor,
+                                onTap: (index) {
+                                  final bookSelection = _bookSelections[index];
+                                  if (kIsWeb) {
+                                    context.go(
+                                      '/book-details/${bookSelection.biblionumber}',
+                                    );
+                                    return;
+                                  }
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BookView(
+                                        biblioNumber:
+                                            bookSelection.biblionumber,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                              children: _bookSelections.map((bookSelection) {
-                                return HeroLayoutCard(
-                                  fit: BoxFit.fitHeight,
-                                  imageModel: ImageModel(
-                                    bookSelection.name,
-                                    '$_baseUrl/cgi-bin/koha/opac-image.pl?biblionumber=${bookSelection.biblionumber}',
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          );
-                        },
-                      ),
-                      // button icon with icon arrow left
-                      const SizedBox(height: 16.0),
-                      Theme.of(context).platform == TargetPlatform.iOS ||
-                              Theme.of(context).platform ==
-                                  TargetPlatform.android
-                          ? const SizedBox.shrink()
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              spacing: 8.0,
-                              children: [
-                                ElevatedButton.icon(
-                                  onPressed: () => carouselPrev(
-                                    controller: _booksCarouselController,
-                                    currentIndex: _currentBookIndex,
-                                    updateIndex: (v) => _currentBookIndex = v,
-                                  ),
-                                  label: const Icon(Icons.arrow_left, size: 32),
-                                ),
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    final maxIndex =
-                                        MediaQuery.of(context).size.width < 600
-                                        ? (_bookSelections.length - 1)
-                                        : (_bookSelections.length - 4 - 1);
-                                    carouselNext(
+                                  );
+                                },
+                                children: _bookSelections.map((bookSelection) {
+                                  return HeroLayoutCard(
+                                    fit: BoxFit.fitHeight,
+                                    imageModel: ImageModel(
+                                      bookSelection.name,
+                                      '$_baseUrl/cgi-bin/koha/opac-image.pl?biblionumber=${bookSelection.biblionumber}',
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            );
+                          },
+                        ),
+                        // button icon with icon arrow left
+                        const SizedBox(height: 16.0),
+                        Theme.of(context).platform == TargetPlatform.iOS ||
+                                Theme.of(context).platform ==
+                                    TargetPlatform.android
+                            ? const SizedBox.shrink()
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                spacing: 8.0,
+                                children: [
+                                  ElevatedButton.icon(
+                                    onPressed: () => carouselPrev(
                                       controller: _booksCarouselController,
                                       currentIndex: _currentBookIndex,
-                                      maxIndex: maxIndex < 0 ? 0 : maxIndex,
                                       updateIndex: (v) => _currentBookIndex = v,
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: _primaryColor,
+                                    ),
+                                    label: const Icon(
+                                      Icons.arrow_left,
+                                      size: 32,
+                                    ),
                                   ),
-                                  label: const Icon(
-                                    Icons.arrow_right,
-                                    size: 32,
+                                  ElevatedButton.icon(
+                                    onPressed: () {
+                                      final maxIndex =
+                                          MediaQuery.of(context).size.width <
+                                              600
+                                          ? (_bookSelections.length - 1)
+                                          : (_bookSelections.length - 4 - 1);
+                                      carouselNext(
+                                        controller: _booksCarouselController,
+                                        currentIndex: _currentBookIndex,
+                                        maxIndex: maxIndex < 0 ? 0 : maxIndex,
+                                        updateIndex: (v) =>
+                                            _currentBookIndex = v,
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: _primaryColor,
+                                    ),
+                                    label: const Icon(
+                                      Icons.arrow_right,
+                                      size: 32,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                    ],
+                                ],
+                              ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
 
             /// Libraries Services Carousel
             /// It displays a carousel of library services.
